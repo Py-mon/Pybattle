@@ -1,11 +1,7 @@
 # Pybattle
-A ascii text art pokemon style game in the terminal using curses/discord.
+A ascii text art pokemon style game in the terminal using ANSI escape codes
 
-My main goal is for it to be a computer ascii text game.
-
-I would love any help coding, balancing, art, etc.
-
-Example of art:
+Example of ascii text art:
 ```
 ╭─ BEDROOM ─┬──────────────────╮
 │   ╰───────╯       ||||       │
