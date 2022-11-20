@@ -16,3 +16,15 @@ Example of ascii text art:
 │                    ╰─────┴─╯ │
 ╰──────────────────────────────╯
 ```
+
+# Installation:
+**Linux:**
+```$ pip install --upgrade setuptools ```
+
+```$ python3 -m venv env```
+
+```$ source env/bin/activate```
+
+```$ pip install . ```
+
+```$ python main.py ```
