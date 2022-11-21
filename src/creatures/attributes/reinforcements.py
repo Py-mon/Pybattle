@@ -17,7 +17,11 @@ class Armor:
         self.speed_decrease_mult = self.weight * WEIGHT_TO_SPEED
         
     def __repr__(self) -> str:
-        return self.function.__name__.capitalize()
+        # return self.function.__name__.capitalize() # Gives an error here.
+        return f'''Armor:
+Defense multiplier: {self.defense_mult}
+Weight: {self.weight}
+Speed decrease multiplier: {self.speed_decrease_mult}'''
 
 class Weapon:
     """A tool used for increasing physical or magical damage for `Humanoids`."""

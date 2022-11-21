@@ -3,14 +3,14 @@ from fractions import Fraction
 from math import floor
 from random import choice, choices, randint
 from string import ascii_letters, digits
-from typing import Any, Self, TypeVar
+from typing import Any, TypeVar, Self
 
-from .attributes.element import Element
-from .attributes.stats import Stats
-from .attributes.trait import Trait
+from src.creatures.attributes.element import Element
+from src.creatures.attributes.stats   import Stats
+from src.creatures.attributes.trait   import Trait
 
-from log import FileLogger
-from types_ import (Ability, Creature, ElementReference, Item, Move,
+from src.log    import FileLogger
+from src.types_ import (Ability, Creature, ElementReference, Item, Move,
                     StatusAilment, Humanoid)
 
 logger = FileLogger('creatures')
@@ -237,3 +237,7 @@ class Pymon:
             'skill_points': inherit(self.stats.skill_points, with_.stats.skill_points),
             'starting_level': randint(1, 5),
         })
+
+
+p = Pymon()
+print(p.stats)

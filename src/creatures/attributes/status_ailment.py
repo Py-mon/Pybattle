@@ -1,7 +1,7 @@
 from typing import Callable
 
 from .element import Element
-from types_ import Attacker, Creature, Defender, ElementReference
+from src.types_ import Attacker, Creature, Defender, ElementReference
 
 
 class StatusAilment:

@@ -1,7 +1,7 @@
 from typing import Callable
 from random import choices
 
-from types_ import Creature
+from src.types_ import Creature
 
 
 class Trait:

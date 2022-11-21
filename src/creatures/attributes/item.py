@@ -1,5 +1,5 @@
 from .ability import Ability
-from types_ import Creature
+from src.types_ import Creature
 
 
 class Item(Ability):

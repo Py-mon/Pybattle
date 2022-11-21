@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from types_ import Attacker, Creature, Defender, User
+from src.types_ import Attacker, Creature, Defender, User
 
 
 class Ability:
