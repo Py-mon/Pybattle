@@ -1,0 +1,2 @@
+INFO: ---------------------- Cobolor Created ----------------------
+DEBUG: {'id_': 'ETNvZQ9VJrvi', 'name': 'Cobolor', 'stats': Stats({'attack': 141;0, 'magic': 139;0, 'defense': 128;0, 'health': 115;0, 'energy': 92;0, 'speed': 81;0}), 'max_stats': Stats({'attack': 141;0, 'magic': 139;0, 'defense': 128;0, 'health': 115;0, 'energy': 92;0, 'speed': 81;0}), 'traits': {eager}, 'elements': [], 'status_ailments': [], 'item': None, 'graphics': '', 'targets': [], 'damage_to': 0.0, 'moves': [], 'experience': 0.0, 'max_experience': 100, 'level': 1}
