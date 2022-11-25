@@ -14,6 +14,7 @@ class AnsiEscapeCode:
     def __init__(self, code: str, *args: str | int) -> None:
         self.code = self.CSI + \
             "".join([str(arg) + ';' for arg in args])[:-1] + code
+        self.real = '\\' + self.code
 
     def execute(self) -> None:
         """Execute the ANSI escape code."""
