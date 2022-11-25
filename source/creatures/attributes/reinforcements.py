@@ -26,11 +26,13 @@ class Weapon:
 
     def __init__(
         self,
+        name: str,
         stat: str,
         mult: float,
         weight: int,
         graphics: str = '',
     ):
+        self.name = name
         self.stat = stat
         self.mult = mult
         self.weight = weight

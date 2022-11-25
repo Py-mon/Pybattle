@@ -59,7 +59,3 @@ class Element:
         if mult == 1/4:
             return 0
         return mult
-
-
-# Body	(for pokemon)	Plant	Insect	Bird	Fairy	Fish	Mineral	Angel
-# Element	(for moves)	Wind	Earth	Fire	Ice	Gamma	Lightning	Shadow	Night	Sea	Nature	Crystal	Sound	Cosmic	Tech	Day	Metal

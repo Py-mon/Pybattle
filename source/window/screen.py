@@ -50,25 +50,25 @@ class Cursor:
     @classmethod
     def up(cls, n: int = 1) -> AnsiEscapeCode:
         """Moves the cursor `n` cells up."""
-        cls.pos.y - 1
+        cls.pos.y -= 1
         return AnsiEscapeCode('A', n - 1)
 
     @classmethod
     def down(cls, n: int = 1) -> AnsiEscapeCode:
         """Moves the cursor `n` cells down."""
-        cls.pos.y + 1
+        cls.pos.y += 1
         return AnsiEscapeCode('B', n - 1)
 
     @classmethod
     def right(cls, n: int = 1) -> AnsiEscapeCode:
         """Moves the cursor `n` cells right."""
-        cls.pos.x + 1
+        cls.pos.x += 1
         return AnsiEscapeCode('C', n - 1)
 
     @classmethod
     def left(cls, n: int = 1) -> AnsiEscapeCode:
         """Moves the cursor `n` cells left."""
-        cls.pos.x - 1
+        cls.pos.x -= 1
         return AnsiEscapeCode('D', n - 1)
 
     @classmethod

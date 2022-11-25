@@ -28,8 +28,8 @@ class Move:
 
         # TextBox is not implemented
         # text_box = TextBox(height=3, width=width)
-        text_box = None
-
+        text_box = ...
+        
         for attacker in attackers:
             self.function(attackers, defenders)
             for target in attacker.targets:
@@ -43,7 +43,7 @@ class Move:
                 elif mult == 0:
                     text_box.text = f"It's doesn't affect {target.name}..."
                 target.damage_to *= mult
-                target.stats['health'] -= target.damage_to
-            attacker.stats['health'] -= attacker.damage_to
+                target.stats['health'].battle_bonus -= target.damage_to
+            attacker.stats['health'].battle_bonus -= attacker.damage_to
 
         print(text_box.speech())

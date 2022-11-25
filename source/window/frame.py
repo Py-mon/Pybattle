@@ -3,7 +3,6 @@ from source.window.matrix import Matrix
 from source.window.size import Size
 from source.types_ import SizeReference, CoordReference
 from .screen import Cursor
-from typing import Self
 
 
 class Frame:
@@ -56,10 +55,10 @@ class Frame:
         self.matrix = Matrix(frame)
 
     def __getitem__(self, item) -> None:
-        return self.frame[item]
+        return self.matrix[item]
 
     def __setitem__(self, item, to) -> None:
-        self.frame[item] = to
+        self.matrix[item] = to
 
     @property
     def top_edge_positions(self) -> list[Coord]:
@@ -92,13 +91,14 @@ class Frame:
     @property
     def bottom_right_corner(self) -> Coord:
         return Coord(self.icols, self.irows)
-    
+
     def add_frame(
         self,
-        frame: Self,
+        frame: "Frame",  # Only Frames can be added not Windows (so not Self)
         pos: CoordReference = Coord(0, 0),
     ) -> None:
-        top_left = Coord.convert_reference(pos)
+        pos = Coord.convert_reference(pos)
+        top_left = pos
 
         top_right = pos + frame.top_right_corner
         bottom_left = pos + frame.bottom_left_corner
@@ -129,7 +129,8 @@ class Frame:
             frame.matrix[*bottom_right.reverse] = '┤'
 
         result += str(frame.matrix)
-        
+
+        # TEST
         length = set()
         for line in result.splitlines(True):
             valid = True
@@ -137,7 +138,7 @@ class Frame:
             if len(length) > 1:
                 print(line)
                 valid = False
-        
+
             print(valid)
 
         self.matrix = Matrix(result)

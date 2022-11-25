@@ -16,49 +16,48 @@ __handler.setFormatter(__formatter)
 logger.addHandler(__handler)
 
 
-# Going to be unused
-class FileLogger:
-    """A logger for a file. When you log it also goes into a global log file."""
+# class FileLogger:
+#     """A logger for a file. When you log it also goes into a global log file."""
 
-    def __init__(self, file_name: str = ..., default_level: int = DEBUG) -> None:
-        if file_name == ...:
-            file_name = getframeinfo(stack()[1][0]).filename  # The file path
-        self.default_level = default_level
+#     def __init__(self, file_name: str = ..., default_level: int = DEBUG) -> None:
+#         if file_name == ...:
+#             file_name = getframeinfo(stack()[1][0]).filename  # The file path
+#         self.default_level = default_level
 
-        # ...\tester.py -> tester
-        # tester.py -> tester
-        # tester -> tester
-        name = Path(file_name).stem
+#         # ...\tester.py -> tester
+#         # tester.py -> tester
+#         # tester -> tester
+#         name = Path(file_name).stem
 
-        logger = getLogger(name)
+#         logger = getLogger(name)
 
-        if not logger.hasHandlers():  # If logger has been created (it has no handlers)
-            logger.setLevel(default_level)
+#         if not logger.hasHandlers():  # If logger has been created (it has no handlers)
+#             logger.setLevel(default_level)
 
-            handler = FileHandler(Path('Loggers/' + name + '.log'), mode='w')
-            formatter = Formatter(
-                "%(levelname)s: %(message)s")  # LEVEL: message
+#             handler = FileHandler(Path('Loggers/' + name + '.log'), mode='w')
+#             formatter = Formatter(
+#                 "%(levelname)s: %(message)s")  # LEVEL: message
 
-            handler.setFormatter(formatter)
+#             handler.setFormatter(formatter)
 
-            logger.addHandler(handler)
+#             logger.addHandler(handler)
 
-        self.logger = logger
+#         self.logger = logger
 
-    def log(self, msg: str, level: int = ...) -> None:
-        if level is ...:
-            level = self.default_level
-        self.logger.log(level, msg)
-        self.global_logger.log(level, msg)
+#     def log(self, msg: str, level: int = ...) -> None:
+#         if level is ...:
+#             level = self.default_level
+#         self.logger.log(level, msg)
+#         logger.log(level, msg)
 
-    def debug(self, msg: str) -> None:
-        self.logger.debug(msg)
-        self.global_logger.debug(msg)
+#     def debug(self, msg: str) -> None:
+#         self.logger.debug(msg)
+#         logger.debug(msg)
 
-    def warning(self, msg: str) -> None:
-        self.logger.warning(msg)
-        self.global_logger.warning(msg)
+#     def warning(self, msg: str) -> None:
+#         self.logger.warning(msg)
+#         logger.warning(msg)
 
-    def info(self, msg: str) -> None:
-        self.logger.info(msg)
-        self.global_logger.info(msg)
+#     def info(self, msg: str) -> None:
+#         self.logger.info(msg)
+#         logger.info(msg)

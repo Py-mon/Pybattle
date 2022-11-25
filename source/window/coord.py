@@ -74,5 +74,5 @@ class CoordList:
         self.start = Coord.convert_reference(start)
         self.end = Coord.convert_reference(end)
 
-    def get_range(self) -> list[Self]:
+    def get_range(self) -> list[Coord]:
         return [Coord(self.start.x + col, self.start.y + row) for col in range(self.end.x + 1) for row in range(self.end.y + 1)]
