@@ -12,9 +12,9 @@ class Matrix:
     def __init__(self, str_: str) -> None:
         if str_[-1] != '\n':
             str_ += '\n'
-        self.__str = str_
+        self._str = str_
         
-        self._matrix = row_stack([array(list(row)) for row in self.__str.splitlines(True)])
+        self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
 
     def __len__(self) -> int:
         return len(self._matrix)
@@ -31,7 +31,7 @@ class Matrix:
 
     def __str__(self) -> str:
         """The str formed from the matrix."""
-        return "".join([char for row in self._matrix for char in row])
+        return Matrix.convert_array(self._matrix)
 
     @property
     def size(self) -> Size:
