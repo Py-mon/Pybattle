@@ -57,10 +57,10 @@ class Stats:
         skill_points: dict[str, int] = {},
     ) -> None:
         self.stats = {stat: Stat(
-            bases.get(stat, ...),  # type: ignore
-            level_points.get(stat, ...),  # type: ignore
-            special_points.get(stat, ...),  # type: ignore
-            skill_points.get(stat, ...)  # type: ignore
+            bases.get(stat, ...),
+            level_points.get(stat, ...),
+            special_points.get(stat, ...),
+            skill_points.get(stat, ...)
         ) for stat in self.STATS}
 
         self.bases = {key: value.base for key, value in self.stats.items()}
