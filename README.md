@@ -32,7 +32,3 @@ Example of ascii text art:
 
 # Socials
 Trello: https://trello.com/b/zEno2FGf/pybattle
-
-Roblox: https://www.roblox.com/users/823085822/profile
-
-Discord: https://discord.gg/qQrquCxp
