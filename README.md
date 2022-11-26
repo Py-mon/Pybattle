@@ -35,4 +35,4 @@ Trello: https://trello.com/b/zEno2FGf/pybattle
 
 Roblox: https://www.roblox.com/users/823085822/profile
 
-Discord: jacoblilia10#1552
+Discord: https://discord.gg/qQrquCxp
