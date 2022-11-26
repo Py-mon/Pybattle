@@ -1,4 +1,5 @@
 from typing import Self, Sequence
+
 from src.types_ import CoordReference
 
 
@@ -10,17 +11,18 @@ class Coord:
         self,
         x: int = 0,
         y: int = 0
-        
+
     ) -> None:
         self.y = y
         self.x = x
-        
+
     @staticmethod
-    def convert_reference(reference: CoordReference) -> "Coord":  # Says Any with Self (due to staticmethod)
+    # Says Any with Self (due to staticmethod)
+    def convert_reference(reference: CoordReference) -> "Coord":
         if isinstance(reference, tuple):
             return Coord(*reference)
         return reference
-        
+
     @property
     def reverse(self) -> tuple[int, int]:
         """(y, x)"""
