@@ -19,6 +19,7 @@ Example of ascii text art:
 
 # Installation:
 **Linux:**
+
 ```$ pip install --upgrade setuptools ```
 
 ```$ python3 -m venv env```
@@ -31,5 +32,7 @@ Example of ascii text art:
 
 # Socials
 Trello: https://trello.com/b/zEno2FGf/pybattle
+
 Roblox: https://www.roblox.com/users/823085822/profile
+
 Discord: jacoblilia10#1552
