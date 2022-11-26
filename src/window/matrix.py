@@ -35,4 +35,4 @@ class Matrix:
 
     @property
     def size(self) -> Size:
-        return Size(self._matrix.shape[1], self._matrix.shape[0])
+        return Size(self._matrix.shape[0], self._matrix.shape[1])

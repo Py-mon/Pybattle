@@ -1,8 +1,11 @@
+from typing import Self
+
 from src.types_ import SizeReference
 
 
 class Size:
     """2D (Width, Height)"""
+
     def __init__(
         self,
         height: int,
@@ -10,7 +13,7 @@ class Size:
     ) -> None:
         self.width = width
         self.height = height
-        
+
     @staticmethod
     def convert_reference(reference: SizeReference) -> "Size":  # Says Any with Self (due to staticmethod)
         if isinstance(reference, tuple):
@@ -19,10 +22,16 @@ class Size:
 
     @property
     def size(self) -> tuple[int, int]:
-        return (self.width, self.height)
-    
+        return (self.height, self.width)
+
     def __iter__(self):
         return iter(self.size)
+
+    def __add__(self, x) -> Self:
+        return Size(self.height + x, self.width + x)
+    
+    def __sub__(self, x) -> Self:
+        return Size(self.height - x, self.width - x)
 
     def __repr__(self) -> str:
         return f'(Height: {self.height}, Width: {self.width})'

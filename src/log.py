@@ -1,9 +1,41 @@
-from inspect import getframeinfo, stack
-from logging import DEBUG, FileHandler, Formatter, getLogger
-from os import mkdir
+from inspect import stack
+from logging import DEBUG, FileHandler, Formatter, getLogger, Logger
 from pathlib import Path
+from typing import Optional
 
-logger = getLogger('global')
+
+class Traceback:
+    def __init__(self):
+        """
+        ```
+        stack()[0] -> "Info About this line"
+        stack()[1] -> "About the line it is used"
+        ...
+        ```
+        """
+        # Get the latest traceback
+        n = 0
+        while True:
+            try:
+                self.filename = stack()[n].filename
+                self.line_num = stack()[n].lineno
+                self.line = stack()[n].code_context[0].rstrip('\n')
+                n += 1
+            except:
+                self.filename = stack()[n - 1].filename
+                self.line_num = stack()[n - 1].lineno
+                self.line = stack()[n - 1].code_context[0].rstrip('\n')
+                break
+
+    @property
+    def trace(self):
+        # TODO: Show where one the line the log came from
+        return f'''\
+In file {self.filename} on line {self.line_num}
+{self.line}\n'''
+
+
+logger = getLogger('log')
 
 logger.setLevel(DEBUG)
 
@@ -16,48 +48,27 @@ __handler.setFormatter(__formatter)
 logger.addHandler(__handler)
 
 
-# class FileLogger:
-#     """A logger for a file. When you log it also goes into a global log file."""
+class _Logger:
+    def __init__(self, logger: Logger) -> None:
+        self.logger = logger
 
-#     def __init__(self, file_name: str = ..., default_level: int = DEBUG) -> None:
-#         if file_name == ...:
-#             file_name = getframeinfo(stack()[1][0]).filename  # The file path
-#         self.default_level = default_level
+    def debug(self, msg: str, traceback: bool = False) -> None:
+        if traceback:
+            self.logger.debug(Traceback().trace + msg)
+        else:
+            self.logger.debug(msg)
 
-#         # ...\tester.py -> tester
-#         # tester.py -> tester
-#         # tester -> tester
-#         name = Path(file_name).stem
+    def warning(self, msg: str, traceback: bool = True) -> None:
+        if traceback:
+            self.logger.warning(Traceback().trace + msg)
+        else:
+            self.logger.warning(msg)
 
-#         logger = getLogger(name)
+    def info(self, msg: str, traceback: bool = True) -> None:
+        if traceback:
+            self.logger.info(Traceback().trace + msg)
+        else:
+            self.logger.info(msg)
 
-#         if not logger.hasHandlers():  # If logger has been created (it has no handlers)
-#             logger.setLevel(default_level)
 
-#             handler = FileHandler(Path('Loggers/' + name + '.log'), mode='w')
-#             formatter = Formatter(
-#                 "%(levelname)s: %(message)s")  # LEVEL: message
-
-#             handler.setFormatter(formatter)
-
-#             logger.addHandler(handler)
-
-#         self.logger = logger
-
-#     def log(self, msg: str, level: int = ...) -> None:
-#         if level is ...:
-#             level = self.default_level
-#         self.logger.log(level, msg)
-#         logger.log(level, msg)
-
-#     def debug(self, msg: str) -> None:
-#         self.logger.debug(msg)
-#         logger.debug(msg)
-
-#     def warning(self, msg: str) -> None:
-#         self.logger.warning(msg)
-#         logger.warning(msg)
-
-#     def info(self, msg: str) -> None:
-#         self.logger.info(msg)
-#         logger.info(msg)
+logger = _Logger(logger)

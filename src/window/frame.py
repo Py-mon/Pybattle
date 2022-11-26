@@ -1,9 +1,10 @@
+from typing import Optional
+
+from src.log import logger
 from src.types_ import CoordReference, SizeReference
 from src.window.coord import Coord, CoordList
 from src.window.matrix import Matrix
 from src.window.size import Size
-
-from .screen import Cursor
 
 
 class Frame:
@@ -11,9 +12,22 @@ class Frame:
 
     def __init__(
         self,
-        size: SizeReference
+        contents: Optional[str] = None,
+        size: SizeReference = ...
     ) -> None:
-        self.size = Size.convert_reference(size)
+        self.contents = contents
+
+        if self.contents is not None:
+            if size is not ...:
+                logger.info(f'Unused Frame size.')
+            self.contents = Matrix(contents)
+            self.size = self.contents.size + 1
+            self.size.height += 1  # Cuts off the button without
+        elif size is not ...:
+            self.size = Size.convert_reference(size)
+        else:
+            raise ValueError(
+                'Cannot have no contents and no size. Must have one.')
 
         self._update_frame()
 
@@ -44,13 +58,15 @@ class Frame:
         return self.height - 1
 
     def _update_frame(self) -> None:
-        try:
-            frame = f'╭{"─" * (self.width - 2)}╮\n'
-            for _ in range(self.height - 2):
+        frame = f'╭{"─" * (self.width - 2)}╮\n'
+        for i in range(self.height - 2):
+            if self.contents is None:
                 frame += f'│{" " * (self.width - 2)}│\n'
-            frame += f'╰{"─" * (self.width - 2)}╯\n'
-        except Exception:
-            raise ValueError(f'Invalid Frame')
+            else:
+                x = '\n' # Doesn't allow "\" in f-strings
+                frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
+
+        frame += f'╰{"─" * (self.width - 2)}╯\n'
 
         self.matrix = Matrix(frame)
 
@@ -97,6 +113,8 @@ class Frame:
         frame: "Frame",  # Only Frames can be added not subclasses (not Self)
         pos: CoordReference = Coord(0, 0),
     ) -> None:
+        # TODO: Not give error when out of bounds
+
         pos = Coord.convert_reference(pos)
 
         out_of_boundaries_step_x = (
@@ -130,12 +148,12 @@ class Frame:
             self.matrix[*top_right.reverse] = '┤'
 
         if self.bottom_edge_positions in bottom_left:
-            self.matrix[*bottom_left.reverse] = '┬'
+            self.matrix[*bottom_left.reverse] = '┴'
         elif self.left_edge_positions in bottom_left:
             self.matrix[*bottom_left.reverse] = '├'
 
         if self.bottom_edge_positions in bottom_right:
-            self.matrix[*bottom_right.reverse] = '┬'
+            self.matrix[*bottom_right.reverse] = '┴'
         if self.right_edge_positions in bottom_right:
             self.matrix[*bottom_right.reverse] = '┤'
 
