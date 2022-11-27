@@ -1,3 +1,5 @@
+"""A quality or characteristic belonging to a creature."""
+
 from random import choices
 from typing import Callable
 
@@ -46,27 +48,27 @@ class Trait:
         return self.name
 
 
-Trait('brave', Trait.creases(['attack'], ['speed']))
-Trait('fierce', Trait.creases(['attack'], ['magic']))
-Trait('aggressive', Trait.creases(['attack'], ['defense']))
-Trait('swift', Trait.creases(['attack'], ['energy']))
+Trait('brave',       Trait.creases(['attack'], ['speed']))
+Trait('fierce',      Trait.creases(['attack'], ['magic']))
+Trait('aggressive',  Trait.creases(['attack'], ['defense']))
+Trait('swift',       Trait.creases(['attack'], ['energy']))
 
-Trait('careful', Trait.creases(['defense'], ['speed']))
-Trait('shy', Trait.creases(['defense'], ['magic']))
-Trait('tired', Trait.creases(['defense'], ['energy']))
-Trait('tough', Trait.creases(['defense'], ['attack']))
+Trait('careful',     Trait.creases(['defense'], ['speed']))
+Trait('shy',         Trait.creases(['defense'], ['magic']))
+Trait('tired',       Trait.creases(['defense'], ['energy']))
+Trait('tough',       Trait.creases(['defense'], ['attack']))
 
-Trait('cheerful', Trait.creases(['energy'], ['defense']))
-Trait('courageous', Trait.creases(['energy'], ['magic']))
-Trait('eager', Trait.creases(['energy'], ['speed']))
-Trait('excited', Trait.creases(['energy'], ['attack']))
+Trait('cheerful',    Trait.creases(['energy'], ['defense']))
+Trait('courageous',  Trait.creases(['energy'], ['magic']))
+Trait('eager',       Trait.creases(['energy'], ['speed']))
+Trait('excited',     Trait.creases(['energy'], ['attack']))
 
-Trait('hungry', Trait.creases(['speed'], ['energy']))
-Trait('curious', Trait.creases(['speed'], ['defense']))
-Trait('energetic', Trait.creases(['speed'], ['attack']))
+Trait('hungry',      Trait.creases(['speed'], ['energy']))
+Trait('curious',     Trait.creases(['speed'], ['defense']))
+Trait('energetic',   Trait.creases(['speed'], ['attack']))
 Trait('adventurous', Trait.creases(['speed'], ['defense']))
 
-Trait('enchanting', Trait.creases(['magic'], ['defense']))
-Trait('hypnotic', Trait.creases(['magic'], ['energy']))
-Trait('angelic', Trait.creases(['magic'], ['attack']))
-Trait('modest', Trait.creases(['magic'], ['speed']))
+Trait('enchanting',  Trait.creases(['magic'], ['defense']))
+Trait('hypnotic',    Trait.creases(['magic'], ['energy']))
+Trait('angelic',     Trait.creases(['magic'], ['attack']))
+Trait('modest',      Trait.creases(['magic'], ['speed']))

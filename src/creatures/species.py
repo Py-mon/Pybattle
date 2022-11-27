@@ -6,7 +6,7 @@ class Sciture(Pymon):
     """A swift squirrel. Comes from the Latin word sciurus.
 
     Sci-ture"""
-    # 600
+    # Total: 600
     bases = {
         'attack':  80,
         'energy':  120,
@@ -22,7 +22,7 @@ class Cobolor(Humanoid):
 
     Co-bol-or
     """
-    # 600
+    # Total: 600
     bases = {
         'attack':  120,
         'energy':  80,

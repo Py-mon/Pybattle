@@ -1,3 +1,5 @@
+"""Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
+
 from numpy import row_stack, array
 from .size import Size
 

@@ -1,3 +1,5 @@
+"""All the Types."""
+
 from typing import TYPE_CHECKING, TypeAlias, Union
 
 if TYPE_CHECKING:

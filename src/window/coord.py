@@ -1,3 +1,5 @@
+"""2D coordinates (x, y) (col, row)."""
+
 from typing import Self, Sequence
 
 from src.types_ import CoordReference

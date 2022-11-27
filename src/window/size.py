@@ -1,3 +1,5 @@
+"""2D (Width, Height)"""
+
 from typing import Self
 
 from src.types_ import SizeReference

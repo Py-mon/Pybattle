@@ -1,3 +1,5 @@
+"""A human or human like creature that is the same as a Pymon but with armor and weapons. Cannot be bred."""
+
 from typing import Any
 
 from src.creatures.pymon import Pymon

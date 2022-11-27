@@ -34,8 +34,8 @@ class Stat:
         self.level_point = level_point
         self.special_point = special_point
         self.skill_point = skill_point
-        self.bonus = 0.0
-        self.battle_bonus = 0.0
+        self.bonus = 0.0  # Used for traits, and other bonuses before battle.
+        self.battle_bonus = 0.0  # Use in battle.
 
     def __repr__(self) -> str:
         return str(self.value) + ';' + str(self.battle_bonus)
@@ -47,6 +47,8 @@ class Stat:
 
 
 class Stats:
+    """A dict of Stats for attack, magic, defense, health, energy, and speed."""
+    
     STATS = ['attack', 'magic', 'defense', 'health', 'energy', 'speed']
 
     def __init__(

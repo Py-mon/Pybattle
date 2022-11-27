@@ -1,3 +1,5 @@
+"""A negative status effect on a creature."""
+
 from typing import Callable
 
 from src.types_ import Attacker, Creature, Defender, ElementReference
