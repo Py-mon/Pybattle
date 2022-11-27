@@ -1,10 +1,11 @@
 from inspect import stack
-from logging import DEBUG, FileHandler, Formatter, getLogger, Logger
+from logging import DEBUG, FileHandler, Formatter, getLogger
 from pathlib import Path
-from typing import Optional
 
 
 class Traceback:
+    """Show information like the file, line, or line number of a log."""
+
     def __init__(self):
         """
         ```
@@ -35,40 +36,36 @@ In file {self.filename} on line {self.line_num}
 {self.line}\n'''
 
 
-logger = getLogger('log')
+class Logger:
+    logger = getLogger('log')
 
-logger.setLevel(DEBUG)
+    logger.setLevel(DEBUG)
 
-__handler = FileHandler(Path('log.log'), mode='w')
-__formatter = Formatter(
-    "%(levelname)s: %(message)s")  # LEVEL: message
+    __handler = FileHandler(Path('log.log'), mode='w')
+    __formatter = Formatter(
+        "%(levelname)s: %(message)s")  # LEVEL: message
 
-__handler.setFormatter(__formatter)
+    __handler.setFormatter(__formatter)
 
-logger.addHandler(__handler)
+    logger.addHandler(__handler)
 
-
-class _Logger:
-    def __init__(self, logger: Logger) -> None:
-        self.logger = logger
-
-    def debug(self, msg: str, traceback: bool = False) -> None:
+    @classmethod
+    def debug(cls, msg: str, traceback: bool = False) -> None:
         if traceback:
-            self.logger.debug(Traceback().trace + msg)
+            cls.logger.debug(Traceback().trace + msg)
         else:
-            self.logger.debug(msg)
+            cls.logger.debug(msg)
 
-    def warning(self, msg: str, traceback: bool = True) -> None:
+    @classmethod
+    def warning(cls, msg: str, traceback: bool = True) -> None:
         if traceback:
-            self.logger.warning(Traceback().trace + msg)
+            cls.logger.warning(Traceback().trace + msg)
         else:
-            self.logger.warning(msg)
+            cls.logger.warning(msg)
 
-    def info(self, msg: str, traceback: bool = True) -> None:
+    @classmethod
+    def info(cls, msg: str, traceback: bool = False) -> None:
         if traceback:
-            self.logger.info(Traceback().trace + msg)
+            cls.logger.info(Traceback().trace + msg)
         else:
-            self.logger.info(msg)
-
-
-logger = _Logger(logger)
+            cls.logger.info(msg)

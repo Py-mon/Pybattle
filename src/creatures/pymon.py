@@ -1,3 +1,5 @@
+"""A wild animal. (AKA: A Pokémon)"""
+
 from copy import deepcopy
 from fractions import Fraction
 from math import floor
@@ -8,9 +10,9 @@ from typing import Any, Self, TypeVar
 from src.creatures.attributes.element import Element
 from src.creatures.attributes.stats import Stats
 from src.creatures.attributes.trait import Trait
-from src.log import logger
+from src.log import Logger
 from src.types_ import (Ability, Creature, ElementReference, Humanoid, Item,
-                           Move, StatusAilment)
+                        Move, StatusAilment)
 from src.window.screen import Color
 
 
@@ -38,7 +40,7 @@ PymonSpecies = TypeVar('PymonSpecies', bound="Pymon")
 
 
 class Pymon:
-    """A wild animal."""
+    """A wild animal. (AKA: A Pokémon)"""
     TRAIT_AMOUNT = 2
 
     STARTING_LEVEL = 1
@@ -92,7 +94,7 @@ class Pymon:
             """
         self.__init_subclass__()
 
-        logger.info(
+        Logger.info(
             f'---------------------- {self.name} Created ----------------------')
 
         self.id_ = ID()
@@ -109,7 +111,7 @@ class Pymon:
         self.traits = Trait.generate(
             dct.get('trait_amount', self.TRAIT_AMOUNT))
         if self.traits is None:
-            logger.warning(
+            Logger.warning(
                 f'Not enough traits established for {self.name}. {self.name} will have traits.')
         else:
             for trait in self.traits:
@@ -149,7 +151,7 @@ class Pymon:
 
     def debug(self) -> None:
         """Debug all the stats."""
-        logger.debug(str(self.__dict__))
+        Logger.debug(str(self.__dict__))
 
     def element_mult(self, defending_elements: list[ElementReference]) -> float | int:
         """Get a element multiplier by attacking `defending_elements`."""

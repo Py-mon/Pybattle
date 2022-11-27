@@ -1,8 +1,10 @@
+"""Determines the strengths and weaknesses of different `Creatures`."""
+
 from __future__ import annotations
 
 from typing import Sequence
 
-from src.log import logger
+from src.log import Logger
 from src.types_ import ElementReference
 
 
@@ -20,7 +22,7 @@ class Element:
                 if element in Element.elements:
                     elements.append(Element.elements[element])
                 else:
-                    logger.warning(
+                    Logger.warning(
                         f'{element} is not an active element. It is not been added.')
             else:
                 elements.append(element)
