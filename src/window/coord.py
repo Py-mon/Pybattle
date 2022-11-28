@@ -21,6 +21,8 @@ class Coord:
     @staticmethod
     # Says Any with Self (due to staticmethod)
     def convert_reference(reference: CoordReference) -> "Coord":
+        if isinstance(reference, int):
+            return Coord(reference, reference)
         if isinstance(reference, tuple):
             return Coord(*reference)
         return reference
@@ -71,7 +73,7 @@ class Coord:
         return False
 
     def __repr__(self) -> str:
-        return f'(x: {self.x}, y: {self.y})'
+        return f'Coord(x={self.x}, y={self.y})'
 
 
 class CoordList:
