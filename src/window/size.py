@@ -31,11 +31,11 @@ class Size:
 
     def add(self, other: SizeReference) -> Self:
         other = Size.convert_reference(other)
-        return Size(self.x + other.x, self.y + other.y)
+        return Size(self.width + other.width, self.height + other.height)
 
     def subtract(self, other: SizeReference) -> Self:
         other = Size.convert_reference(other)
-        return Size(self.x - other.x, self.y - other.y)
+        return Size(self.width - other.width, self.height - other.height)
 
     def __add__(self, other: SizeReference) -> Self:
         return self.add(other)
@@ -54,14 +54,14 @@ class Size:
 
     def __eq__(self, other: SizeReference) -> bool:
         other = Size.convert_reference(other)
-        if self.x == other.x and self.y == other.y:
+        if self.width == other.width and self.height == other.height:
             return True
         return False
     
     def __contains__(self, sequence: Sequence[SizeReference]) -> bool:
-        for coord in sequence:
-            coord = Size.convert_reference(coord)
-            if self.x == coord.x and self.y == coord.y:
+        for size in sequence:
+            size = Size.convert_reference(size)
+            if self.width == size.width and self.height == size.height:
                 return True
         return False
 
