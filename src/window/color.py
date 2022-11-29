@@ -22,5 +22,3 @@ class Color:
     BLUE = Fore.BLUE                       # 0x2472C8
     MAGENTA = Fore.MAGENTA                 # 0xBC3FBC
     BRIGHT_MAGENTA = Fore.LIGHTMAGENTA_EX  # 0xD670D6
-
-# class

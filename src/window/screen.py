@@ -1,8 +1,8 @@
 from typing import Optional
 
-from src.window.color import Color
 from src.types_ import CoordReference
 from src.window.coord import Coord
+from src.window.color import Color
 
 
 class AnsiEscapeCode:
@@ -18,6 +18,7 @@ class AnsiEscapeCode:
     def execute(self) -> None:
         """Execute the ANSI escape code."""
         print(self.code, end='')
+
 
 class Cursor:
     """https://en.wikipedia.org/wiki/ANSI_escape_code"""
@@ -61,8 +62,7 @@ class Screen:
         color: Optional[Color] = None,
         move_cursor: bool = True
     ) -> None:
-        if isinstance(pos, tuple):
-            pos = Coord(*pos)
+        pos = Coord.convert_reference(pos)
 
         txt = str(txt)
 
@@ -73,7 +73,7 @@ class Screen:
             print(color, end='')
             
         for line in txt.splitlines():
-            Cursor.left(Cursor.pos.x).execute()
+            Cursor.left(Cursor.pos.x).execute()  # May need to change to pos.x instead of Cursor.pos.x
             print(line)
 
         Cursor.pos.x += txt.count('\n')
@@ -81,3 +81,8 @@ class Screen:
 
         if not move_cursor:
             Cursor.up(txt.count('\n') + 1).execute()
+            
+    @staticmethod
+    def clear():
+        """Clear the screen."""
+        AnsiEscapeCode('J', 3).execute()
