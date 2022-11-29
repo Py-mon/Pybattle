@@ -1,9 +1,8 @@
 """2D (Width, Height)"""
 
-from typing import Self
+from typing import Self, Sequence
 
 from src.types_ import SizeReference
-from typing import Sequence
 
 
 class Size:
