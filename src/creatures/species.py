@@ -1,5 +1,5 @@
-from .humanoid import Humanoid
-from .pymon import Pymon
+from src.creatures.humanoid import Humanoid
+from src.creatures.pymon import Pymon
 
 
 class Sciture(Pymon):

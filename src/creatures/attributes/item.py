@@ -2,7 +2,7 @@
 
 from src.types_ import Creature
 
-from .ability import Ability
+from src.creatures.attributes.ability import Ability
 
 
 class Item(Ability):
