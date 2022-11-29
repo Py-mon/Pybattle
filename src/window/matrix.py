@@ -1,48 +1,67 @@
 """Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
+import re
 
-from re import compile, sub
-
-from numpy import array, row_stack
-
+from numpy import row_stack, array
 from src.window.size import Size
-
+from re import search
 
 class Matrix:
     """Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
+    def remove_and_save_escape_chars(self):
+        reg = re.compile(r'\033\[((?:\d|;)*)([a-zA-Z])')
+        res = []
+        new_str = re.sub(reg, '', self._str) # Deletes found matches
+        self._str = new_str
+
+        # re.sub - to remove the matches
+        # for match in reg.finditer(self._str): # Iterates through found matches
+        #     escape_code = match.group() # Matched sequence
+        #     match_pos = match.start() # staring position of the match in a string
+            # position_y = len(self._str) // match.start()
+            # position_x = len(self._str) % match.start()
+            # print(position_x, position_y)
+            # el = (, )
+            # print(el)
+            # res.append(escape_code)
+        # return res
+
+    def filter_string(self):
+        """ Get rid of unnecessary new lines"""
+        rows = list(self._str.split('\n'))
+        new_string = ''
+        for row in rows:
+            if row == '':
+                continue
+
+            new_string += row + '\n'
+
+        self._str = new_string
 
     @staticmethod
     def convert_array(array_) -> str:
         return "".join([char for row in array_ for char in row])
 
+    def print_char_array(self):
+        """ Prints characters array. Convenient for debugging. """
+        rows = list(self._str.split('\n'))
+        for row in rows:
+            if row == '':
+                continue
+            print('[ ', end='')
+            for col in row:
+                print(col, end=', ')
+            print(' ]', end='\n')
+
     def __init__(self, str_: str) -> None:
         self._str = str_
-        
-        reg = compile(r'\xb1\[((?:\d|;)*)([a-zA-Z])')
-        self._str = sub(reg, '', self._str) # Deletes found matches
-        
-        print(self._str)
-        
-        # TODO: Fix (colors is always {})
-        colors: dict[str, tuple[int, int]] = {}
-        for match in reg.finditer(self._str): # Iterates through found matches
-            escape_code = match.group() # Matched sequence
-            y = len(self._str) // match.start()
-            x = len(self._str) % match.start()
-            colors[escape_code] = (x, y)
-        
-        rows = self._str.split('\n')
-        self._str = ''
-        for row in rows:
-            if row != '':
-                self._str += row + '\n'
-        
+        self.remove_and_save_escape_chars()
+        self.filter_string()
+        # self.print_char_array()
         self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
-
-        for color, location in colors.items():
-            self._matrix[location] = color + self._matrix[location]
-        
         print(self._matrix)
 
+    #
+    #
     def __len__(self) -> int:
         return len(self._matrix)
 
