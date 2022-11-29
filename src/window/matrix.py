@@ -1,11 +1,9 @@
 """Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
+import re
 
-from re import compile, sub
-
-from numpy import array, row_stack
-
+from numpy import row_stack, array, insert
 from src.window.size import Size
-
+from re import search
 
 class Matrix:
     """Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
@@ -16,32 +14,71 @@ class Matrix:
 
     def __init__(self, str_: str) -> None:
         self._str = str_
-        
-        reg = compile(r'\xb1\[((?:\d|;)*)([a-zA-Z])')
-        self._str = sub(reg, '', self._str) # Deletes found matches
-        
-        print(self._str)
-        
-        # TODO: Fix (colors is always {})
-        colors: dict[str, tuple[int, int]] = {}
-        for match in reg.finditer(self._str): # Iterates through found matches
-            escape_code = match.group() # Matched sequence
-            y = len(self._str) // match.start()
-            x = len(self._str) % match.start()
-            colors[escape_code] = (x, y)
-        
-        rows = self._str.split('\n')
-        self._str = ''
-        for row in rows:
-            if row != '':
-                self._str += row + '\n'
-        
-        self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
+        self._codes = []
+        self._matrix = None
+        self.init_matrix()
 
-        for color, location in colors.items():
-            self._matrix[location] = color + self._matrix[location]
-        
-        print(self._matrix)
+    def init_matrix(self):
+        self.filter_string()
+        self.remove_and_save_escape_chars()
+        self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
+        # Apply escape characters after numpy array was initialized to avoid size error.
+        self.apply_escape_chars()
+
+    def remove_and_save_escape_chars(self) -> None:
+        reg = re.compile(r'\033\[((?:\d|;)*)([a-zA-Z])')
+        self._codes = []
+
+        for match in reg.finditer(self._str):
+            # Save start position and escape seq
+            self._codes.append([match.start(), match.group()])
+
+        # Algorithm to correct the escape codes position
+        for i in range(1, len(self._codes)):
+            for j in range(0, i):
+                self._codes[i][0] -= len(self._codes[j][1])
+
+        # Deletes found matches
+        new_str = re.sub(reg, '', self._str)
+        self._str = new_str
+
+    def apply_escape_chars(self):
+        """ Applying saved escape characters to numpy matrix """
+
+        # Offset is needed to keep track of the size of the escape sequence and increase position respectively
+        offset = 0
+        for (pos, escape_code) in self._codes:
+            # Convert escape code to insertable format (Meaning you can only insert separated symbols)
+            escape_code = list(escape_code)
+            pos += offset
+            for char in escape_code:
+                self._matrix = insert(self._matrix, pos, char)
+                # Increasing the pos to insert sequentially
+                pos += 1
+                offset += 1
+
+    def filter_string(self) -> None:
+        """ Get rid of unnecessary new lines"""
+        rows = list(self._str.split('\n'))
+        new_string = ''
+        for row in rows:
+            if row == '':
+                continue
+
+            new_string += row + '\n'
+
+        self._str = new_string
+
+    def print_char_array(self):
+        """ Prints characters array. Convenient for debugging. """
+        rows = list(self._str.split('\n'))
+        for row in rows:
+            if row == '':
+                continue
+            print('[ ', end='')
+            for col in row:
+                print(col, end=', ')
+            print(' ]', end='\n')
 
     def __len__(self) -> int:
         return len(self._matrix)
