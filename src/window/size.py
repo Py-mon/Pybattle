@@ -10,8 +10,8 @@ class Size:
 
     def __init__(
         self,
-        width: int,
-        height: int
+        height: int,
+        width: int
     ) -> None:
         self.width = width
         self.height = height

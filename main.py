@@ -1,36 +1,44 @@
-from os import system
-from time import sleep
-import re
+# map = Window('''\
+#                    ||||
+#                    ||||
+#                      ─┬─┬─┬─┬─
 
-from src.window.frame import Frame, Window
+
+# ╭│╮   ╶─╮
+# │││    ░│
+# ╰│╯   ╶─╯           ╭─────┬─╮
+#                     │░░░░░│▓│
+#                     ╰─────┴─╯
+# ''', name='BEDROOM')
+
+# map.add_frame(Frame(size=(2, 9)), (4, 0))
+
+from os import system
+
 from src.window.color import Color
 from src.window.matrix import Matrix
+from src.window.screen import Screen
 
-system('clear') # Change to "clear" if you are not on windows
+Screen.clear()  # doesn't work
 
-main = Window((40, 60))
-main.add_frame(Frame((6, 20)), (3, 3))
-main.add_frame(Frame((2, 2)))
+
+system('cls')
+
 
 test_str = Matrix(f'''
 ╭───────────╮
 │╭─╮        │
-││{Color.RED}d{Color.DEFAULT}│        │
+││{Color.RED}a{Color.DEFAULT}│        │
 │╰─╯        │
 │   ╭─╮     │
-│   │{Color.BLUE}b{Color.DEFAULT}│     │
+│   │b│     │
 │   ╰─╯     │
-│   {Color.GREEN}f{Color.DEFAULT}       │
+│           │
 │           │
 │        ╭─╮│
-│        │{Color.MAGENTA}c{Color.DEFAULT}││
+│        │c││
 │        ╰─╯│
 ╰───────────╯
 ''')
 
 print(test_str)
-
-# print(test_str)
-# test_str = f'{Color.RED} Hello world, {Color.BLUE} This is {Color.DEFAULT}'
-# print(test_str)
-# print(remove_and_save_escape_chars(test_str))
