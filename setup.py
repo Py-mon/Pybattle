@@ -10,7 +10,8 @@ setup(
     python_requires='>=3.11',
     install_requires=[
                 'colorama',
-                'numpy'
+                'numpy',
+                'keyboard'
     ]
     # scripts=[''] # Will need to add this for game running script
 )

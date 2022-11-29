@@ -15,18 +15,20 @@ main.add_frame(Frame((2, 2)))
 test_str = Matrix(f'''
 ╭───────────╮
 │╭─╮        │
-││{Color.RED}a{Color.DEFAULT}│        │
+││{Color.RED}d{Color.DEFAULT}│        │
 │╰─╯        │
 │   ╭─╮     │
-│   │b│     │
+│   │{Color.BLUE}b{Color.DEFAULT}│     │
 │   ╰─╯     │
-│           │
+│   {Color.GREEN}f{Color.DEFAULT}       │
 │           │
 │        ╭─╮│
-│        │c││
+│        │{Color.MAGENTA}c{Color.DEFAULT}││
 │        ╰─╯│
 ╰───────────╯
 ''')
+
+print(test_str)
 
 # print(test_str)
 # test_str = f'{Color.RED} Hello world, {Color.BLUE} This is {Color.DEFAULT}'

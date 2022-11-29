@@ -13,8 +13,7 @@ class Map:
         self,
         map_: str,
         exits: Optional[list[tuple[int, int]]] = None,
-        keys: Optional[dict[str, Optional[Callable[[], None]]]] = {
-            '!': None, '?': None},
+        keys: Optional[dict[str, Optional[Callable[[], None]]]] = {'!': None, '?': None},
     ) -> None:
         self.base_matrix = Matrix(map_)
         self.matrix = Matrix(map_)
