@@ -2,7 +2,7 @@
 
 from re import compile, sub
 
-from numpy import array, row_stack
+from numpy import array, row_stack, insert
 
 from src.window.size import Size
 
@@ -14,51 +14,73 @@ class Matrix:
     def convert_array(array_) -> str:
         return "".join([char for row in array_ for char in row])
 
+    def remove_and_save_ansi_codes(self) -> None:
+        """Save ANSI escape characters with starting positions. Then delete them from the matrix."""
+        reg = compile(r'\033\[((?:\d|;)*)([a-zA-Z])')
+        self._codes = []
+        
+        # Save ANSI escape characters with starting positions
+        for match in reg.finditer(self._str):
+            self._codes.append([match.start(), match.group()])
+
+        # Algorithm to correct the escape codes position
+        for i in range(1, len(self._codes)):
+            for j in range(0, i):
+                self._codes[i][0] -= len(self._codes[j][1])
+
+        # Delete found matches
+        self._str = sub(reg, '', self._str)
+        
+    def apply_ansi_codes(self):
+        """Apply saved ANSI escape characters to the matrix."""
+        # TODO: Add the escape code all at one time instead of each char being added separately
+        
+        # Offset is needed to keep track of the size of the escape sequence and increase position respectively
+        offset = 0
+        for (pos, escape_code) in self._codes:
+            # Convert escape code to insertable format (Meaning you can only insert separated symbols)
+            escape_code = list(escape_code)
+            pos += offset
+            for char in escape_code:
+                self.insert(pos, char)
+                # Increasing the pos to insert sequentially
+                pos += 1
+                offset += 1
+    
+    def insert(self, pos, cell: str) -> None:
+        self._matrix = insert(self._matrix, pos, cell)
+
     def __init__(self, str_: str) -> None:
         self._str = str_
         
-        reg = compile(r'\xb1\[((?:\d|;)*)([a-zA-Z])')
-        self._str = sub(reg, '', self._str) # Deletes found matches
+        # Makes a newline at the start and not the end (without = error)
+        if self._str[0] == '\n':
+            self._str = self._str[1:]
+        if self._str[-1] != '\n':
+            self._str = self._str + '\n'
         
-        print(self._str)
-        
-        # TODO: Fix (colors is always {})
-        colors: dict[str, tuple[int, int]] = {}
-        for match in reg.finditer(self._str): # Iterates through found matches
-            escape_code = match.group() # Matched sequence
-            y = len(self._str) // match.start()
-            x = len(self._str) % match.start()
-            colors[escape_code] = (x, y)
-        
-        rows = self._str.split('\n')
-        self._str = ''
-        for row in rows:
-            if row != '':
-                self._str += row + '\n'
-        
+        self.remove_and_save_ansi_codes()
         self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
 
-        for color, location in colors.items():
-            self._matrix[location] = color + self._matrix[location]
-        
-        print(self._matrix)
-
-    def __len__(self) -> int:
-        return len(self._matrix)
-
     def __getitem__(self, slice_):
+        """(No ANSI escape characters)"""
         return self._matrix[slice_]
 
-    def __setitem__(self, slice_, value: str):
-        self._matrix[slice_] = value
+    def __setitem__(self, slice_, cell: str):
+        self._matrix[slice_] = cell
 
     def __iter__(self):
+        """Iterates through all the cells. (No ANSI escape characters)"""
         for row in self._matrix:
-            yield row
+            for cell in row:
+                yield cell
 
     def __str__(self) -> str:
-        """The str formed from the matrix."""
-        return Matrix.convert_array(self._matrix)
+        """The str with ANSI escape characters formed from the matrix."""
+        self.apply_ansi_codes()
+        res = Matrix.convert_array(self._matrix)
+        self.remove_and_save_ansi_codes()
+        return res
 
     @property
     def size(self) -> Size:
