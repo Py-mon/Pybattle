@@ -4,8 +4,9 @@ from src.window.matrix import Matrix
 
 
 def str_with_text(str_: str, *codes) -> str:
-    # TODO: Make codes[0] not a int instead a coord
-    # TODO: Don't make codes collide
+    # TODO: Make codes[0] not a int instead a coord 
+    # TODO: Don't make codes collide. Adding the escape code all at one time instead of each char being added separately might fix this
+    
     
     matrix = Matrix(str_)
     
