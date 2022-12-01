@@ -49,16 +49,21 @@ class Matrix:
     
     def insert(self, pos, cell: str) -> None:
         self._matrix = insert(self._matrix, pos, cell)
+  
+    def filter_string(self) -> None:
+        """Get rid of unnecessary new lines."""
+        rows = self._str.split('\n')
+        self._str = ''
+        for row in rows:
+            if row == '':
+                continue
+
+            self._str += row + '\n'
 
     def __init__(self, str_: str) -> None:
         self._str = str_
         
-        # Makes a newline at the start and not the end (without = error)
-        if self._str[0] == '\n':
-            self._str = self._str[1:]
-        if self._str[-1] != '\n':
-            self._str = self._str + '\n'
-        
+        self.filter_string()
         self.remove_and_save_ansi_codes()
         self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
 
