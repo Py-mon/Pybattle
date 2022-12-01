@@ -4,6 +4,9 @@ from src.window.matrix import Matrix
 
 
 def str_with_text(str_: str, *codes) -> str:
+    # TODO: Make codes[0] not a int instead a coord
+    # TODO: Don't make codes collide
+    
     matrix = Matrix(str_)
     
     for i in range(1, len(codes)):
