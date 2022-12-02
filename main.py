@@ -1,29 +1,10 @@
-# map = Window('''\
-#                    ||||
-#                    ||||
-#                      ─┬─┬─┬─┬─
-
-
-# ╭│╮   ╶─╮
-# │││    ░│
-# ╰│╯   ╶─╯           ╭─────┬─╮
-#                     │░░░░░│▓│
-#                     ╰─────┴─╯
-# ''', name='BEDROOM')
-
-# map.add_frame(Frame(size=(2, 9)), (4, 0))
-
-from os import system
-
-from src.window.color import Color
-from src.window.matrix import Matrix
-from src.window.screen import Screen
 from src.window.code import str_with_text
+from src.window.color import Color
+from src.window.screen import Screen
+from src.window.code import Code
 
-Screen.clear()  # doesn't work
+Screen.clear()
 
-
-system('cls')
 
 test_str = str_with_text('''\
 ╭───────────╮
@@ -39,26 +20,21 @@ test_str = str_with_text('''\
 │        │c││
 │        ╰─╯│
 ╰───────────╯
-''', [2, Color.RED])
+''', Code((2, 2), Color.RED), Code((4, 2), Color.DEFAULT))
 
 print(test_str)
 
-test_str = Matrix(test_str)
+# map = Window('''\
+#                    ||||
+#                    ||||
+#                      ─┬─┬─┬─┬─
 
-# test_str = Matrix(f'''\
-# ╭───────────╮
-# │╭─╮        │
-# ││{Color.RED}a{Color.DEFAULT}│        │
-# │╰─╯        │
-# │   ╭─╮     │
-# │   │b│     │
-# │   ╰─╯     │
-# │           │
-# │           │
-# │        ╭─╮│
-# │        │c││
-# │        ╰─╯│
-# ╰───────────╯
-# ''')
 
-print(test_str)
+# ╭│╮   ╶─╮
+# │││    ░│
+# ╰│╯   ╶─╯           ╭─────┬─╮
+#                     │░░░░░│▓│
+#                     ╰─────┴─╯
+# ''', name='BEDROOM')
+
+# map.add_frame(Frame(size=(2, 9)), (4, 0))

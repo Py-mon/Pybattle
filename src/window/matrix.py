@@ -2,9 +2,10 @@
 
 from re import compile, sub
 
-from numpy import array, row_stack, insert
+from numpy import array, row_stack, insert, ravel_multi_index
 
 from src.window.size import Size
+from src.window.coord import Coord
 
 
 class Matrix:
@@ -31,24 +32,19 @@ class Matrix:
         # Delete found matches
         self._str = sub(reg, '', self._str)
         
-    def apply_ansi_codes(self):
-        """Apply saved ANSI escape characters to the matrix."""
-        # TODO: Add the escape code all at one time instead of each char being added separately
-        
-        # Offset is needed to keep track of the size of the escape sequence and increase position respectively
-        offset = 0
-        for (pos, escape_code) in self._codes:
-            # Convert escape code to insertable format (Meaning you can only insert separated symbols)
-            escape_code = list(escape_code)
-            pos += offset
-            for char in escape_code:
-                self.insert(pos, char)
-                # Increasing the pos to insert sequentially
-                pos += 1
-                offset += 1
+    def apply_ansi_codes(self, codes: list[str]):
+        """Apply ANSI escape characters to the matrix."""      
+        for i, (pos, code) in enumerate(codes):
+            pos = Coord.convert_reference(pos)
+            pos.x += i
+            self.insert(pos, code)
     
     def insert(self, pos, cell: str) -> None:
-        self._matrix = insert(self._matrix, pos, cell)
+        """Insert a cell into the matrix at the given position."""
+        pos = Coord.convert_reference(pos)
+        # Because this creates it 1D we have to use the original shape of the matrix
+        index = ravel_multi_index(([pos.y], [pos.x]), self._shape)
+        self._matrix = insert(self._matrix, index, cell)
   
     def filter_string(self) -> None:
         """Get rid of unnecessary new lines."""
@@ -65,7 +61,8 @@ class Matrix:
         
         self.filter_string()
         self.remove_and_save_ansi_codes()
-        self._matrix = row_stack([array(list(row)) for row in self._str.splitlines(True)])
+        self._matrix = row_stack([array(list(row), object) for row in self._str.splitlines(True)])
+        self._shape = self._matrix.shape
 
     def __getitem__(self, slice_):
         """(No ANSI escape characters)"""
@@ -82,7 +79,7 @@ class Matrix:
 
     def __str__(self) -> str:
         """The str with ANSI escape characters formed from the matrix."""
-        self.apply_ansi_codes()
+        self.apply_ansi_codes(self._codes)
         res = Matrix.convert_array(self._matrix)
         self.remove_and_save_ansi_codes()
         return res
