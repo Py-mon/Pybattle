@@ -17,6 +17,7 @@ class Selection:
 
 
 class SelectionMenu:
+    # TODO: Finish with new color matrix
     def __init__(self, selections: dict[str, CoordReference], default_color: Color = Color.GRAY) -> None:
         for coord in selections:
             selections[coord] = Coord.convert_reference(selections[coord])
