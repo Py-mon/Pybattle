@@ -6,7 +6,7 @@ from src.types_ import SizeReference
 
 
 class Size:
-    """2D (Width, Height)"""
+    """2D (Height, Width)"""
 
     def __init__(
         self,
