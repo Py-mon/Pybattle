@@ -1,8 +1,8 @@
 from typing import Optional
 
-from src.types_ import CoordReference
+from src.types_ import CoordReference, Color
 from src.window.coord import Coord
-from src.window.color import Color
+from os import system, name as os_name
 
 
 class AnsiEscapeCode:
@@ -84,5 +84,5 @@ class Screen:
             
     @staticmethod
     def clear():
-        """Clear the screen."""
-        AnsiEscapeCode('J', 3).execute()
+        """Clear the screen. Works on all operating systems."""
+        system('cls' if os_name == 'nt' else 'clear')
