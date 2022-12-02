@@ -32,6 +32,3 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 ```$ pip install . ```
 
 ```$ python main.py```
-
-# Socials
-Trello: https://trello.com/b/zEno2FGf/pybattle
