@@ -1,1 +1,0 @@
-"""Everything to do with creatures."""
