@@ -18,10 +18,14 @@ class Frame:
         self,
         contents: Optional[str] | Matrix = None,
         size: SizeReference = ...,
-        name: Optional[str] = None
+        name: Optional[str] = None,
+        name_location: Coord = Coord(2, 0)
     ) -> None:
+        # TODO: Add centered contents
+
         self.contents = contents
         self.name = name
+        self.name_location = name_location  # TODO: Make this do something
 
         if self.contents is not None:
             if size is not ...:
@@ -29,7 +33,7 @@ class Frame:
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
             self.size = self.contents.size + 1
-            self.size.height += 1  # Cuts off the button without
+            self.size.height -= 1  # Cuts off the button without
         elif size is not ...:
             self.size = Size.convert_reference(size)
         else:
@@ -65,21 +69,27 @@ class Frame:
         return self.height - 1
 
     def _update_frame(self) -> None:
-        if self.name is None:
-            frame = f'╭{"─" * (self.width - 2)}╮\n'
-        else:
-            frame = f'╭─ {self.name} {"─" * (self.width - 5 - len(self.name))}╮\n'
+        frame = f'╭{"─" * (self.width - 2)}╮\n'
+        # frame = f'╭─ {self.name} {"─" * (self.width - 5 - len(self.name))}╮\n'
         for i in range(self.height - 2):
             if self.contents is None:
                 frame += f'│{" " * (self.width - 2)}│\n'
             else:
                 x = '\n'  # Doesn't allow "\" in f-strings
+                print(i)
                 frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
 
         frame += f'╰{"─" * (self.width - 2)}╯\n'
 
         self.matrix = Matrix(frame)
-
+        
+        if self.name is not None:
+            for i, char in enumerate(' ' + self.name + ' '):
+                try:
+                    self.matrix[self.name_location.y, i + self.name_location.x] = char
+                except IndexError:
+                    raise ValueError(f'Starting at {self.name_location.coords} the name: " {self.name} " is out of bounds of {self.size.size}')
+                
     def __getitem__(self, item) -> None:
         return self.matrix[item]
 
@@ -178,14 +188,68 @@ class Frame:
                 if self.matrix[y + pos.y, x + pos.x] == ' ':
                     self.matrix[y + pos.y, x + pos.x] = frame_slice[y, x]
 
-        # Overlaps Name
-        if self.name is not None:
-            for i, char in enumerate(self.name + ' '):
-                self.matrix[0, i + 3] = char
-
         print(Matrix.convert_array(self.matrix))
 
 
 class Window(Frame):
     """The main border screen."""
-    pass
+
+    def add_frame(self, frame, pos):
+        pos = Coord.convert_reference(pos)
+
+        if pos.x + frame.width >= self.matrix.size.width:
+            raise ValueError(
+                f'pos x: {pos.x} is out of bounds of {self.matrix.size.width - frame.width}')
+
+        elif pos.y + frame.height >= self.matrix.size.height:
+            raise ValueError(
+                f'pos y: {pos.y} is out of bounds of {self.matrix.size.height - frame.width}')
+
+        top_left = pos
+        top_right = pos + frame.top_right_corner
+        bottom_left = pos + frame.bottom_left_corner
+        bottom_right = pos + frame.bottom_right_corner
+
+        # Removes the last column (which is only newlines)
+        frame_without_newlines = frame.matrix._matrix[:, :-1]
+
+        print(frame.matrix._matrix[:, :-1])
+        print(self.matrix[top_left.y: frame_without_newlines.shape[0] + pos.y,
+                          top_left.x: frame_without_newlines.shape[1] + pos.x])
+
+        self.matrix[top_left.y: frame_without_newlines.shape[0] + pos.y,
+                    top_left.x: frame_without_newlines.shape[1] + pos.x] = frame.matrix._matrix[:, :-1]
+
+        print(self.matrix)
+
+        # TODO: Fix corner going like this:
+        # ╭──────────┬───────┬
+        # │          ╰───────┤
+        # ╰──────────────────╯
+
+        if top_left in self.top_edge_positions:
+            self.matrix[top_left.reverse] = '┬'
+        elif top_left in self.left_edge_positions:
+            self.matrix[top_left.reverse] = '├'
+
+        if top_right in self.top_edge_positions:
+            self.matrix[top_right.reverse] = '┬'
+        elif top_right in self.right_edge_positions:
+            self.matrix[top_right.reverse] = '┤'
+
+        if bottom_left in self.top_edge_positions:
+            self.matrix[bottom_left.reverse] = '┴'
+        elif bottom_left in self.left_edge_positions:
+            self.matrix[bottom_left.reverse] = '├'
+
+        if bottom_right in self.top_edge_positions:
+            self.matrix[bottom_right.reverse] = '┴'
+        elif bottom_right in self.right_edge_positions:
+            self.matrix[bottom_right.reverse] = '┤'
+
+        # Overlaps Name
+        if self.name is not None:
+            for i, char in enumerate(' ' + self.name + ' '):
+                self.matrix[self.name_location.y, i + self.name_location.x] = char
+
+        print(self.matrix)
