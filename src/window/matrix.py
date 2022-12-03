@@ -2,10 +2,11 @@
 
 from re import compile, sub
 
-from numpy import array, row_stack, insert, ravel_multi_index
+from numpy import array, insert, ravel_multi_index, row_stack
 
-from src.window.size import Size
+from src.types_ import CoordReference
 from src.window.coord import Coord
+from src.window.size import Size
 
 
 class Matrix:
@@ -13,13 +14,18 @@ class Matrix:
 
     @staticmethod
     def convert_array(array_) -> str:
+        print(array_)
         return "".join([char for row in array_ for char in row])
+
+    @staticmethod
+    def array_to_matrix(array_) -> "Matrix":  # doesn't work with Self
+        return Matrix(Matrix.convert_array(array_))
 
     def remove_and_save_ansi_codes(self) -> None:
         """Save ANSI escape characters with starting positions. Then delete them from the matrix."""
         reg = compile(r'\033\[((?:\d|;)*)([a-zA-Z])')
         self._codes = []
-        
+
         # Save ANSI escape characters with starting positions
         for match in reg.finditer(self._str):
             self._codes.append([match.start(), match.group()])
@@ -31,21 +37,21 @@ class Matrix:
 
         # Delete found matches
         self._str = sub(reg, '', self._str)
-        
+
     def apply_ansi_codes(self, codes: list[str]):
-        """Apply ANSI escape characters to the matrix."""      
+        """Apply ANSI escape characters to the matrix."""
         for i, (pos, code) in enumerate(codes):
             pos = Coord.convert_reference(pos)
             pos.x += i
             self.insert(pos, code)
-    
-    def insert(self, pos, cell: str) -> None:
+
+    def insert(self, pos: CoordReference, cell: str) -> None:
         """Insert a cell into the matrix at the given position."""
         pos = Coord.convert_reference(pos)
         # Because this creates it 1D we have to use the original shape of the matrix
         index = ravel_multi_index(([pos.y], [pos.x]), self._shape)
         self._matrix = insert(self._matrix, index, cell)
-  
+
     def filter_string(self) -> None:
         """Get rid of unnecessary new lines."""
         rows = self._str.split('\n')
@@ -58,10 +64,11 @@ class Matrix:
 
     def __init__(self, str_: str) -> None:
         self._str = str_
-        
+
         self.filter_string()
         self.remove_and_save_ansi_codes()
-        self._matrix = row_stack([array(list(row), object) for row in self._str.splitlines(True)])
+        self._matrix = row_stack([array(list(row), object)
+                                 for row in self._str.splitlines(True)])
         self._shape = self._matrix.shape
 
     def __getitem__(self, slice_):
