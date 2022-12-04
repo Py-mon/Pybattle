@@ -197,6 +197,7 @@ class Window(Frame):
     def add_frame(self, frame, pos):
         pos = Coord.convert_reference(pos)
 
+        # TODO: Finish Errors
         if pos.x + frame.width >= self.matrix.size.width:
             raise ValueError(
                 f'pos x: {pos.x} is out of bounds of {self.matrix.size.width - frame.width}')
