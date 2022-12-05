@@ -1,5 +1,3 @@
-"""A technique that a creature uses in battle."""
-
 from typing import Callable
 
 from src.types_ import Attacker, Creature, Defender, ElementReference

@@ -1,5 +1,3 @@
-"""Determines the strengths and weaknesses of different `Creatures`."""
-
 from __future__ import annotations
 
 from typing import Sequence

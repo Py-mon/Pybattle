@@ -1,5 +1,3 @@
-"""A covering to protect and increase a `Humanoid's` defense in battle."""
-
 WEIGHT_TO_SPEED = 1/3  # 30lb -> 10% Speed Decrease
 
 

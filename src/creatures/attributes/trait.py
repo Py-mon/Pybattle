@@ -1,5 +1,3 @@
-"""A quality or characteristic belonging to a creature."""
-
 from random import choices
 from typing import Callable
 

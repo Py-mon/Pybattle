@@ -1,5 +1,3 @@
-"""A beneficial equip-able object for any creature. """
-
 from src.types_ import Creature
 
 from src.creatures.attributes.ability import Ability

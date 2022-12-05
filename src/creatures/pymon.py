@@ -1,5 +1,3 @@
-"""A wild animal. (AKA: A Pokémon)"""
-
 from copy import deepcopy
 from fractions import Fraction
 from math import floor
@@ -193,7 +191,7 @@ class Pymon:
         elif percent <= 1/3:
             color = low_color
 
-        end = '\u001b[0m'
+        end = Color.RESET
 
         bars = f"{color + '━' * bars + end:─<{bar_amount + len(color) + len(end)}}"
         return bars
@@ -218,7 +216,7 @@ class Pymon:
         while self.level < level:
             self.level_up()
 
-    def breed(self, with_: PymonSpecies) -> Self:
+    def breed(self, with_: PymonSpecies, level: int = ...) -> Self:
         """Create a offspring between `self` and `with_`. The species with be `self`'s species and some stats will be inherited from `with_`."""
         if type(with_) == Humanoid or type(with_) in Humanoid.__subclasses__():
             raise AttributeError('Breeding is not allowed for Humanoids.')
@@ -231,10 +229,13 @@ class Pymon:
                 else:
                     x[key] = common[key]
             return x
+        
+        if level is ...:
+            level = randint(1, 5)
 
         return self.__class__({
             'level_points': inherit(self.stats.level_points, with_.stats.level_points),
             'special_points': inherit(self.stats.special_points, with_.stats.special_points),
             'skill_points': inherit(self.stats.skill_points, with_.stats.skill_points),
-            'starting_level': randint(1, 5),
+            'starting_level': level
         })
