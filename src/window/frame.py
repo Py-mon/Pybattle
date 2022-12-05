@@ -7,6 +7,7 @@ from src.types_ import CoordReference, SizeReference
 from src.window.coord import Coord, CoordList
 from src.window.matrix import Matrix
 from src.window.size import Size
+from src.error import OutOfBoundsError
 
 
 class Frame:
@@ -21,8 +22,6 @@ class Frame:
         name: Optional[str] = None,
         name_location: Coord = Coord(2, 0)
     ) -> None:
-        # TODO: Add centered contents
-
         self.contents = contents
         self.name = name
         self.name_location = name_location  # TODO: Make this do something
@@ -37,7 +36,8 @@ class Frame:
         elif size is not ...:
             self.size = Size.convert_reference(size)
         else:
-            raise ValueError(
+            # TODO: Centered the contents here instead of error
+            raise Logger.error(
                 'Cannot have no contents and no size. Must have one.')
 
         self._update_frame()
@@ -88,7 +88,7 @@ class Frame:
                 try:
                     self.matrix[self.name_location.y, i + self.name_location.x] = char
                 except IndexError:
-                    raise ValueError(f'Starting at {self.name_location.coords} the name: " {self.name} " is out of bounds of {self.size.size}')
+                    raise Logger.error(f'Starting at {self.name_location.coords} the name: " {self.name} " is out of bounds of {self.size.size}', OutOfBoundsError)
                 
     def __getitem__(self, item) -> None:
         return self.matrix[item]
@@ -199,12 +199,12 @@ class Window(Frame):
 
         # TODO: Finish Errors
         if pos.x + frame.width >= self.matrix.size.width:
-            raise ValueError(
-                f'pos x: {pos.x} is out of bounds of {self.matrix.size.width - frame.width}')
+            raise Logger.error(
+                f'pos x: {pos.x} is out of bounds of {self.matrix.size.width - frame.width}', OutOfBoundsError)
 
         elif pos.y + frame.height >= self.matrix.size.height:
-            raise ValueError(
-                f'pos y: {pos.y} is out of bounds of {self.matrix.size.height - frame.width}')
+            raise Logger.error(
+                f'pos y: {pos.y} is out of bounds of {self.matrix.size.height - frame.width}', OutOfBoundsError)
 
         top_left = pos
         top_right = pos + frame.top_right_corner
