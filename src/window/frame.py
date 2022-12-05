@@ -1,5 +1,3 @@
-"""A border around some contents."""
-
 from typing import Optional
 
 from src.log import Logger
@@ -7,7 +5,7 @@ from src.types_ import CoordReference, SizeReference
 from src.window.coord import Coord, CoordList
 from src.window.matrix import Matrix
 from src.window.size import Size
-from src.error import OutOfBoundsError
+from src.error import OutOfBoundsError, InsufficientArgumentsError
 
 
 class Frame:
@@ -42,7 +40,7 @@ class Frame:
             self.size.height -= 1  # Cuts off the bottom without
         else:
             raise Logger.error(
-                'Cannot have no contents and no size. Must have at least one.')
+                'Cannot have no contents and no size. Must have at least one.', InsufficientArgumentsError)
 
         self._update_frame()
 
@@ -136,9 +134,6 @@ class Frame:
         frame: "Frame",  # Only Frames can be added not subclasses (not Self)
         pos: CoordReference = Coord(0, 0),
     ) -> None:
-        # TODO: Not give error when out of bounds
-        # TODO: Test out ansi escape code version with new matrix
-
         pos = Coord.convert_reference(pos)
 
         out_of_boundaries_step_x = (
