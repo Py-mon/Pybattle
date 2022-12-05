@@ -40,4 +40,4 @@ Screen.clear()
 
 map = Window(size=(20, 20), name='HI')
 
-map.add_frame(Window(size=(2, 9)), (0, 0))
+map.add_frame(Window(size=(2, 9)), (0, 20))
