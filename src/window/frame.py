@@ -25,20 +25,24 @@ class Frame:
         self.contents = contents
         self.name = name
         self.name_location = name_location  # TODO: Make this do something
-
-        if self.contents is not None:
+        
+        if size is not ...:
+            self.size = Size.convert_reference(size)
+            
+            if self.contents is not None:
+                center = ((self.height - 2) // 2, (self.width - 2) // 2 - len(contents))
+                # TODO: Add centered contents (text)
+                
+        elif self.contents is not None:
             if size is not ...:
                 Logger.info(f'Unused Frame size.', True)
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
             self.size = self.contents.size + 1
-            self.size.height -= 1  # Cuts off the button without
-        elif size is not ...:
-            self.size = Size.convert_reference(size)
+            self.size.height -= 1  # Cuts off the bottom without
         else:
-            # TODO: Centered the contents here instead of error
             raise Logger.error(
-                'Cannot have no contents and no size. Must have one.')
+                'Cannot have no contents and no size. Must have at least one.')
 
         self._update_frame()
 
@@ -197,7 +201,7 @@ class Window(Frame):
     def add_frame(self, frame, pos):
         pos = Coord.convert_reference(pos)
 
-        # TODO: Finish Errors
+        # TODO: Fix Errors
         if pos.x + frame.width >= self.matrix.size.width:
             raise Logger.error(
                 f'pos x: {pos.x} is out of bounds of {self.matrix.size.width - frame.width}', OutOfBoundsError)
