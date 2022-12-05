@@ -24,7 +24,7 @@ class Frame:
     ) -> None:
         self.contents = contents
         self.name = name
-        self.name_location = name_location  # TODO: Make this do something
+        self.name_location = name_location
         
         if size is not ...:
             self.size = Size.convert_reference(size)
@@ -74,7 +74,6 @@ class Frame:
 
     def _update_frame(self) -> None:
         frame = f'╭{"─" * (self.width - 2)}╮\n'
-        # frame = f'╭─ {self.name} {"─" * (self.width - 5 - len(self.name))}╮\n'
         for i in range(self.height - 2):
             if self.contents is None:
                 frame += f'│{" " * (self.width - 2)}│\n'
