@@ -1,5 +1,3 @@
-"""Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
-
 from re import compile, sub
 
 from numpy import array, insert, ravel_multi_index, row_stack
