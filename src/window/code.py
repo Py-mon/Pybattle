@@ -15,6 +15,7 @@ class Code:
 
 
 def str_with_text(str_: str, *codes: Code) -> str:
+    """Takes a str and adds ANSI escape codes to it; keeping it readable."""
     matrix = Matrix(str_)
 
     matrix.apply_ansi_codes(codes)

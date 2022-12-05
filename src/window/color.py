@@ -16,6 +16,7 @@ class Color:
     
     @classmethod
     def init_colors(cls) -> None:
+        """Initialize all the base colors."""
         cls.DEFAULT = Color(AnsiEscapeCode(Fore.RESET), 'DEFAULT')
 
         cls.BLACK = Color(AnsiEscapeCode(Fore.BLACK), 'BLACK')                              # 0x000000

@@ -34,6 +34,7 @@ class Coord:
 
     @property
     def coords(self) -> tuple[int, int]:
+        """(x, y)"""
         return (self.x, self.y)
 
     def add(self, other: CoordReference) -> Self:
@@ -82,4 +83,5 @@ class CoordList:
         self.end = Coord.convert_reference(end)
 
     def get_range(self) -> list[Coord]:
+        """Get a range of coords from `start` to `end`."""
         return [Coord(self.start.x + col, self.start.y + row) for col in range(self.end.x + 1) for row in range(self.end.y + 1)]
