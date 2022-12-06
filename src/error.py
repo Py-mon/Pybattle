@@ -1,4 +1,4 @@
-from src.log import Traceback
+from src.traceback import Traceback
 
 
 class Error(Exception):
