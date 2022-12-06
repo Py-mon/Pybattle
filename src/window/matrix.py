@@ -1,6 +1,6 @@
 from re import compile, sub
 
-from numpy import array, insert, ravel_multi_index, row_stack
+from numpy import append, array, full, insert, ravel_multi_index, row_stack
 
 from src.types_ import CoordReference
 from src.window.coord import Coord
@@ -12,7 +12,7 @@ class Matrix:
 
     @staticmethod
     def convert_array(array_) -> str:
-        print(array_)
+        array_ = append(array_, full((array_.shape[0], 1), '\n'), 1)
         return "".join([char for row in array_ for char in row])
 
     @staticmethod
@@ -66,7 +66,7 @@ class Matrix:
         self.filter_string()
         self.remove_and_save_ansi_codes()
         self._matrix = row_stack([array(list(row), object)
-                                 for row in self._str.splitlines(True)])
+                                 for row in self._str.splitlines()])
         self._shape = self._matrix.shape
 
     def __getitem__(self, slice_):
