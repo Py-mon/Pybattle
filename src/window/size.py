@@ -28,6 +28,10 @@ class Size:
     def size(self) -> tuple[int, int]:
         return (self.height, self.width)
 
+    @property
+    def reverse(self) -> tuple[int, int]:
+        return (self.width, self.height)
+
     def add(self, other: SizeReference) -> Self:
         other = Size.convert_reference(other)
         return Size(self.width + other.width, self.height + other.height)
