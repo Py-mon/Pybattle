@@ -38,6 +38,6 @@ Screen.clear()
 #                     ╰─────┴─╯ 
 # ''', name='BEDROOM')
 
-map = Window(size=(20, 20), name='HI')
+map_ = Window('CENTERED', (11, 21))
 
-map.add_frame(Window(size=(2, 9)), (0, 20))
+print(map_.matrix)

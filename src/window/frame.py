@@ -1,11 +1,13 @@
-from typing import Optional
+from typing import Optional, Self
 
+from numpy import full
+
+from src.error import InsufficientArgumentsError, OutOfBoundsError
 from src.log import Logger
 from src.types_ import CoordReference, SizeReference
 from src.window.coord import Coord, CoordList
 from src.window.matrix import Matrix
 from src.window.size import Size
-from src.error import OutOfBoundsError, InsufficientArgumentsError
 
 
 class Frame:
@@ -28,8 +30,29 @@ class Frame:
             self.size = Size.convert_reference(size)
             
             if self.contents is not None:
-                center = ((self.height - 2) // 2, (self.width - 2) // 2 - len(contents))
-                # TODO: Add centered contents (text)
+                if isinstance(contents, str):
+                    self.contents = Matrix(contents)
+                
+                height = self.contents.size.height // 2
+                width = self.contents.size.width // 2
+                              
+                middle_height = (self.size.height - 2) // 2
+                middle_width = (self.size.width - 2) // 2
+                
+                array = full(self.size.subtract(2).reverse, ' ')
+                
+                starting_height = middle_height - height
+                ending_height = middle_height + height
+                if height == 0:
+                    ending_height = middle_height + self.contents.size.height
+                
+                starting_width = middle_width - width
+                ending_width = middle_width + width
+
+                array[starting_height: ending_height,
+                      starting_width: ending_width] = self.contents._matrix
+                
+                self.contents = Matrix.array_to_matrix(array)
                 
         elif self.contents is not None:
             if size is not ...:
@@ -77,7 +100,6 @@ class Frame:
                 frame += f'│{" " * (self.width - 2)}│\n'
             else:
                 x = '\n'  # Doesn't allow "\" in f-strings
-                print(i)
                 frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
 
         frame += f'╰{"─" * (self.width - 2)}╯\n'
@@ -192,7 +214,7 @@ class Frame:
 class Window(Frame):
     """The main border screen."""
 
-    def add_frame(self, frame, pos):
+    def add_frame(self, frame: Self, pos: CoordReference = Coord(0, 0)):
         pos = Coord.convert_reference(pos)
 
         # TODO: Fix Errors
