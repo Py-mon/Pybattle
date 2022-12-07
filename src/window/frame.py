@@ -55,12 +55,11 @@ class Frame:
                 self.contents = Matrix.array_to_matrix(array)
                 
         elif self.contents is not None:
-            if size is not ...:
-                Logger.info(f'Unused Frame size.', True)
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
-            self.size = self.contents.size + 1
-            self.size.height -= 1  # Cuts off the bottom without
+            print(self.contents)
+            self.size = self.contents.size + 2
+            #self.size.height -= 1  # Cuts off the bottom without
         else:
             raise Logger.error(
                 'Cannot have no contents and no size. Must have at least one.', InsufficientArgumentsError)
@@ -103,6 +102,8 @@ class Frame:
                 frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
 
         frame += f'╰{"─" * (self.width - 2)}╯\n'
+        
+        print(frame)
 
         self.matrix = Matrix(frame)
         
@@ -231,15 +232,12 @@ class Window(Frame):
         bottom_left = pos + frame.bottom_left_corner
         bottom_right = pos + frame.bottom_right_corner
 
-        # Removes the last column (which is only newlines)
-        frame_without_newlines = frame.matrix._matrix[:, :-1]
+        print(frame.matrix._matrix)
+        print(self.matrix[top_left.y: frame.height + pos.y,
+                          top_left.x: frame.width + pos.x])
 
-        print(frame.matrix._matrix[:, :-1])
-        print(self.matrix[top_left.y: frame_without_newlines.shape[0] + pos.y,
-                          top_left.x: frame_without_newlines.shape[1] + pos.x])
-
-        self.matrix[top_left.y: frame_without_newlines.shape[0] + pos.y,
-                    top_left.x: frame_without_newlines.shape[1] + pos.x] = frame.matrix._matrix[:, :-1]
+        self.matrix[top_left.y: frame.height + pos.y,
+                    top_left.x: frame.width + pos.x] = frame.matrix._matrix
 
         print(self.matrix)
 

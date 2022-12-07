@@ -6,6 +6,10 @@ from src.window.frame import Window, Frame
 
 Screen.clear()
 
+import src.window.input
+
+
+
 
 # test_str = str_with_text('''\
 # ╭───────────╮

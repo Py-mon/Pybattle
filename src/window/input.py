@@ -1,49 +1,40 @@
-from src.window.frame import Frame
-from src.window.coord import Coord
-from src.types_ import CoordReference
-from src.window.size import Size
-from src.window.screen import Color
 from typing import Callable
+
+from src.types_ import CoordReference, SizeReference
+from src.window.coord import Coord
+from src.window.frame import Window
+from src.window.color import Color
+from src.window.size import Size
 
 
 class Selection:
-    def __init__(self, location: CoordReference, action: Callable[(...), None]) -> None:
-        self.location = location
+    def __init__(self, location: CoordReference, action: Callable[[], None]) -> None:
+        self.location = Coord.convert_reference(location)
         self.action = action
         
-    def use(self, location) -> None:
-        if location == self.location:
+    def use(self, location: CoordReference) -> None:
+        if  Coord.convert_reference(location) == self.location:
             self.action()
 
 
 class SelectionMenu:
     # TODO: Finish with new color matrix
-    def __init__(self, selections: dict[str, CoordReference], default_color: Color = Color.GRAY) -> None:
+    def __init__(self, size: SizeReference, selections: dict[str, CoordReference], default_color: str = Color.GRAY) -> None:
         for coord in selections:
             selections[coord] = Coord.convert_reference(selections[coord])
         self.selections = selections
-
-        coords = list(self.selections.values())
-        coords.sort(key=lambda coord: coord.x ** 2 + coord.y ** 2)
-        farthest_coord = coords[-1]
-        
-        width = max([Frame(selection).width for selection in self.selections.keys()])
-        height = max([Frame(selection).height for selection in self.selections.keys()])
-        
-        size = Size(farthest_coord.x + 1 + width, farthest_coord.y + 1 + height)
         
         self.selection = list(selections.keys())[0]
         
-        self.frame = Frame(size=size)
+        self.frame = Window(size=size)
         for selection, location in self.selections.items():
             if selection == self.selection:
-                print(Frame(selection, default_color).matrix)
-                self.frame.add_frame(Frame(selection, default_color), location)
+                self.frame.add_frame(Window(selection), location)
             else:
-                self.frame.add_frame(Frame(selection), location)
+                self.frame.add_frame(Window(selection), location)
 
 
-SelectionMenu({'a': (1, 1), 'b': (4, 4), 'c': (9, 9)})
+SelectionMenu((15, 15), {'a': (1, 1), 'b': (4, 4), 'c': (9, 9)})
   
   
 def func(p1, p2):
