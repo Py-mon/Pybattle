@@ -19,22 +19,35 @@ class Selection:
 
 class SelectionMenu:
     # TODO: Finish with new color matrix
-    def __init__(self, size: SizeReference, selections: dict[str, CoordReference], default_color: str = Color.GRAY) -> None:
+    def __init__(
+        self, size: SizeReference,
+        selections: dict[str, (CoordReference, SizeReference)],
+        default_color: str = Color.GRAY
+    ) -> None:
         for coord in selections:
             selections[coord] = Coord.convert_reference(selections[coord])
         self.selections = selections
         
         self.selection = list(selections.keys())[0]
         
+        # TODO: Add color on current selection
+        
         self.frame = Window(size=size)
-        for selection, location in self.selections.items():
+        for selection, (location, size) in self.selections.items():
+            size = Size.convert_reference(size)
             if selection == self.selection:
-                self.frame.add_frame(Window(selection), location)
+                if size is not None:
+                    self.frame.add_frame(Window(selection, size), location)
+                else:
+                    self.frame.add_frame(Window(selection), location)
             else:
-                self.frame.add_frame(Window(selection), location)
+                if size is not None:
+                    self.frame.add_frame(Window(selection, size), location)
+                else:
+                    self.frame.add_frame(Window(selection), location)
 
 
-SelectionMenu((15, 15), {'a': (1, 1), 'b': (4, 4), 'c': (9, 9)})
+SelectionMenu((15, 15), {'a': ((1, 1), (3, 5)), 'b': ((4, 4), None), 'c': ((9, 9), None)})
   
   
 def func(p1, p2):
