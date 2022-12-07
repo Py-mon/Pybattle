@@ -48,6 +48,8 @@ class Frame:
                 
                 starting_width = middle_width - width
                 ending_width = middle_width + width
+                if width == 0:
+                    ending_width = middle_width + self.contents.size.width
 
                 array[starting_height: ending_height,
                       starting_width: ending_width] = self.contents._matrix
