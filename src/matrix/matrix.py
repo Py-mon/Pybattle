@@ -1,5 +1,5 @@
-from src.window.color import Color
-from typing import Self, Iterator, Any
+from src.window.color import Color, Colors
+from typing import Self, Iterator, Any, Tuple, List
 from src.window.coord import Coord
 from src.types_ import CoordReference, AnsiEscapeCodeOrColor
 from src.window.size import Size
@@ -12,7 +12,7 @@ class Code:
         self.coord = Coord.convert_reference(coord)
         self.code = code
 
-    def __iter__(self) -> None:
+    def __iter__(self) -> Iterator[Tuple[Coord, ]]:
         return iter((self.coord, self.code))
     
 
@@ -55,7 +55,7 @@ class Matrix:
     
     @property
     def size(self) -> Size:
-        return (self.height, self.width)
+        return Size(self.height, self.width)
 
     @property
     def width(self) -> int:
@@ -73,8 +73,20 @@ class Matrix:
         pos = Coord.convert_reference(pos)
         self.array[pos.y].insert(pos.x, cell)
 
+    def remove(self, pos: CoordReference):
+        pos = Coord.convert_reference(pos)
+        self.array[pos.y].pop(pos.x)
+
+    def __getitem__(self, coord: CoordReference) -> Any:
+        coord = Coord.convert_reference(coord)
+        return self.array[coord.y][coord.x]
+
+    def __setitem__(self, coord: CoordReference, cell: Any) -> Any:
+        coord = Coord.convert_reference(coord)
+        self.array[coord.y][coord.x] = cell
+
     def __repr__(self) -> str:
-        color = str(Color.DEFAULT)
+        color = str(Colors.DEFAULT)
         res = '['
         for row in self.array:
             row_ = '['
@@ -83,14 +95,14 @@ class Matrix:
                     color = str(cell)
                     row_ += color
                 else:
-                    row_ += color + cell + str(Color.DEFAULT) + ','
+                    row_ += color + cell + str(Colors.DEFAULT) + ','
             res += row_[:-1] + '],\n '
-        res = res[:-3] + str(Color.DEFAULT) + ']'
+        res = res[:-3] + str(Colors.DEFAULT) + ']'
         return res
     
 
 class StrMatrix(Matrix):
-    def __init__(self, data: str | Matrix | list[list[object]], *codes: list[Code]) -> None:
+    def __init__(self, data: str | Matrix | List[List[Any]], *codes: Code) -> None:
         if isinstance(data, str):
             if data[0] == '\n':
                 data = data[1:]
@@ -98,7 +110,7 @@ class StrMatrix(Matrix):
         super().__init__(data, *codes)
 
     def __str__(self) -> str:
-        return "".join([str(char) for row in self.array for char in row + ['\n']])[:-1] + str(Color.DEFAULT)
+        return "".join([str(char) for row in self.array for char in row + ['\n']])[:-1] + str(Colors.DEFAULT)
 
 
 array = StrMatrix(
@@ -106,7 +118,7 @@ f'''
 123
 456
 789
-''', Code((1, 1), Color.RED), Code((3, 1), Color.BLUE))
+''', Code((1, 1), Colors.RED), Code((3, 1), Colors.BLUE))
 
 print(array.__repr__())
 print(array.height)
