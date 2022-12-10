@@ -8,46 +8,33 @@ from src.window.size import Size
 
 
 class Selection:
-    def __init__(self, location: CoordReference, action: Callable[[], None]) -> None:
+    def __init__(self, label: str, location: CoordReference, size: SizeReference = ...) -> None:
         self.location = Coord.convert_reference(location)
-        self.action = action
-        
-    def use(self, location: CoordReference) -> None:
-        if  Coord.convert_reference(location) == self.location:
-            self.action()
+        self.size = Size.convert_reference(size)
+        self.label = label
 
 
 class SelectionMenu:
     # TODO: Finish with new color matrix
     def __init__(
         self, size: SizeReference,
-        selections: dict[str, (CoordReference, SizeReference)],
+        selections: list[Selection],
         default_color: str = Color.GRAY
     ) -> None:
-        for coord in selections:
-            selections[coord] = Coord.convert_reference(selections[coord])
         self.selections = selections
         
-        self.selection = list(selections.keys())[0]
-        
-        # TODO: Add color on current selection
+        self.selection = selections[0]
         
         self.frame = Window(size=size)
-        for selection, (location, size) in self.selections.items():
-            size = Size.convert_reference(size)
+        for selection in self.selections:
             if selection == self.selection:
-                if size is not None:
-                    self.frame.add_frame(Window(selection, size), location)
-                else:
-                    self.frame.add_frame(Window(selection), location)
+                # TODO: Add color using default_color (Need to fix matrix)
+                self.frame.add_frame(Window(selection.label, selection.size), selection.location)
             else:
-                if size is not None:
-                    self.frame.add_frame(Window(selection, size), location)
-                else:
-                    self.frame.add_frame(Window(selection), location)
+                self.frame.add_frame(Window(str(default_color) + selection.label, selection.size), selection.location)
 
 
-SelectionMenu((15, 15), {'a': ((1, 1), (3, 5)), 'b': ((4, 4), None), 'c': ((9, 9), None)})
+SelectionMenu((15, 15), [Selection('a', (1, 1), (3, 5)), Selection('b', (4, 4)), Selection('c', (8, 8))])
   
   
 def func(p1, p2):
