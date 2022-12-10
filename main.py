@@ -1,14 +1,13 @@
-from src.window.code import str_with_text
-from src.window.color import Color
+# from src.window.code import str_with_text
+# from src.window.color import Color
+# from src.window.code import Code
+# from src.window.frame import Window, Frame
+
 from src.window.screen import Screen
-from src.window.code import Code
-from src.window.frame import Window, Frame
 
 Screen.clear()
 
-import src.window.input
-
-
+import src.matrix.matrix
 
 
 # test_str = str_with_text('''\
@@ -42,6 +41,6 @@ import src.window.input
 #                     ╰─────┴─╯ 
 # ''', name='BEDROOM')
 
-map_ = Window('CENTERED', (11, 21))
+# map_ = Window('CENTERED', (11, 21))
 
-print(map_.matrix)
+# print(map_.matrix)
