@@ -12,7 +12,7 @@ class Code:
         self.coord = Coord.convert_reference(coord)
         self.code = code
 
-    def __iter__(self) -> Iterator[Tuple[Coord, ]]:
+    def __iter__(self) -> Iterator[Tuple[Coord, AnsiEscapeCodeOrColor]]:
         return iter((self.coord, self.code))
     
 
