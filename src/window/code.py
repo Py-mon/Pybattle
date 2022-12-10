@@ -10,7 +10,7 @@ class Code:
         self.coord = Coord.convert_reference(coord)
         self.code = code
 
-    def __iter__(self) -> None:
+    def __iter__(self):
         return iter((self.coord, self.code))
 
 
