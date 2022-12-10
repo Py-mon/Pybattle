@@ -1,6 +1,6 @@
 """2D coordinates (x, y) (col, row)."""
 
-from typing import Self, Sequence
+from typing import Self, Sequence, Any
 
 from src.types_ import CoordReference
 
@@ -20,7 +20,12 @@ class Coord:
 
     @staticmethod
     # Says Any with Self (due to staticmethod)
-    def convert_reference(reference: CoordReference) -> "Coord":
+    def convert_reference(reference: CoordReference | int | Any) -> Self | Any:
+        """
+        ```
+        Coord(5, 5) -> Coord(5, 5)
+        (1, 3) -> Coord(1, 3)
+        """
         if isinstance(reference, int):
             return Coord(reference, reference)
         if isinstance(reference, tuple):

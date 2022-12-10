@@ -18,6 +18,12 @@ class Size:
 
     @staticmethod
     def convert_reference(reference: SizeReference) -> "Size":  # Says Any with Self (due to staticmethod)
+        """
+        ```
+        Size(5, 5) -> Size(5, 5)
+        (1, 3) -> Size(1, 3)
+        ... -> ...
+        """
         if isinstance(reference, int):
             return Size(reference, reference)
         if isinstance(reference, tuple):
