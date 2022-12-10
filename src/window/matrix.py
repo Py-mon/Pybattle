@@ -7,6 +7,10 @@ from src.window.coord import Coord
 from src.window.size import Size
 
 
+def ravel(coord: CoordReference, width: int) -> int:
+    return coord.y * width + coord.x
+
+
 class Matrix:
     """Converts a str into a Matrix so it can be easily edited and then returned back to a str."""
 
