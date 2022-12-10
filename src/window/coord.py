@@ -20,7 +20,7 @@ class Coord:
 
     @staticmethod
     # Says Any with Self (due to staticmethod)
-    def convert_reference(reference: CoordReference | int | Any) -> Self | Any:
+    def convert_reference(reference: CoordReference | int | Any) -> "Coord":
         """
         ```
         Coord(5, 5) -> Coord(5, 5)
