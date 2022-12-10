@@ -38,12 +38,9 @@ class Color:
         
     def __iter__(self):
         return iter(self._color_code)
-    
+
     def __str__(self) -> str:
         return self._color_code
-    
-    def __repr__(self) -> str:
-        return f'Color({self.name})'
 
 
 Color.init_colors()
