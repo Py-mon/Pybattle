@@ -20,6 +20,7 @@ class Color:
     def __str__(self) -> str:
         return self._color_code
 
+
 class Colors:
     DEFAULT = Color(AnsiEscSeq(Fore.RESET), 'DEFAULT')
     BLACK = Color(AnsiEscSeq(Fore.BLACK), 'BLACK')                              # 0x000000
