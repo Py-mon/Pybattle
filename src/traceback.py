@@ -5,8 +5,8 @@ class Traceback:
     """Show information like the file, line, or line number of a log."""
 
     def __init__(self):
-        # stack()[0] -> "Info About this line"
-        # stack()[1] -> "About the line it is used"
+        # stack()[0] -> Info About this line
+        # stack()[1] -> About the line it is used
         
         # Get the latest traceback
         n = 0
