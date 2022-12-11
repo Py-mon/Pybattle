@@ -3,7 +3,7 @@ from typing import Callable
 from src.types_ import CoordReference, SizeReference
 from src.window.coord import Coord
 from src.window.frame import Window
-from src.window.color import Color
+from src.window.color import Colors
 from src.window.size import Size
 
 
@@ -19,7 +19,7 @@ class SelectionMenu:
     def __init__(
         self, size: SizeReference,
         selections: list[Selection],
-        default_color: str = Color.GRAY
+        default_color: str = Colors.GRAY
     ) -> None:
         self.selections = selections
         
