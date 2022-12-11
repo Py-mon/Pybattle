@@ -1,4 +1,3 @@
-"""2D (Width, Height)"""
 
 from typing import Self, Sequence
 
@@ -17,7 +16,7 @@ class Size:
         self.height = height
 
     @staticmethod
-    def convert_reference(reference: SizeReference) -> "Size":  # Says Any with Self (due to staticmethod)
+    def convert_reference(reference: SizeReference) -> "Size":
         """
         ```
         Size(5, 5) -> Size(5, 5)
