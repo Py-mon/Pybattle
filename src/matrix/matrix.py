@@ -100,7 +100,7 @@ class Matrix:
     def height(self) -> int:
         return max([len(col) for col in self.cols])
 
-    def insert(self, pos: CoordReference, cell: str | Color):
+    def insert(self, pos: CoordReference, cell: Any):
         pos = Coord.convert_reference(pos)
         self.array[pos.y].insert(pos.x, cell)
 
@@ -124,7 +124,7 @@ class Matrix:
             row_ = '['
             for cell in row:
                 if isinstance(cell, Color):
-                    color = cell._color_code
+                    color = str(cell)
                     row_ += color
                 else:
                     row_ += color + cell + str(Colors.DEFAULT) + ','
