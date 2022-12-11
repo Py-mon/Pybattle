@@ -2,11 +2,13 @@ from enum import Enum
 from os import name as os_name
 from os import system
 from typing import Optional, Tuple
+from shutil import get_terminal_size
 
 from src.types_ import CoordReference
 from src.window.coord import Coord
 from src.window.color import Colors
 from src.window.ansi import AnsiEscSeq, EscSeq
+from src.window.size import Size
 
 
 class Cursor:
@@ -73,10 +75,16 @@ class Screen:
         if not move_cursor:
             Cursor.up(txt.count('\n') + 1).execute()
 
+    @property
     @staticmethod
     def clear():
         """Clear the screen. Works on all operating systems."""
         system('cls' if os_name == 'nt' else 'clear')
+    
+    @property
+    @staticmethod
+    def terminal_size() -> Size:
+       return Size(get_terminal_size())
 
     @staticmethod
     def change_scene(scene: str):
