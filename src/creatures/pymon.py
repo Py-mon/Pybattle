@@ -3,14 +3,17 @@ from fractions import Fraction
 from math import floor
 from random import choice, choices, randint
 from string import ascii_letters, digits
-from typing import Any, Self, TypeVar, Dict
+from typing import Any, Dict, Self
 
+from src.creatures.attributes.ability import Ability
 from src.creatures.attributes.element import Element
+from src.creatures.attributes.item import Item
+from src.creatures.attributes.move import Move
 from src.creatures.attributes.stats import Stats
+from src.creatures.attributes.status_ailment import StatusAilment
 from src.creatures.attributes.trait import Trait
 from src.log import Logger
-from src.types_ import (Ability, Creature, ElementReference, Humanoid, Item,
-                        Move, StatusAilment)
+from src.types_ import Creature, ElementReference, Humanoid
 from src.window.color import Colors
 
 
