@@ -1,6 +1,6 @@
 """2D coordinates (x, y) (col, row)."""
 
-from typing import Self, Sequence, Any
+from typing import Any, Self, Sequence
 
 from src.types_ import CoordReference
 
@@ -19,8 +19,7 @@ class Coord:
         self.x = x
 
     @staticmethod
-    # Says Any with Self (due to staticmethod)
-    def convert_reference(reference: CoordReference | int | Any) -> Self | Any:
+    def convert_reference(reference: CoordReference | int | Any) -> "Coord":
         """
         ```
         Coord(5, 5) -> Coord(5, 5)
