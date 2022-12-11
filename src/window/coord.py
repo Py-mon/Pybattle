@@ -1,6 +1,6 @@
 """2D coordinates (x, y) (col, row)."""
 
-from typing import Any, Self, Sequence
+from typing import Any, Self, Sequence, Tuple
 
 from src.types_ import CoordReference
 
@@ -32,12 +32,12 @@ class Coord:
         return reference
 
     @property
-    def reverse(self) -> tuple[int, int]:
+    def reverse(self) -> Tuple[int, int]:
         """(y, x)"""
         return (self.y, self.x)
 
     @property
-    def coords(self) -> tuple[int, int]:
+    def coords(self) -> Tuple[int, int]:
         """(x, y)"""
         return (self.x, self.y)
 

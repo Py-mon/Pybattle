@@ -1,13 +1,13 @@
-from typing import Any
+from typing import Any, Dict
 
 from src.creatures.pymon import Pymon
-from src.types_ import Armor, Weapon
+from src.creatures.attributes.reinforcements import Armor, Weapon
 
 
 class Humanoid(Pymon):
     """A human or human like creature that is the same as a Pymon but with armor and weapons. Cannot be bred."""
 
-    def __init__(self, stats: dict[str, Any] = {}):
+    def __init__(self, stats: Dict[str, Any] = {}):
         """
         Args:
             - `'name': str`
