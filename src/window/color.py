@@ -2,27 +2,27 @@ from typing import Optional
 
 from colorama import Fore
 
-from src.window.screen import AnsiEscSeq
+from src.window.ansi import AnsiEscSeq
 
 
 class Color:
     """A 4-bit color ANSI escape code."""
     def __init__(self, color_code: AnsiEscSeq, name: Optional[str] = None) -> None:
-        self._color_code = color_code.code
+        self.__color_code = color_code.code
         if name is None:
             self.name = 'N/A'
         else:
             self.name = name
 
     def __iter__(self):
-        return iter(self._color_code)
+        return iter(self.__color_code)
 
     def __str__(self) -> str:
-        return self._color_code
+        return self.__color_code
 
 
 class Colors:
-    DEFAULT = Color(AnsiEscSeq(Fore.RESET), 'DEFAULT')
+    DEFAULT = Color(AnsiEscSeq(Fore.RESET), 'DEFAULT')                          #  VSCODE
     BLACK = Color(AnsiEscSeq(Fore.BLACK), 'BLACK')                              # 0x000000
     GRAY = Color(AnsiEscSeq(Fore.LIGHTBLACK_EX), 'GRAY')                        # 0x666666
     BRIGHT_WHITE = Color(AnsiEscSeq(Fore.LIGHTWHITE_EX), 'BRIGHT_WHITE')        # 0xE5E5E5
