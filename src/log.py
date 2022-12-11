@@ -2,6 +2,7 @@ from logging import DEBUG, FileHandler, Formatter, getLogger
 from pathlib import Path
 from src.traceback import Traceback
 from src.error import Error
+from typing import Type
 
 
 class Logger:
@@ -18,7 +19,7 @@ class Logger:
     logger.addHandler(__handler)
     
     @classmethod
-    def error(cls, msg: str, error: Error = Error, traceback: bool = True) -> None:
+    def error(cls, msg: str, error: Type[Error] = Error, traceback: bool = True) -> None:
         if traceback:
             cls.logger.error(error.__name__ + ': ' + Traceback().trace + msg)
         else:
