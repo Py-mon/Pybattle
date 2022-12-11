@@ -37,6 +37,6 @@ Humanoid: TypeAlias = "Humanoid_"
 
 ElementReference: TypeAlias = Union[str, "Element"]
 
-CoordReference: TypeAlias = Union["Coord", tuple]
+CoordReference: TypeAlias = Union["Coord", tuple, int]
 
-SizeReference: TypeAlias = Union["Size", tuple]
+SizeReference: TypeAlias = Union["Size", tuple, int]
