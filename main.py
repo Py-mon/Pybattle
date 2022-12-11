@@ -14,7 +14,7 @@ f'''
 1230
 4560
 7890
-''', Code((0, 0), Colors.RED), Code((4, 0), Colors.BLUE))
+''', Code((0, 0), Colors.MAGENTA), Code((2, 0), Colors.RED), Code((4, 0), Colors.BLUE))
 
 print(repr(array))
 print(str(array))

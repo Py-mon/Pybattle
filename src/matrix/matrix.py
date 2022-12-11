@@ -20,7 +20,7 @@ class Code:
 class Range:
     def __init__(
         self, stop: CoordReference | int,
-        start: Optional[CoordReference] | int = None
+        start: Optional[CoordReference] | int = 0
     ) -> None:
         self.start = Coord.convert_reference(start)
         self.stop = Coord.convert_reference(stop)
@@ -41,14 +41,19 @@ class Range:
 class Matrix:
     @staticmethod
     def with_colors(func: Callable[["Matrix"], Any]) -> Callable[["Matrix"], Any]:
-        """Includes colors."""
+        """Includes colors during the given function."""
 
         def wrapper(self: Self, *args) -> Any:
-            for (coord, code) in self.colors:
+            # Add Colors
+            for coord, code in self.colors:
                 self.insert(coord, code)
+            # Run Function
             res = func(self, *args)
-            for i, (coord, _) in enumerate(self.colors):
-                self.remove((coord.x - i, coord.y))
+            # Remove Colors
+            for i, row in enumerate(self.rows):
+                for coord, cell in zip(Range((len(row), i), (0, i)).coords, row):
+                    if isinstance(cell, Color):
+                        self.remove((coord.x, coord.y))
             return res
         return wrapper
 
@@ -71,11 +76,18 @@ class Matrix:
             for cell in row:
                 yield cell
 
+    @property
+    def coords(self) -> List[Coord]:
+        return Range(self.size.reverse).coords
+    
+    def row_coords(self, row: int) -> List[Coord]:
+        return Range((len(row), row), (0, row))
+
     def __contains__(self, coord_or_cell: CoordReference | Any) -> bool:
         """Check if a coord or cell is in the Matrix."""
         coord_or_cell = Coord.convert_reference(coord_or_cell)
         if isinstance(coord_or_cell, Coord):
-            return coord_or_cell in Range((0, 0), self.width).coords
+            return coord_or_cell in self.coords
         else:
             return coord_or_cell in iter(self)
 
