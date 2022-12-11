@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from src.creatures.pymon import Pymon as Pymon_
     from src.window.color import Color as Color_
     from src.window.coord import Coord
-    from src.window.screen import AnsiEscapeCode as AnsiEscapeCode_
     from src.window.size import Size
 
 
@@ -26,8 +25,6 @@ Defender = Creature
 User = Creature
 
 Color: TypeAlias = "Color_"
-AnsiEscapeCode: TypeAlias = "AnsiEscapeCode_"
-AnsiEscapeCodeOrColor = Union[Color, AnsiEscapeCode]  # TODO: Please rename
 
 Armor: TypeAlias = "Armor_"
 Weapon: TypeAlias = "Weapon_"
