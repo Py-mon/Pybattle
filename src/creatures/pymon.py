@@ -3,7 +3,7 @@ from fractions import Fraction
 from math import floor
 from random import choice, choices, randint
 from string import ascii_letters, digits
-from typing import Any, Self, TypeVar
+from typing import Any, Self, TypeVar, Dict
 
 from src.creatures.attributes.element import Element
 from src.creatures.attributes.stats import Stats
@@ -11,7 +11,7 @@ from src.creatures.attributes.trait import Trait
 from src.log import Logger
 from src.types_ import (Ability, Creature, ElementReference, Humanoid, Item,
                         Move, StatusAilment)
-from src.window.screen import Color
+from src.window.color import Colors
 
 
 class ID:
@@ -32,9 +32,6 @@ def roll(chance: Fraction) -> bool:
 
     >>> roll(Fraction(1/4))  # 1/4 chance to return True, 3/4 chance to return False."""
     return choices([True, False], [chance, Fraction(chance.denominator - chance.numerator, chance.denominator)])[0]
-
-
-PymonSpecies = TypeVar('PymonSpecies', bound="Pymon")
 
 
 class Pymon:
@@ -159,9 +156,9 @@ class Pymon:
         self,
         stat: str,
         bar_amount: int = 20,
-        high_color=Color.GREEN,
-        medium_color=Color.YELLOW,
-        low_color=Color.RED,
+        high_color=Colors.GREEN,
+        medium_color=Colors.YELLOW,
+        low_color=Colors.RED,
     ) -> str:
         """Get a percentage bar.
 
@@ -191,9 +188,7 @@ class Pymon:
         elif percent <= 1/3:
             color = low_color
 
-        end = Color.RESET
-
-        bars = f"{color + '━' * bars + end:─<{bar_amount + len(color) + len(end)}}"
+        bars = f"{str(color) + '━' * bars + str(Colors.DEFAULT):─<{bar_amount + len(str(color)) + len(str(Colors.DEFAULT))}}"
         return bars
 
     def level_up(self) -> None:
@@ -216,12 +211,12 @@ class Pymon:
         while self.level < level:
             self.level_up()
 
-    def breed(self, with_: PymonSpecies, level: int = ...) -> Self:
+    def breed(self, with_: Self, level: int = ...) -> Self:
         """Create a offspring between `self` and `with_`. The species with be `self`'s species and some stats will be inherited from `with_`."""
-        if type(with_) == Humanoid or type(with_) in Humanoid.__subclasses__():
+        if isinstance(with_, Humanoid):
             raise AttributeError('Breeding is not allowed for Humanoids.')
 
-        def inherit(common: dict[str, float], rare: dict[str, float]) -> dict[str, float]:
+        def inherit(common: Dict[str, float], rare: Dict[str, float]) -> Dict[str, float]:
             x = {}
             for key in common.keys():
                 if roll(self.INHERITANCE_CHANCE):
