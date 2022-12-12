@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterator
 
 from colorama import Fore
 
@@ -8,17 +8,20 @@ from src.window.ansi import AnsiEscSeq
 class Color:
     """A 4-bit color ANSI escape code."""
     def __init__(self, color_code: AnsiEscSeq, name: Optional[str] = None) -> None:
-        self.__color_code = color_code.code
+        self.__color_code = color_code
         if name is None:
             self.name = 'N/A'
         else:
             self.name = name
 
-    def __iter__(self):
-        return iter(self.__color_code)
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.__color_code.code)
 
     def __str__(self) -> str:
-        return self.__color_code
+        return self.__color_code.code
+    
+    def use(self) -> None:
+        self.__color_code.execute()
 
 
 class Colors:
