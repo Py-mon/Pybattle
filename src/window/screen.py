@@ -75,9 +75,8 @@ class Screen:
         if not move_cursor:
             Cursor.up(txt.count('\n') + 1).execute()
 
-    @property
     @staticmethod
-    def clear():
+    def clear() -> None:
         """Clear the screen. Works on all operating systems."""
         system('cls' if os_name == 'nt' else 'clear')
     
