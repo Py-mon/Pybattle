@@ -4,6 +4,7 @@ from src.types_ import CoordReference
 from src.window.color import Color, Colors
 from src.window.coord import Coord
 from src.window.size import Size
+from src.log import Logger
 
 
 class Code:
@@ -41,24 +42,22 @@ class Range:
 class Matrix:
     @staticmethod
     def with_colors(func: Callable[["Matrix"], Any]) -> Callable[["Matrix"], Any]:
-        """Includes colors during the given function."""
+        """Includes colors in the given function."""
 
         def wrapper(self: Self, *args) -> Any:
-            # Add Colors
             for coord, code in self.colors:
                 self.insert(coord, code)
-            # Run Function
+                
             res = func(self, *args)
-            # Remove Colors
-            for i, row in enumerate(self.rows):
-                for coord, cell in zip(Range((len(row), i), (0, i)).coords, row):
-                    if isinstance(cell, Color):
-                        self.remove((coord.x, coord.y))
+
+            for _, code in self.colors:
+                self.remove(code)
             return res
         return wrapper
 
     def __init__(self, data: str | List[List], *colors: Code) -> None:
         self.colors = colors
+        
 
         if isinstance(data, str):
             if data[0] == '\n':
@@ -69,7 +68,14 @@ class Matrix:
 
         width = max([len(row) for row in self.rows])
         self.array = [row + [" "] * (width - len(row)) for row in self.rows]
-
+        
+        for color in self.colors:
+            if color.coord.x >= self.width:
+                Logger.warning(f'Coord x: {color.coord.x} is passed the bounds of {self.width}. This may cause unintended problems.')
+            for color_ in self.colors:
+                # TODO if color.coord.x == color_.coord.x: not == but around by 1
+                ...
+            
     def __iter__(self) -> Iterator[Generator[str, Any, Any]]:
         """Iterate through every cell."""
         for row in self.rows:
@@ -80,6 +86,7 @@ class Matrix:
     def coords(self) -> List[Coord]:
         return Range(self.size.reverse).coords
     
+    @property
     def row_coords(self, row: int) -> List[Coord]:
         return Range((len(row), row), (0, row))
 
@@ -112,21 +119,21 @@ class Matrix:
     def height(self) -> int:
         return max([len(col) for col in self.cols])
 
-    def insert(self, pos: CoordReference, cell: Any):
+    def insert(self, pos: CoordReference, cell: Any) -> None:
+        """Insert a cell at a given pos."""
         pos = Coord.convert_reference(pos)
         self.array[pos.y].insert(pos.x, cell)
 
-    def remove(self, pos: CoordReference):
+    def pop(self, pos: CoordReference) -> None:
+        """Remove the cell at a given pos."""
         pos = Coord.convert_reference(pos)
         self.array[pos.y].pop(pos.x)
 
-    def __getitem__(self, coord: CoordReference) -> Any:
-        coord = Coord.convert_reference(coord)
-        return self.array[coord.y][coord.x]
-
-    def __setitem__(self, coord: CoordReference, cell: Any) -> Any:
-        coord = Coord.convert_reference(coord)
-        self.array[coord.y][coord.x] = cell
+    def remove(self, cell: Any) -> None:
+        """Remove the first occurrence a cell."""
+        for i, row in enumerate(self.rows):
+            if cell in row:
+                self.array[i].remove(cell)
 
     @with_colors
     def __repr__(self) -> str:
