@@ -1,4 +1,4 @@
-from typing import List, Optional, Iterator
+from typing import List, Optional, Generator
 
 from src.types_ import CoordReference
 from src.window.coord import Coord
@@ -9,13 +9,11 @@ class Range:
         self, stop: CoordReference,
         start: Optional[CoordReference] = None
     ) -> None:
-        if start is None:
-            start = 0
-        self.start = Coord.convert_reference(start)
+        self.start = Coord.convert_reference(start or 0)
         self.stop = Coord.convert_reference(stop)
         
-    def __iter__(self) -> Iterator[Coord]:
-        for row in self.coords:
+    def __iter__(self) -> Generator[Coord, None, None]:
+        for row in self.row_coords:
             for coord in row:
                 yield coord
 
@@ -28,7 +26,7 @@ class Range:
         return slice(self.start.y, self.stop.y)
 
     @property
-    def coords(self) -> List[List[Coord]]:
+    def row_coords(self) -> List[List[Coord]]:
         return [[
             Coord(self.start.y + col, self.start.x + row)
             for col in range(self.stop.x + 1)]
