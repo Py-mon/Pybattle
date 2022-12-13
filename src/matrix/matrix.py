@@ -21,7 +21,7 @@ class ColorCoord:
 
 
 class Matrix:
-    def __init__(self, data: str | List[List], *colors: ColorCoord) -> None:
+    def __init__(self, data: str | List[List] | List, *colors: ColorCoord) -> None:
         self.colors = colors
 
         if isinstance(data, str):
@@ -30,6 +30,8 @@ class Matrix:
             self.array = [[cell for cell in row] for row in data.splitlines()]
         else:
             self.array = data
+            if not all([isinstance(row, list) for row in self.array]):
+                self.array = [self.array]
 
         width = max([len(row) for row in self.rows])
         self.array = [row + [" "] * (width - len(row)) for row in self.rows]
@@ -58,14 +60,14 @@ class Matrix:
         else:
             return coord_or_cell in iter(self)
 
-    def __iter__(self) -> Iterator[Generator[str, Any, Any]]:
+    def __iter__(self) -> Generator[Any, None, None]:
         """Iterate through every cell."""
         for row in self.rows:
             for cell in row:
                 yield cell
 
     @staticmethod
-    def out_of_bounds(func: Callable) -> Callable:
+    def log_out_of_bounds(func: Callable) -> Callable:
         """Logs on IndexError."""
 
         def wrapper(self: Self, *args) -> Any:
@@ -76,12 +78,12 @@ class Matrix:
             return res
         return wrapper
 
-    @out_of_bounds
+    @log_out_of_bounds
     def __getitem__(
         self,
         slice_: int | tuple[int, int] | Tuple[CoordReference,
                                               CoordReference] | slice
-    ) -> Self:
+    ) -> Self | Any:
         """
         ```
         matrix[n] -> Row n
@@ -89,28 +91,27 @@ class Matrix:
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
 
         """
-        # print(slice_, type(slice_))
-
         if isinstance(slice_, int):
-            return self.array[slice_]
+            return Matrix(self.array[slice_])
 
         elif isinstance(slice_, Coord | tuple):
             coord = Coord.convert_reference(slice_)
             return self.array[coord.y][coord.x]
 
         elif isinstance(slice_, slice):
-            if slice_.stop is None:
-                slice_.stop = (self.width, self.height)
+            stop = slice_.stop
+            if stop is None:
+                stop = (self.width - 1, self.height - 1)
 
-            return [[self[coord] for coord in row] for row in Range(slice_.stop, slice_.start).coords]
+            return Matrix([[self[coord] for coord in row] for row in Range(slice_.stop, slice_.start).row_coords])
 
-    @out_of_bounds
+    @log_out_of_bounds
     def __setitem__(
         self,
         slice_: int | Tuple[int, int] | Tuple[CoordReference,
                                               CoordReference] | slice,
         cell_s: Any | List | Self
-    ) -> Self:
+    ) -> None:
         """
         ```
         matrix[n] -> Row n
@@ -118,7 +119,8 @@ class Matrix:
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
 
         """
-
+        # TODO: Remove colors in area
+        
         if isinstance(slice_, int):
             self.array[slice_] = cell_s
 
@@ -170,7 +172,7 @@ class Matrix:
         for i, row in enumerate(self.rows):
             if cell in row:
                 self.array[i].remove(cell)
-                
+
     def remove_colors(self) -> None:
         self.colors = []
 
@@ -188,7 +190,7 @@ class Matrix:
                 self.remove(code)
             return res
         return wrapper
-    
+
     @with_colors
     def __repr__(self) -> str:
         color = str(Colors.DEFAULT)
