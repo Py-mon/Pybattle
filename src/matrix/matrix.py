@@ -1,13 +1,15 @@
-from typing import Any, Callable, Generator, Iterator, List, Optional, Self
+from typing import Any, Callable, Generator, Iterator, List, Self, Tuple
 
+from src.error import OutOfBoundsError
+from src.log import Logger
+from src.matrix.range import Range
 from src.types_ import CoordReference
 from src.window.color import Color, Colors
 from src.window.coord import Coord
 from src.window.size import Size
-from src.log import Logger
 
 
-class Code:
+class ColorCoord:
     """A Color assigned to a coordinate."""
 
     def __init__(self, coord: CoordReference, color: Color) -> None:
@@ -16,48 +18,11 @@ class Code:
 
     def __iter__(self) -> Iterator[Coord | Color]:
         return iter((self.coord, self.color))
-    
-
-class Range:
-    def __init__(
-        self, stop: CoordReference | int,
-        start: Optional[CoordReference] | int = 0
-    ) -> None:
-        self.start = Coord.convert_reference(start)
-        self.stop = Coord.convert_reference(stop)
-
-    @property
-    def x_slice(self) -> slice:
-        return slice(self.start.x, self.stop.x)
-    
-    @property
-    def y_slice(self) -> slice:
-        return slice(self.start.y, self.stop.y)
-
-    @property
-    def coords(self) -> List[Coord]:
-        return [Coord(self.start.y + col, self.start.x + row) for col in range(self.stop.x + 1) for row in range(self.stop.y + 1)]
 
 
 class Matrix:
-    @staticmethod
-    def with_colors(func: Callable[["Matrix"], Any]) -> Callable[["Matrix"], Any]:
-        """Includes colors in the given function."""
-
-        def wrapper(self: Self, *args) -> Any:
-            for coord, code in self.colors:
-                self.insert(coord, code)
-                
-            res = func(self, *args)
-
-            for _, code in self.colors:
-                self.remove(code)
-            return res
-        return wrapper
-
-    def __init__(self, data: str | List[List], *colors: Code) -> None:
+    def __init__(self, data: str | List[List], *colors: ColorCoord) -> None:
         self.colors = colors
-        
 
         if isinstance(data, str):
             if data[0] == '\n':
@@ -68,24 +33,19 @@ class Matrix:
 
         width = max([len(row) for row in self.rows])
         self.array = [row + [" "] * (width - len(row)) for row in self.rows]
-        
+
         for color in self.colors:
             if color.coord.x >= self.width:
-                Logger.warning(f'Coord x: {color.coord.x} is passed the bounds of {self.width}. This may cause unintended problems.')
+                Logger.warning(
+                    f'Coord x: {color.coord.x} is passed the bounds of {self.width}. This may cause unintended problems.')
             for color_ in self.colors:
                 # TODO if color.coord.x == color_.coord.x: not == but around by 1
                 ...
-            
-    def __iter__(self) -> Iterator[Generator[str, Any, Any]]:
-        """Iterate through every cell."""
-        for row in self.rows:
-            for cell in row:
-                yield cell
 
     @property
     def coords(self) -> List[Coord]:
-        return Range(self.size.reverse).coords
-    
+        return list(iter(Range(self.size.reverse)))
+
     @property
     def row_coords(self, row: int) -> List[Coord]:
         return Range((len(row), row), (0, row))
@@ -97,6 +57,82 @@ class Matrix:
             return coord_or_cell in self.coords
         else:
             return coord_or_cell in iter(self)
+
+    def __iter__(self) -> Iterator[Generator[str, Any, Any]]:
+        """Iterate through every cell."""
+        for row in self.rows:
+            for cell in row:
+                yield cell
+
+    @staticmethod
+    def out_of_bounds(func: Callable) -> Callable:
+        """Logs on IndexError."""
+
+        def wrapper(self: Self, *args) -> Any:
+            try:
+                res = func(self, *args)
+            except IndexError:
+                Logger.error('Index out of range.', OutOfBoundsError)
+            return res
+        return wrapper
+
+    @out_of_bounds
+    def __getitem__(
+        self,
+        slice_: int | tuple[int, int] | Tuple[CoordReference,
+                                              CoordReference] | slice
+    ) -> Self:
+        """
+        ```
+        matrix[n] -> Row n
+        matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
+        matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
+
+        """
+        # print(slice_, type(slice_))
+
+        if isinstance(slice_, int):
+            return self.array[slice_]
+
+        elif isinstance(slice_, Coord | tuple):
+            coord = Coord.convert_reference(slice_)
+            return self.array[coord.y][coord.x]
+
+        elif isinstance(slice_, slice):
+            if slice_.stop is None:
+                slice_.stop = (self.width, self.height)
+
+            return [[self[coord] for coord in row] for row in Range(slice_.stop, slice_.start).coords]
+
+    @out_of_bounds
+    def __setitem__(
+        self,
+        slice_: int | Tuple[int, int] | Tuple[CoordReference,
+                                              CoordReference] | slice,
+        cell_s: Any | List | Self
+    ) -> Self:
+        """
+        ```
+        matrix[n] -> Row n
+        matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
+        matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
+
+        """
+
+        if isinstance(slice_, int):
+            self.array[slice_] = cell_s
+
+        elif isinstance(slice_, Coord | tuple):
+            coord = Coord.convert_reference(slice_)
+            self.array[coord.y][coord.x] = cell_s
+
+        elif isinstance(slice_, slice):
+            stop = slice_.stop
+            if stop is None:
+                stop = (self.width - 1, self.height - 1)
+
+            for coord in Range(stop, slice_.start):
+                self[coord] = cell_s[coord]
 
     @property
     def rows(self) -> List[List]:
@@ -134,7 +170,25 @@ class Matrix:
         for i, row in enumerate(self.rows):
             if cell in row:
                 self.array[i].remove(cell)
+                
+    def remove_colors(self) -> None:
+        self.colors = []
 
+    @staticmethod
+    def with_colors(func: Callable[["Matrix"], Any]) -> Callable[["Matrix"], Any]:
+        """Includes colors in the given function."""
+
+        def wrapper(self: Self, *args) -> Any:
+            for i, (coord, code) in enumerate(self.colors):
+                self.insert((coord.x + i, coord.y), code)
+
+            res = func(self, *args)
+
+            for _, code in self.colors:
+                self.remove(code)
+            return res
+        return wrapper
+    
     @with_colors
     def __repr__(self) -> str:
         color = str(Colors.DEFAULT)

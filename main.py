@@ -7,20 +7,27 @@ from src.window.screen import Screen
 
 Screen.clear()
 
-from src.matrix.matrix import Matrix, Code, Colors
+from src.matrix.matrix import Matrix, ColorCoord, Colors
 
 array = Matrix(
 f'''
 1230
 4560
 7890
-''', Code((0, 0), Colors.MAGENTA), Code((2, 0), Colors.RED), Code((4, 0), Colors.BLUE))
+''', ColorCoord((0, 0), Colors.MAGENTA), ColorCoord((2, 0), Colors.RED), ColorCoord((3, 0), Colors.BLUE))
 
 print(repr(array))
 print(str(array))
 print(array.size)
 
-
+print(array[(0, 0):(1, 2)])
+array[(0, 0):(1, 2)] = Matrix(
+f'''
+99
+99
+99
+''')
+print(repr(array))
 
 # test_str = str_with_text('''\
 # ╭───────────╮
