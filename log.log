@@ -1,3 +1,0 @@
-WARNING: In file c:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\main.py on line 12
-array = Matrix(
-Coord x: 4 is passed the bounds of 4. This may cause unintended problems.

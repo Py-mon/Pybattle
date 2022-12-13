@@ -21,7 +21,7 @@ class Logger:
     @classmethod
     def error(cls, msg: str, error: Type[Error] = Error, traceback: bool = True) -> None:
         if traceback:
-            cls.logger.error(error.__name__ + ': ' + Traceback().trace + msg)
+            cls.logger.error(Traceback().trace + error.__name__ + ': ' + msg)
         else:
             cls.logger.error(error.__name__ + ': ' + msg)
         raise error(msg)
