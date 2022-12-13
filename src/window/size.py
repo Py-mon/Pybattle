@@ -65,13 +65,6 @@ class Size:
         if self.width == other.width and self.height == other.height:
             return True
         return False
-    
-    def __contains__(self, sequence: Sequence[SizeReference]) -> bool:
-        for size in sequence:
-            size = Size.convert_reference(size)
-            if self.width == size.width and self.height == size.height:
-                return True
-        return False
 
     def __repr__(self) -> str:
         return f'(Height: {self.height}, Width: {self.width})'
