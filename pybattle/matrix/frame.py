@@ -28,7 +28,7 @@ class Frame:
         self.name_location = name_location
         
         if size is not ...:
-            self.size = Size.convert_reference(size)
+            self.size = Size.convert_reference(size) - 2
             
             # if self.contents is not None:
             #     if isinstance(contents, str):
@@ -61,7 +61,7 @@ class Frame:
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
             print(repr(self.contents))
-            self.size = self.contents.size
+            self.size = self.contents.size + 2
         else:
             raise Logger.error(
                 'Cannot have no contents and no size. Must have at least one.', InsufficientArgumentsError)
@@ -88,23 +88,26 @@ class Frame:
 
     @property
     def icols(self) -> int:
-        return self.width - 1
+        return self.width + 1
 
     @property
     def irows(self) -> int:
-        return self.height - 1
+        return self.height + 1
 
     def _update_frame(self) -> None:
-        frame = f'╭{"─" * self.width}╮\n'
-        for i in range(self.height):
-            if self.contents is None:
-                frame += f'│{" " * self.width}│\n'
-            else:
+        
+        if self.contents is None:
+            frame = f'╭{"─" * self.width}╮\n'
+            for i in range(self.height):
+                frame += f'│{" " * (self.width)}│\n'
+            frame += f'╰{"─" * self.width}╯\n'
+        else:
+            frame = f'╭{"─" * (self.width - 2)}╮\n'
+            for i in range(self.height - 2):
                 x = '\n'  # Doesn't allow "\" in f-strings
                 frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
+            frame += f'╰{"─" * (self.width - 2)}╯\n'
 
-        frame += f'╰{"─" * self.width}╯\n'
-        
         print(frame)
 
         self.matrix = Matrix(frame)
@@ -176,7 +179,7 @@ class Window(Frame):
         bottom_right = pos + frame.bottom_right_corner
 
         print(repr(frame.matrix))
-        print(repr(self.matrix[top_left: pos + frame.size + 1]))
+        print(repr(self.matrix[top_left: pos + frame.size]))
         # print(self.matrix[top_left.y: frame.height + pos.y,
         #                   top_left.x: frame.width + pos.x])
         self.matrix[top_left: pos + frame.size] = frame.matrix
@@ -188,28 +191,29 @@ class Window(Frame):
         # ╰──────────────────╯
 
         if top_left in self.top_edge_positions:
-            self.matrix[top_left.reverse] = '┬'
+            self.matrix[top_left] = '┬'
         elif top_left in self.left_edge_positions:
-            self.matrix[top_left.reverse] = '├'
+            self.matrix[top_left] = '├'
 
+        print(top_right in self.top_edge_positions)
         if top_right in self.top_edge_positions:
-            self.matrix[top_right.reverse] = '┬'
+            self.matrix[top_right] = '┬'
         elif top_right in self.right_edge_positions:
-            self.matrix[top_right.reverse] = '┤'
+            self.matrix[top_right] = '┤'
 
         if bottom_left in self.top_edge_positions:
-            self.matrix[bottom_left.reverse] = '┴'
+            self.matrix[bottom_left] = '┴'
         elif bottom_left in self.left_edge_positions:
-            self.matrix[bottom_left.reverse] = '├'
+            self.matrix[bottom_left] = '├'
 
         if bottom_right in self.top_edge_positions:
-            self.matrix[bottom_right.reverse] = '┴'
+            self.matrix[bottom_right] = '┴'
         elif bottom_right in self.right_edge_positions:
-            self.matrix[bottom_right.reverse] = '┤'
+            self.matrix[bottom_right] = '┤'
 
         # Overlaps Name
         # if self.name is not None:
         #     for i, char in enumerate(' ' + self.name + ' '):
         #         self.matrix[self.name_location.y, i + self.name_location.x] = char
         
-    
+        print(self.matrix)
