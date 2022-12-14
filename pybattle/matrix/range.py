@@ -31,6 +31,6 @@ class Range:
     @property
     def row_coords(self) -> List[List[Coord]]:
         return [[
-            Coord(self.start.y + col, self.start.x + row)
+            Coord(self.start.x + col, self.start.y + row)
             for col in range(self.stop.x + 1)]
             for row in range(self.stop.y + 1)]
