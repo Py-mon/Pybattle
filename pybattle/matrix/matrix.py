@@ -131,9 +131,7 @@ class Matrix:
             if stop is None:
                 stop = (self.width - 1, self.height - 1)
             
-            print(repr(cell_s))
-            for coord in Range(stop, slice_.start):
-                print(self[coord], cell_s[coord])
+            for coord in Range(stop + 1, slice_.start):
                 self[coord] = cell_s[coord]
 
     @property
