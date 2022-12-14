@@ -39,11 +39,11 @@ class Size:
 
     def add(self, other: SizeReference) -> Self:
         other = Size.convert_reference(other)
-        return Size(self.width + other.width, self.height + other.height)
+        return Size(self.height + other.height, self.width + other.width)
 
     def subtract(self, other: SizeReference) -> Self:
         other = Size.convert_reference(other)
-        return Size(self.width - other.width, self.height - other.height)
+        return Size(self.height - other.height, self.width - other.width)
 
     def __add__(self, other: SizeReference) -> Self:
         return self.add(other)
