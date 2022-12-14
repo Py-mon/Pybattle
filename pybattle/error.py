@@ -1,4 +1,4 @@
-from src.traceback import Traceback
+from pybattle.traceback import Traceback
 
 
 class Error(Exception):

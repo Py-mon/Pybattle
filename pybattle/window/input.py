@@ -1,10 +1,10 @@
 from typing import Callable
 
-from src.types_ import CoordReference, SizeReference
-from src.window.coord import Coord
-from src.window.frame import Window
-from src.window.color import Colors
-from src.window.size import Size
+from pybattle.types_ import CoordReference, SizeReference
+from pybattle.window.coord import Coord
+from pybattle.window.frame import Window
+from pybattle.window.color import Colors
+from pybattle.window.size import Size
 
 
 class Selection:

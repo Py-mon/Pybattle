@@ -4,8 +4,8 @@ from re import compile, sub
 
 from numpy import array, row_stack, insert, ravel_multi_index
 
-from src.window.size import Size
-from src.window.coord import Coord
+from pybattle.window.size import Size
+from pybattle.window.coord import Coord
 
 
 class Matrix:

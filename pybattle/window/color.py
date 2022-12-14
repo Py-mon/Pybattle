@@ -2,7 +2,7 @@ from typing import Optional, Iterator
 
 from colorama import Fore
 
-from src.window.ansi import AnsiEscSeq
+from pybattle.window.ansi import AnsiEscSeq
 
 
 class Color:

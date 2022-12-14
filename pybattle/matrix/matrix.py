@@ -1,12 +1,12 @@
 from typing import Any, Callable, Generator, Iterator, List, Self, Tuple
 
-from src.error import OutOfBoundsError
-from src.log import Logger
-from src.matrix.range import Range
-from src.types_ import CoordReference
-from src.window.color import Color, Colors
-from src.window.coord import Coord
-from src.window.size import Size
+from pybattle.error import OutOfBoundsError
+from pybattle.log import Logger
+from pybattle.matrix.range import Range
+from pybattle.types_ import CoordReference
+from pybattle.window.color import Color, Colors
+from pybattle.window.coord import Coord
+from pybattle.window.size import Size
 
 
 class ColorCoord:
@@ -89,7 +89,6 @@ class Matrix:
         matrix[n] -> Row n
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
-
         """
         if isinstance(slice_, int):
             return Matrix(self.array[slice_])
@@ -110,14 +109,13 @@ class Matrix:
         self,
         slice_: int | Tuple[int, int] | Tuple[CoordReference,
                                               CoordReference] | slice,
-        cell_s: Any | List | Self
+        cell_s: Any | List | Self | List[List]
     ) -> None:
         """
         ```
         matrix[n] -> Row n
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
-
         """
         # TODO: Remove colors in area
         
@@ -132,8 +130,10 @@ class Matrix:
             stop = slice_.stop
             if stop is None:
                 stop = (self.width - 1, self.height - 1)
-
+            
+            print(repr(cell_s))
             for coord in Range(stop, slice_.start):
+                print(self[coord], cell_s[coord])
                 self[coord] = cell_s[coord]
 
     @property

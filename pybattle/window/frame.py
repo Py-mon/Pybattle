@@ -2,12 +2,12 @@ from typing import Optional, Self
 
 from numpy import full
 
-from src.error import InsufficientArgumentsError, OutOfBoundsError
-from src.log import Logger
-from src.types_ import CoordReference, SizeReference
-from src.window.coord import Coord, CoordList
-from src.window.matrix import Matrix
-from src.window.size import Size
+from pybattle.error import InsufficientArgumentsError, OutOfBoundsError
+from pybattle.log import Logger
+from pybattle.types_ import CoordReference, SizeReference
+from pybattle.window.coord import Coord, CoordList
+from pybattle.window.matrix import Matrix
+from pybattle.window.size import Size
 
 
 class Frame:
@@ -274,3 +274,5 @@ class Window(Frame):
                 self.matrix[self.name_location.y, i + self.name_location.x] = char
 
         print(self.matrix)
+        
+    

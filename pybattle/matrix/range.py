@@ -1,7 +1,7 @@
 from typing import List, Optional, Generator
 
-from src.types_ import CoordReference
-from src.window.coord import Coord
+from pybattle.types_ import CoordReference
+from pybattle.window.coord import Coord
 
 
 class Range:
@@ -16,6 +16,9 @@ class Range:
         for row in self.row_coords:
             for coord in row:
                 yield coord
+                
+    def __contains__(self, coord: CoordReference) -> bool:
+        return Coord.convert_reference(coord) in iter(self)
 
     @property
     def x_slice(self) -> slice:

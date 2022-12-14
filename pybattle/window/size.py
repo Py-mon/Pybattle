@@ -1,7 +1,7 @@
 
 from typing import Self, Sequence
 
-from src.types_ import SizeReference
+from pybattle.types_ import SizeReference
 
 
 class Size:
