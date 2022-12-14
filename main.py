@@ -60,6 +60,4 @@ map_ = Window('''
                     ╰─────┴─╯ 
 ''')
 
-map_[1, 1] = '5'
-
 map_.add_frame(Window(size=(5, 5)))
