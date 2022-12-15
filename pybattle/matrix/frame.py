@@ -1,7 +1,5 @@
 from typing import Optional, Self, List
 
-from numpy import full
-
 from pybattle.error import InsufficientArgumentsError, OutOfBoundsError
 from pybattle.log import Logger
 from pybattle.types_ import CoordReference, SizeReference
@@ -21,46 +19,43 @@ class Frame:
         contents: Optional[str] | Matrix = None,
         size: SizeReference = ...,
         name: Optional[str] = None,
-        name_location: Coord = Coord(2, 0)
     ) -> None:
         self.contents = contents
         self.name = name
-        self.name_location = name_location
         
         if size is not ...:
-            self.size = Size.convert_reference(size) - 2
+            self.size = Size.convert_reference(size)
             
-            # if self.contents is not None:
-            #     if isinstance(contents, str):
-            #         self.contents = Matrix(contents)
+            if self.contents is not None:
+                if isinstance(contents, str):
+                    self.contents = Matrix(contents)
+                    
+                array = Matrix([[' ' for _ in range(self.inner_width)] for _ in range(self.inner_height)])
                 
-            #     height = self.contents.size.height // 2
-            #     width = self.contents.size.width // 2
-                              
-            #     middle_height = (self.size.height - 2) // 2
-            #     middle_width = (self.size.width - 2) // 2
-                
-            #     array = full(self.size.subtract(2).reverse, ' ')
-                
-            #     starting_height = middle_height - height
-            #     ending_height = middle_height + height
-            #     if height == 0:
-            #         ending_height = middle_height + self.contents.size.height
-                
-            #     starting_width = middle_width - width
-            #     ending_width = middle_width + width
-            #     if width == 0:
-            #         ending_width = middle_width + self.contents.size.width
+                print(repr(array))
 
-            #     array[starting_height: ending_height,
-            #           starting_width: ending_width] = self.contents._matrix
+                center_size = self.contents.size.center - 1
                 
-            #     self.contents = Matrix.array_to_matrix(array)
+                print(center_size, center_size)
+                
+                center_inner_size = self.inner_size.center
+
+                print(center_inner_size, center_inner_size)
+                
+                starting = center_inner_size - center_size
+                ending = center_inner_size + center_size
+                
+                print(starting, ending)
+                print(repr(array[starting: ending]))
+                print(repr(self.contents))
+
+                array[starting: ending] = self.contents
+                
+                self.contents = array
                 
         elif self.contents is not None:
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
-            print(repr(self.contents))
             self.size = self.contents.size + 2
         else:
             raise Logger.error(
@@ -85,39 +80,44 @@ class Frame:
     def height(self, to: int):
         self.size.height = to
         self._update_frame()
+        
+    @property
+    def inner_height(self) -> int:
+        return self.height - 2
+    
+    @property
+    def inner_width(self) -> int:
+        return self.width - 2
+    
+    @property
+    def inner_size(self) -> Size:
+        return self.size - 2
 
     @property
     def icols(self) -> int:
-        return self.width + 1
+        return self.width - 1
 
     @property
     def irows(self) -> int:
-        return self.height + 1
+        return self.height - 1
 
     def _update_frame(self) -> None:
-        
-        if self.contents is None:
-            frame = f'╭{"─" * self.width}╮\n'
-            for i in range(self.height):
-                frame += f'│{" " * (self.width)}│\n'
-            frame += f'╰{"─" * self.width}╯\n'
+        if self.name is None:
+            frame = f'╭{"─" * self.inner_width}╮\n'
         else:
-            frame = f'╭{"─" * (self.width - 2)}╮\n'
-            for i in range(self.height - 2):
+            frame = f'╭─ {self.name} {"─" * (self.inner_width - len(self.name) - 3)}╮\n'
+        for i in range(self.inner_height):
+            if self.contents is None:
+                frame += f'│{" " * self.inner_width}│\n'
+            else:
                 x = '\n'  # Doesn't allow "\" in f-strings
                 frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
-            frame += f'╰{"─" * (self.width - 2)}╯\n'
+    
+        frame += f'╰{"─" * self.inner_width}╯\n'
 
         print(frame)
 
         self.matrix = Matrix(frame)
-        
-        # if self.name is not None:
-        #     for i, char in enumerate(' ' + self.name + ' '):
-        #         try:
-        #             self.matrix[self.name_location.y, i + self.name_location.x] = char
-        #         except IndexError:
-        #             raise Logger.error(f'Starting at {self.name_location.coords} the name: " {self.name} " is out of bounds of {self.size.size}', OutOfBoundsError)
                 
     def __getitem__(self, item) -> None:
         return self.matrix[item]
@@ -179,10 +179,8 @@ class Window(Frame):
         bottom_right = pos + frame.bottom_right_corner
 
         print(repr(frame.matrix))
-        print(repr(self.matrix[top_left: pos + frame.size]))
-        # print(self.matrix[top_left.y: frame.height + pos.y,
-        #                   top_left.x: frame.width + pos.x])
-        self.matrix[top_left: pos + frame.size] = frame.matrix
+        print(repr(self.matrix[top_left: frame.size.reverse]))
+        self.matrix[top_left: frame.size.reverse] = frame.matrix
         print(repr(self.matrix))
 
         # TODO: Fix corner going like this:
@@ -212,8 +210,8 @@ class Window(Frame):
             self.matrix[bottom_right] = '┤'
 
         # Overlaps Name
-        # if self.name is not None:
-        #     for i, char in enumerate(' ' + self.name + ' '):
-        #         self.matrix[self.name_location.y, i + self.name_location.x] = char
+        if self.name is not None:
+            for i, char in enumerate(' ' + self.name + ' '):
+                self.matrix[i + 2, 0] = char
         
         print(self.matrix)

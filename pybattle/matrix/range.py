@@ -21,16 +21,9 @@ class Range:
         return Coord.convert_reference(coord) in iter(self)
 
     @property
-    def x_slice(self) -> slice:
-        return slice(self.start.x, self.stop.x)
-
-    @property
-    def y_slice(self) -> slice:
-        return slice(self.start.y, self.stop.y)
-
-    @property
     def row_coords(self) -> List[List[Coord]]:
+        # TODO Fix
         return [[
-            Coord(self.start.x + col, self.start.y + row)
-            for col in range(self.stop.x + 1)]
+            Coord(self.start.y + row, self.start.x + col)
             for row in range(self.stop.y + 1)]
+            for col in range(self.stop.x + 1)]

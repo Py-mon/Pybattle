@@ -93,16 +93,18 @@ class Matrix:
         if isinstance(slice_, int):
             return Matrix(self.array[slice_])
 
-        elif isinstance(slice_, Coord | tuple):
+        elif isinstance(slice_, Size | Coord | tuple):
             coord = Coord.convert_reference(slice_)
             return self.array[coord.y][coord.x]
 
         elif isinstance(slice_, slice):
             stop = slice_.stop
             if stop is None:
-                stop = (self.width - 1, self.height - 1)
+                stop = Size(self.width, self.height) - slice_.start
 
-            return Matrix([[self[coord] for coord in row] for row in Range(slice_.stop, slice_.start).row_coords])
+            stop = Size.convert_reference(stop)
+            print(Range(stop - 1, slice_.start).row_coords)
+            return Matrix([[self[coord] for coord in row] for row in Range(stop - 1, slice_.start).row_coords])
 
     @log_out_of_bounds
     def __setitem__(
@@ -118,21 +120,24 @@ class Matrix:
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
         """
         # TODO: Remove colors in area
-        
+
         if isinstance(slice_, int):
             self.array[slice_] = cell_s
 
-        elif isinstance(slice_, Coord | tuple):
+        elif isinstance(slice_, Size | Coord | tuple):
             coord = Coord.convert_reference(slice_)
             self.array[coord.y][coord.x] = cell_s
 
         elif isinstance(slice_, slice):
             stop = slice_.stop
             if stop is None:
-                stop = (self.width - 1, self.height - 1)
-            
-            for coord in Range(stop + 1, slice_.start):
-                self[coord] = cell_s[coord]
+                stop = Size(self.width, self.height) - slice_.start
+
+            stop = Size.convert_reference(stop)
+
+            for coord in Range(stop - 1, slice_.start):
+                print(coord)
+                self[coord] = cell_s[coord - slice_.start]
 
     @property
     def rows(self) -> List[List]:
@@ -166,7 +171,7 @@ class Matrix:
         self.array[pos.y].pop(pos.x)
 
     def remove(self, cell: Any) -> None:
-        """Remove the first occurrence a cell."""
+        """Remove the first occurrence of a cell."""
         for i, row in enumerate(self.rows):
             if cell in row:
                 self.array[i].remove(cell)
@@ -200,7 +205,7 @@ class Matrix:
                     color = str(cell)
                     row_ += color
                 else:
-                    row_ += color + cell + str(Colors.DEFAULT) + ','
+                    row_ += color + str(cell) + str(Colors.DEFAULT) + ','
             res += row_[:-1] + '],\n '
         res = res[:-3] + str(Colors.DEFAULT) + ']'
         return res

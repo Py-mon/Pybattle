@@ -47,17 +47,33 @@ from pybattle.matrix.matrix import Matrix, ColorCoord, Colors
 
 # print(test_str)
 
-map_ = Window('''
-                   ||||       
-                   ||||       
-                     ─┬─┬─┬─┬─
+# map_ = Window('''
+#                    ||||       
+#                    ||||       
+#                      ─┬─┬─┬─┬─
                               
                               
-╭│╮   ╶─╮                     
-│││    ░│                     
-╰│╯   ╶─╯           ╭─────┬─╮ 
-                    │░░░░░│▓│ 
-                    ╰─────┴─╯ 
-''')
+# ╭│╮   ╶─╮                     
+# │││    ░│                     
+# ╰│╯   ╶─╯           ╭─────┬─╮ 
+#                     │░░░░░│▓│ 
+#                     ╰─────┴─╯ 
+# ''', name='HELLO')
 
-map_.add_frame(Window(size=(5, 5)))
+# print(map_.size)
+
+# map_.add_frame(Window(size=(5, 7)), (3, 0))
+
+
+Window('CENTERED', (11, 11))
+
+window = Window(size=(10, 10))
+
+# print(window.size)
+# print(window.inner_size)
+
+# x = window.size.center - Matrix('\nAB\n').size
+
+# window[x] = 'AB'
+
+# print(repr(window.matrix))

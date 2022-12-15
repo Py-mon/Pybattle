@@ -32,6 +32,17 @@ class Size:
     @property
     def size(self) -> tuple[int, int]:
         return (self.height, self.width)
+    
+    @property
+    def center(self) -> Self:
+        height = self.height // 2
+        width = self.width // 2
+        if height == 0:
+            height = self.height
+        if width == 0:
+            width = self.width
+            
+        return Size(height, width)
 
     @property
     def reverse(self) -> tuple[int, int]:
