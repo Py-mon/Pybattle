@@ -2,6 +2,7 @@
 from typing import Self, Sequence
 
 from pybattle.types_ import SizeReference
+from pybattle.window.coord import Coord
 
 
 class Size:
@@ -42,7 +43,7 @@ class Size:
         if width == 0:
             width = self.width
             
-        return Size(height, width)
+        return Coord(width, height)
 
     @property
     def reverse(self) -> tuple[int, int]:

@@ -25,3 +25,8 @@ class OutOfBoundsError(Error):
 class InsufficientArgumentsError(Error):
     """Too few arguments required."""
     pass
+
+
+class InvalidMethodError(Error):
+    """Invalid method."""
+    pass

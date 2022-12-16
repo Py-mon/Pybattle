@@ -19,7 +19,7 @@ class Logger:
     logger.addHandler(__handler)
     
     @classmethod
-    def error(cls, msg: str, error: Type[Error] = Error, traceback: bool = True) -> None:
+    def error(cls, msg: str = '', error: Type[Error] = Error, traceback: bool = True) -> None:
         if traceback:
             cls.logger.error(Traceback().trace + error.__name__ + ': ' + msg)
         else:

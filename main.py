@@ -1,10 +1,9 @@
 # from src.window.code import str_with_text
 # from src.window.color import Color
 # from src.window.code import Code
-from pybattle.matrix.frame import Window
-
+from pybattle.matrix.range import Range
 from pybattle.window.screen import Screen
-
+from pybattle.matrix.frame import Window
 Screen.clear()
 
 from pybattle.matrix.matrix import Matrix, ColorCoord, Colors
@@ -64,16 +63,6 @@ from pybattle.matrix.matrix import Matrix, ColorCoord, Colors
 
 # map_.add_frame(Window(size=(5, 7)), (3, 0))
 
+print(Range((4, 8), (4, 0)).row_coords)
 
 Window('CENTERED', (11, 11))
-
-window = Window(size=(10, 10))
-
-# print(window.size)
-# print(window.inner_size)
-
-# x = window.size.center - Matrix('\nAB\n').size
-
-# window[x] = 'AB'
-
-# print(repr(window.matrix))

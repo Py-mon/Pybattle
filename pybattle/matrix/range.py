@@ -1,7 +1,7 @@
 from typing import List, Optional, Generator
 
 from pybattle.types_ import CoordReference
-from pybattle.window.coord import Coord
+from pybattle.matrix.coord import Coord
 
 
 class Range:
@@ -22,8 +22,6 @@ class Range:
 
     @property
     def row_coords(self) -> List[List[Coord]]:
-        # TODO Fix
         return [[
-            Coord(self.start.y + row, self.start.x + col)
-            for row in range(self.stop.y + 1)]
-            for col in range(self.stop.x + 1)]
+            Coord(y, x) for x in range(self.start.x, self.stop.x)]
+            for y in range(self.start.y, self.stop.y + 1)]  # Strange + 1

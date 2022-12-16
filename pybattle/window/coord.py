@@ -2,8 +2,7 @@
 
 from typing import Any, Self, Sequence, Tuple
 
-from pybattle.types_ import CoordReference
-from pybattle.window.size import Size
+from pybattle.types_ import CoordReference, SizeReference
 
 
 class Coord:
@@ -29,7 +28,7 @@ class Coord:
         """
         if isinstance(reference, int):
             return Coord(reference, reference)
-        if isinstance(reference, tuple | Size):
+        if isinstance(reference, SizeReference):
             return Coord(*reference)
         return reference
 

@@ -2,11 +2,10 @@ from typing import Any, Callable, Generator, Iterator, List, Self, Tuple
 
 from pybattle.error import OutOfBoundsError
 from pybattle.log import Logger
+from pybattle.matrix.coord import Coord, Size
 from pybattle.matrix.range import Range
 from pybattle.types_ import CoordReference
 from pybattle.window.color import Color, Colors
-from pybattle.window.coord import Coord
-from pybattle.window.size import Size
 
 
 class ColorCoord:
@@ -33,7 +32,10 @@ class Matrix:
             if not all([isinstance(row, list) for row in self.array]):
                 self.array = [self.array]
 
-        width = max([len(row) for row in self.rows])
+        if self.rows:
+            width = max([len(row) for row in self.rows])
+        else:
+            width = 0
         self.array = [row + [" "] * (width - len(row)) for row in self.rows]
 
         for color in self.colors:
@@ -103,8 +105,9 @@ class Matrix:
                 stop = Size(self.width, self.height) - slice_.start
 
             stop = Size.convert_reference(stop)
-            print(Range(stop - 1, slice_.start).row_coords)
-            return Matrix([[self[coord] for coord in row] for row in Range(stop - 1, slice_.start).row_coords])
+            
+            print(Range(stop, slice_.start).row_coords)
+            return Matrix([[self[coord] for coord in row] for row in Range(stop, slice_.start).row_coords])
 
     @log_out_of_bounds
     def __setitem__(
@@ -135,8 +138,7 @@ class Matrix:
 
             stop = Size.convert_reference(stop)
 
-            for coord in Range(stop - 1, slice_.start):
-                print(coord)
+            for coord in Range(stop, slice_.start):
                 self[coord] = cell_s[coord - slice_.start]
 
     @property

@@ -1,12 +1,11 @@
-from typing import Optional, Self, List
+from typing import List, Optional, Self
 
 from pybattle.error import InsufficientArgumentsError, OutOfBoundsError
 from pybattle.log import Logger
-from pybattle.types_ import CoordReference, SizeReference
-from pybattle.window.coord import Coord, CoordList
+from pybattle.matrix.coord import Coord, Size
 from pybattle.matrix.matrix import Matrix
-from pybattle.window.size import Size
 from pybattle.matrix.range import Range
+from pybattle.types_ import CoordReference, SizeReference
 
 
 class Frame:
@@ -34,18 +33,17 @@ class Frame:
                 
                 print(repr(array))
 
-                center_size = self.contents.size.center - 1
+                text_center = self.contents.size.center
                 
-                print(center_size, center_size)
+                inner_frame_center = self.inner_size.center
                 
-                center_inner_size = self.inner_size.center
-
-                print(center_inner_size, center_inner_size)
+                starting = inner_frame_center - text_center
+                ending = inner_frame_center + text_center
                 
-                starting = center_inner_size - center_size
-                ending = center_inner_size + center_size
-                
+                print(text_center, text_center)
+                print(inner_frame_center, inner_frame_center)
                 print(starting, ending)
+                print()
                 print(repr(array[starting: ending]))
                 print(repr(self.contents))
 
@@ -127,19 +125,19 @@ class Frame:
 
     @property
     def top_edge_positions(self) -> Range:
-        return Range(Coord(self.icols, 0), Coord(1, 0))
+        return Range(Coord(0, self.icols), Coord(0, 1))
 
     @property
     def bottom_edge_positions(self) -> Range:
-        return Range(Coord(self.icols, self.irows), Coord(1, self.irows))
+        return Range(Coord(self.irows, self.icols), Coord(self.irows, 1))
 
     @property
     def left_edge_positions(self) -> Range:
-        return Range(Coord(0, self.irows), Coord(0, 1))
+        return Range(Coord(self.irows, 0), Coord(1, 0))
 
     @property
     def right_edge_positions(self) -> Range:
-        return Range(Coord(self.icols, self.irows), Coord(self.icols, 1))
+        return Range(Coord(self.irows, self.icols), Coord(1, self.icols))
 
     @property
     def top_left_corner(self) -> Coord:
@@ -147,15 +145,15 @@ class Frame:
 
     @property
     def bottom_left_corner(self) -> Coord:
-        return Coord(0, self.irows)
+        return Coord(self.irows, 0)
 
     @property
     def top_right_corner(self) -> Coord:
-        return Coord(self.icols, 0)
+        return Coord(0, self.icols)
 
     @property
     def bottom_right_corner(self) -> Coord:
-        return Coord(self.icols, self.irows)
+        return Coord(self.irows, self.icols)
 
 
 class Window(Frame):
@@ -179,8 +177,8 @@ class Window(Frame):
         bottom_right = pos + frame.bottom_right_corner
 
         print(repr(frame.matrix))
-        print(repr(self.matrix[top_left: frame.size.reverse]))
-        self.matrix[top_left: frame.size.reverse] = frame.matrix
+        print(repr(self.matrix[top_left: frame.size]))
+        self.matrix[top_left: frame.size] = frame.matrix
         print(repr(self.matrix))
 
         # TODO: Fix corner going like this:
