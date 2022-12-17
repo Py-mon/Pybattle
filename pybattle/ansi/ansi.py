@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class Cursor(Enum):
+    """Codes for moving the cursor."""
     UP = 0
     DOWN = 1
     LEFT = 2
@@ -17,12 +18,12 @@ class AnsiEscSeq:
     - Octal: \\033
     - Unicode: \\u001b
     - Hexadecimal: \\x1B (\\x1b)
-    - Decimal: 27
+    - Decimal: 27 (Note: This one does not work)
 
     The most useful sequences start with CSI (Control Sequence Introducer)
     - ESC[
 
-    For example to make the color red: ESC[31m or \\033[31m
+    For example to make the color red: ESC[31m (\\033[31m) (Any ESC will work)
 
     Learn more here: https://en.wikipedia.org/wiki/ANSI_escape_code"""
     ESC = '\033'
@@ -65,4 +66,4 @@ class AnsiEscSeq:
 
     def execute(self) -> None:
         """Execute the ANSI escape code."""
-        print(self.__code, end='')
+        print(self.code, end='')
