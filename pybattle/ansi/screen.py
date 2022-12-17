@@ -6,8 +6,8 @@ from shutil import get_terminal_size
 
 from pybattle.types_ import CoordReference
 from pybattle.window.coord import Coord
-from pybattle.window.color import Colors
-from pybattle.window.ansi import AnsiEscSeq, EscSeq
+from pybattle.ansi.color import Colors
+from pybattle.ansi.ansi import AnsiEscSeq, Cursor
 from pybattle.window.size import Size
 
 
@@ -19,32 +19,32 @@ class Cursor:
     def up(cls, n: int = 1) -> AnsiEscSeq:
         """Moves the cursor `n` cells up."""
         cls.pos.y -= 1
-        return AnsiEscSeq(EscSeq.CURSOR_MOVE_UP, n - 1)
+        return AnsiEscSeq(Cursor.CURSOR_MOVE_UP, n - 1)
 
     @classmethod
     def down(cls, n: int = 1) -> AnsiEscSeq:
         """Moves the cursor `n` cells down."""
         cls.pos.y += 1
-        return AnsiEscSeq(EscSeq.CURSOR_MOVE_DOWN, n - 1)
+        return AnsiEscSeq(Cursor.CURSOR_MOVE_DOWN, n - 1)
 
     @classmethod
     def right(cls, n: int = 1) -> AnsiEscSeq:
         """Moves the cursor `n` cells right."""
         cls.pos.x += 1
-        return AnsiEscSeq(EscSeq.CURSOR_MOVE_RIGHT, n - 1)
+        return AnsiEscSeq(Cursor.CURSOR_MOVE_RIGHT, n - 1)
 
     @classmethod
     def left(cls, n: int = 1) -> AnsiEscSeq:
         """Moves the cursor `n` cells left."""
         cls.pos.x -= 1
-        return AnsiEscSeq(EscSeq.CURSOR_MOVE_LEFT, n - 1)
+        return AnsiEscSeq(Cursor.CURSOR_MOVE_LEFT, n - 1)
 
     @classmethod
     def move(cls, pos: CoordReference) -> AnsiEscSeq:
         """Moves the cursor to the given pos."""
         pos = Coord.convert_reference(pos)
         cls.pos = pos
-        return AnsiEscSeq(EscSeq.MOVE_CURSOR, *pos)
+        return AnsiEscSeq(Cursor.MOVE_CURSOR, *pos)
 
 
 class Screen:

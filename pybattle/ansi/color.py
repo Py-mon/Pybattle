@@ -1,12 +1,13 @@
-from typing import Optional, Iterator
+from typing import Iterator, Optional
 
 from colorama import Fore
 
-from pybattle.window.ansi import AnsiEscSeq
+from pybattle.ansi.ansi import AnsiEscSeq
 
 
 class Color:
     """A 4-bit color ANSI escape code."""
+    
     def __init__(self, color_code: AnsiEscSeq, name: Optional[str] = None) -> None:
         self.__color_code = color_code
         if name is None:

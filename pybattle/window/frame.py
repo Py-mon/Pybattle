@@ -1,12 +1,11 @@
 from typing import Optional, Self
 
-from numpy import full
-
-from pybattle.error import InsufficientArgumentsError, OutOfBoundsError
+from pybattle.error import InsufficientArgumentsError
 from pybattle.log import Logger
 from pybattle.types_ import CoordReference, SizeReference
-from pybattle.window.coord import Coord, CoordList
+from pybattle.window.coord import Coord
 from pybattle.window.matrix import Matrix
+from pybattle.window.range import Range
 from pybattle.window.size import Size
 
 
@@ -20,48 +19,44 @@ class Frame:
         contents: Optional[str] | Matrix = None,
         size: SizeReference = ...,
         name: Optional[str] = None,
-        name_location: Coord = Coord(2, 0)
     ) -> None:
         self.contents = contents
         self.name = name
-        self.name_location = name_location
-        
+
         if size is not ...:
             self.size = Size.convert_reference(size)
-            
+
             if self.contents is not None:
                 if isinstance(contents, str):
                     self.contents = Matrix(contents)
-                
-                height = self.contents.size.height // 2
-                width = self.contents.size.width // 2
-                              
-                middle_height = (self.size.height - 2) // 2
-                middle_width = (self.size.width - 2) // 2
-                
-                array = full(self.size.subtract(2).reverse, ' ')
-                
-                starting_height = middle_height - height
-                ending_height = middle_height + height
-                if height == 0:
-                    ending_height = middle_height + self.contents.size.height
-                
-                starting_width = middle_width - width
-                ending_width = middle_width + width
-                if width == 0:
-                    ending_width = middle_width + self.contents.size.width
 
-                array[starting_height: ending_height,
-                      starting_width: ending_width] = self.contents._matrix
-                
-                self.contents = Matrix.array_to_matrix(array)
-                
+                array = Matrix([[' ' for _ in range(self.inner_width)]
+                               for _ in range(self.inner_height)])
+
+                print(repr(array))
+
+                text_center = self.contents.size.center
+
+                inner_frame_center = self.inner_size.center
+
+                starting = inner_frame_center - text_center
+                ending = inner_frame_center + text_center
+
+                print(text_center, text_center)
+                print(inner_frame_center, inner_frame_center)
+                print(starting, ending)
+                print()
+                print(repr(array[starting: ending]))
+                print(repr(self.contents))
+
+                array[starting: ending] = self.contents
+
+                self.contents = array
+
         elif self.contents is not None:
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
-            print(self.contents)
             self.size = self.contents.size + 2
-            #self.size.height -= 1  # Cuts off the bottom without
         else:
             raise Logger.error(
                 'Cannot have no contents and no size. Must have at least one.', InsufficientArgumentsError)
@@ -87,35 +82,43 @@ class Frame:
         self._update_frame()
 
     @property
-    def icols(self):
+    def inner_height(self) -> int:
+        return self.height - 2
+
+    @property
+    def inner_width(self) -> int:
+        return self.width - 2
+
+    @property
+    def inner_size(self) -> Size:
+        return self.size - 2
+
+    @property
+    def icols(self) -> int:
         return self.width - 1
 
     @property
-    def irows(self):
+    def irows(self) -> int:
         return self.height - 1
 
     def _update_frame(self) -> None:
-        frame = f'╭{"─" * (self.width - 2)}╮\n'
-        for i in range(self.height - 2):
+        if self.name is None:
+            frame = f'╭{"─" * self.inner_width}╮\n'
+        else:
+            frame = f'╭─ {self.name} {"─" * (self.inner_width - len(self.name) - 3)}╮\n'
+        for i in range(self.inner_height):
             if self.contents is None:
-                frame += f'│{" " * (self.width - 2)}│\n'
+                frame += f'│{" " * self.inner_width}│\n'
             else:
                 x = '\n'  # Doesn't allow "\" in f-strings
                 frame += f'│{"".join(self.contents[i]).rstrip(x)}│\n'
 
-        frame += f'╰{"─" * (self.width - 2)}╯\n'
-        
+        frame += f'╰{"─" * self.inner_width}╯\n'
+
         print(frame)
 
         self.matrix = Matrix(frame)
-        
-        if self.name is not None:
-            for i, char in enumerate(' ' + self.name + ' '):
-                try:
-                    self.matrix[self.name_location.y, i + self.name_location.x] = char
-                except IndexError:
-                    raise Logger.error(f'Starting at {self.name_location.coords} the name: " {self.name} " is out of bounds of {self.size.size}', OutOfBoundsError)
-                
+
     def __getitem__(self, item) -> None:
         return self.matrix[item]
 
@@ -123,20 +126,21 @@ class Frame:
         self.matrix[item] = to
 
     @property
-    def top_edge_positions(self) -> list[Coord]:
-        return CoordList(Coord(1, 0), (Coord(self.icols, 0))).get_range()
+    def top_edge_positions(self) -> Range:
+        print(Coord(0, self.icols), Coord(1, 1))
+        return Range(Coord(0, self.icols), Coord(0, 1))
 
     @property
-    def bottom_edge_positions(self) -> list[Coord]:
-        return CoordList(Coord(1, self.irows), (Coord(self.icols, self.irows))).get_range()
+    def bottom_edge_positions(self) -> Range:
+        return Range(Coord(self.irows, self.icols), Coord(self.irows, 1))
 
     @property
-    def left_edge_positions(self) -> list[Coord]:
-        return CoordList(Coord(0, 1), (Coord(0, self.irows))).get_range()
+    def left_edge_positions(self) -> Range:
+        return Range(Coord(self.irows, 0), Coord(1, 0))
 
     @property
-    def right_edge_positions(self) -> list[Coord]:
-        return CoordList(Coord(self.icols, 1), (Coord(self.icols, self.irows))).get_range()
+    def right_edge_positions(self) -> Range:
+        return Range(Coord(self.irows, self.icols), Coord(1, self.icols))
 
     @property
     def top_left_corner(self) -> Coord:
@@ -144,104 +148,30 @@ class Frame:
 
     @property
     def bottom_left_corner(self) -> Coord:
-        return Coord(0, self.irows)
+        return Coord(self.irows, 0)
 
     @property
     def top_right_corner(self) -> Coord:
-        return Coord(self.icols, 0)
+        return Coord(0, self.icols)
 
     @property
     def bottom_right_corner(self) -> Coord:
-        return Coord(self.icols, self.irows)
-
-    def add_frame(
-        self,
-        frame: "Frame",  # Only Frames can be added not subclasses (not Self)
-        pos: CoordReference = Coord(0, 0),
-    ) -> None:
-        pos = Coord.convert_reference(pos)
-
-        out_of_boundaries_step_x = (
-            self.top_right_corner - (pos + frame.size.size)).x
-        out_of_boundaries_step_y = (
-            self.bottom_left_corner - (pos + frame.size.size)).y
-
-        if out_of_boundaries_step_x <= 0:
-            limit = 1 if out_of_boundaries_step_x < 0 else abs(
-                out_of_boundaries_step_x)
-            frame.width -= limit
-
-        if out_of_boundaries_step_y <= 0:
-            limit = 1 if out_of_boundaries_step_y < 0 else abs(
-                out_of_boundaries_step_y)
-            frame.height -= limit
-
-        top_left = pos
-        top_right = pos + frame.top_right_corner
-        bottom_left = pos + frame.bottom_left_corner
-        bottom_right = pos + frame.bottom_right_corner
-
-        if self.top_edge_positions in top_left:
-            self.matrix[*top_left.reverse] = '┬'
-        elif self.left_edge_positions in top_left:
-            self.matrix[*top_left.reverse] = '├'
-
-        if self.top_edge_positions in top_right:
-            self.matrix[*top_right.reverse] = '┬'
-        elif self.right_edge_positions in top_right:
-            self.matrix[*top_right.reverse] = '┤'
-
-        if self.bottom_edge_positions in bottom_left:
-            self.matrix[*bottom_left.reverse] = '┴'
-        elif self.left_edge_positions in bottom_left:
-            self.matrix[*bottom_left.reverse] = '├'
-
-        if self.bottom_edge_positions in bottom_right:
-            self.matrix[*bottom_right.reverse] = '┴'
-        if self.right_edge_positions in bottom_right:
-            self.matrix[*bottom_right.reverse] = '┤'
-
-        frame_slice = frame[
-            0: pos.y + frame.height,
-            0: pos.x + frame.width
-        ]
-
-        for y in range(0, frame.height):
-            for x in range(0, frame.width):
-                if self.matrix[y + pos.y, x + pos.x] == ' ':
-                    self.matrix[y + pos.y, x + pos.x] = frame_slice[y, x]
-
-        print(Matrix.convert_array(self.matrix))
-
-
-class Window(Frame):
-    """The main border screen."""
+        return Coord(self.irows, self.icols)
 
     def add_frame(self, frame: Self, pos: CoordReference = Coord(0, 0)):
         pos = Coord.convert_reference(pos)
 
-        # TODO: Fix Errors
-        if pos.x + frame.width >= self.matrix.size.width:
-            raise Logger.error(
-                f'pos x: {pos.x} is out of bounds of {self.matrix.size.width - frame.width}', OutOfBoundsError)
-
-        elif pos.y + frame.height >= self.matrix.size.height:
-            raise Logger.error(
-                f'pos y: {pos.y} is out of bounds of {self.matrix.size.height - frame.width}', OutOfBoundsError)
-
         top_left = pos
         top_right = pos + frame.top_right_corner
         bottom_left = pos + frame.bottom_left_corner
         bottom_right = pos + frame.bottom_right_corner
 
-        print(frame.matrix._matrix)
-        print(self.matrix[top_left.y: frame.height + pos.y,
-                          top_left.x: frame.width + pos.x])
+        print(repr(frame.matrix))
+        print(repr(self.matrix[top_left: frame.size]))
 
-        self.matrix[top_left.y: frame.height + pos.y,
-                    top_left.x: frame.width + pos.x] = frame.matrix._matrix
+        self.matrix[top_left: frame.size] = frame.matrix
 
-        print(self.matrix)
+        print(repr(self.matrix))
 
         # TODO: Fix corner going like this:
         # ╭──────────┬───────┬
@@ -249,30 +179,33 @@ class Window(Frame):
         # ╰──────────────────╯
 
         if top_left in self.top_edge_positions:
-            self.matrix[top_left.reverse] = '┬'
+            self.matrix[top_left] = '┬'
         elif top_left in self.left_edge_positions:
-            self.matrix[top_left.reverse] = '├'
+            self.matrix[top_left] = '├'
 
         if top_right in self.top_edge_positions:
-            self.matrix[top_right.reverse] = '┬'
+            self.matrix[top_right] = '┬'
         elif top_right in self.right_edge_positions:
-            self.matrix[top_right.reverse] = '┤'
+            self.matrix[top_right] = '┤'
 
         if bottom_left in self.top_edge_positions:
-            self.matrix[bottom_left.reverse] = '┴'
+            self.matrix[bottom_left] = '┴'
         elif bottom_left in self.left_edge_positions:
-            self.matrix[bottom_left.reverse] = '├'
+            self.matrix[bottom_left] = '├'
 
         if bottom_right in self.top_edge_positions:
-            self.matrix[bottom_right.reverse] = '┴'
+            self.matrix[bottom_right] = '┴'
         elif bottom_right in self.right_edge_positions:
-            self.matrix[bottom_right.reverse] = '┤'
+            self.matrix[bottom_right] = '┤'
 
         # Overlaps Name
         if self.name is not None:
             for i, char in enumerate(' ' + self.name + ' '):
-                self.matrix[self.name_location.y, i + self.name_location.x] = char
+                self.matrix[i + 2, 0] = char
 
         print(self.matrix)
-        
-    
+
+
+class Window(Frame):
+    """The main border screen."""
+    pass

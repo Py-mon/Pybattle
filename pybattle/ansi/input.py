@@ -3,8 +3,8 @@ from typing import Callable
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
 from pybattle.window.frame import Window
-from pybattle.window.color import Colors
-from pybattle.window.size import Size
+from pybattle.ansi.color import Colors
+from pybattle.window.range import Size
 
 
 class Selection:

@@ -1,68 +1,11 @@
-# from src.window.code import str_with_text
-# from src.window.color import Color
-# from src.window.code import Code
-from pybattle.matrix.range import Range
-from pybattle.window.screen import Screen
-from pybattle.matrix.frame import Window
+from pybattle.ansi.screen import Screen
+from pybattle.window.frame import Frame
+
 Screen.clear()
 
-from pybattle.matrix.matrix import Matrix, ColorCoord, Colors
-
-# array = Matrix(
-# f'''
-# 1230
-# 4560
-# 7890
-# ''', ColorCoord((0, 0), Colors.MAGENTA), ColorCoord((2, 0), Colors.RED), ColorCoord((3, 0), Colors.BLUE))
-
-# print(repr(array))
-# print(str(array))
-# print(array.size)
-
-# print(array[(0, 0):(1, 2)])
-# array[(0, 0):(1, 2)] = Matrix(
-# f'''
-# 99
-# 99
-# 99
-# ''')
-# print(repr(array))
-
-# test_str = str_with_text('''\
-# ╭───────────╮
-# │╭─╮        │
-# ││a│        │
-# │╰─╯        │
-# │   ╭─╮     │
-# │   │b│     │
-# │   ╰─╯     │
-# │           │
-# │           │
-# │        ╭─╮│
-# │        │c││
-# │        ╰─╯│
-# ╰───────────╯
-# ''', Code((2, 2), Color.MAGENTA))
-
-# print(test_str)
-
-# map_ = Window('''
-#                    ||||       
-#                    ||||       
-#                      ─┬─┬─┬─┬─
-                              
-                              
-# ╭│╮   ╶─╮                     
-# │││    ░│                     
-# ╰│╯   ╶─╯           ╭─────┬─╮ 
-#                     │░░░░░│▓│ 
-#                     ╰─────┴─╯ 
-# ''', name='HELLO')
-
-# print(map_.size)
-
-# map_.add_frame(Window(size=(5, 7)), (3, 0))
-
-print(Range((4, 8), (4, 0)).row_coords)
-
-Window('CENTERED', (11, 11))
+text = '''
+KITTY CATS
+EAT CHICKENS'''
+  
+window = Frame(text, (6, 15))
+window.add_frame(Frame(size=(2, 5)))
