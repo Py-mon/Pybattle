@@ -22,7 +22,7 @@ class ColorCoord:
 
 class Matrix:
     def __init__(self, data: str | List[List] | List, *colors: ColorCoord) -> None:
-        self.colors = colors
+        self.colors = list(colors)
 
         if isinstance(data, str):
             if data[0] == '\n':
@@ -143,6 +143,9 @@ class Matrix:
             stop = Size.convert_reference(stop)
 
             for coord in Range(stop, slice_.start):
+                for color in cell_s.colors:
+                    if coord == color.coord + slice_.start:
+                        self.colors.append(color)
                 self[coord] = cell_s[coord - slice_.start]
 
     @property

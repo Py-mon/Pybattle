@@ -26,6 +26,8 @@ class Color:
 
 
 class Colors:
+    """Stores all 4-bit ANSI escape code colors."""
+    
     DEFAULT = Color(AnsiEscSeq(Fore.RESET), 'DEFAULT')                          #  VSCODE
     BLACK = Color(AnsiEscSeq(Fore.BLACK), 'BLACK')                              # 0x000000
     GRAY = Color(AnsiEscSeq(Fore.LIGHTBLACK_EX), 'GRAY')                        # 0x666666

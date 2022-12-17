@@ -1,10 +1,11 @@
 from typing import Callable
 
+from pybattle.ansi.color import Colors
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
-from pybattle.window.frame import Window
-from pybattle.ansi.color import Colors
-from pybattle.window.range import Size
+from pybattle.window.frame import Frame
+from pybattle.window.size import Size
+from pybattle.window.matrix import Matrix, ColorCoord
 
 
 class Selection:
@@ -15,7 +16,6 @@ class Selection:
 
 
 class SelectionMenu:
-    # TODO: Finish with new color matrix
     def __init__(
         self, size: SizeReference,
         selections: list[Selection],
@@ -25,17 +25,14 @@ class SelectionMenu:
         
         self.selection = selections[0]
         
-        self.frame = Window(size=size)
+        self.frame = Frame(size=size)
         for selection in self.selections:
+            print(selection == self.selection)
             if selection == self.selection:
-                # TODO: Add color using default_color (Need to fix matrix)
-                self.frame.add_frame(Window(selection.label, selection.size), selection.location)
+                self.frame.add_frame(Frame(selection.label, selection.size), selection.location)
             else:
-                self.frame.add_frame(Window(str(default_color) + selection.label, selection.size), selection.location)
-
-
-SelectionMenu((15, 15), [Selection('a', (1, 1), (3, 5)), Selection('b', (4, 4)), Selection('c', (8, 8))])
-  
+                print(repr(Matrix(selection.label, ColorCoord(0, default_color))))
+                self.frame.add_frame(Frame(Matrix(selection.label, ColorCoord(0, default_color)), selection.size), selection.location)  
   
 def func(p1, p2):
     x1, x2 = p1

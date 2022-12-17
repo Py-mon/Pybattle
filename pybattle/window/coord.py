@@ -41,7 +41,7 @@ class Coord:
             return cls(reference, reference)
         if isinstance(reference, (Coord, Tuple, *Coord.__subclasses__())):
             return cls(*reference)
-        return cls(reference)
+        return reference
 
     @property
     def coords(self) -> Tuple[int, int]:

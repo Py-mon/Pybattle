@@ -4,10 +4,10 @@ from pybattle.error import InsufficientArgumentsError
 from pybattle.log import Logger
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
-from pybattle.window.matrix import Matrix
+from pybattle.window.matrix import Matrix, ColorCoord
 from pybattle.window.range import Range
 from pybattle.window.size import Size
-
+from pybattle.ansi.color import Colors
 
 class Frame:
     """A border around some contents.
@@ -22,7 +22,8 @@ class Frame:
     ) -> None:
         self.contents = contents
         self.name = name
-
+        self.colors = []
+        
         if size is not ...:
             self.size = Size.convert_reference(size)
 
@@ -30,10 +31,10 @@ class Frame:
                 if isinstance(contents, str):
                     self.contents = Matrix(contents)
 
-                array = Matrix([[' ' for _ in range(self.inner_width)]
+                matrix = Matrix([[' ' for _ in range(self.inner_width)]
                                for _ in range(self.inner_height)])
 
-                print(repr(array))
+                print(repr(matrix))
 
                 text_center = self.contents.size.center
 
@@ -46,21 +47,27 @@ class Frame:
                 print(inner_frame_center, inner_frame_center)
                 print(starting, ending)
                 print()
-                print(repr(array[starting: ending]))
+                print(repr(matrix[starting: ending]))
                 print(repr(self.contents))
 
-                array[starting: ending] = self.contents
+                matrix[starting: ending] = self.contents
 
-                self.contents = array
+                self.contents = matrix
 
         elif self.contents is not None:
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
             self.size = self.contents.size + 2
+            
+            self.colors = self.contents.colors
+            for color in self.colors:
+                color.coord += 2
+
         else:
             raise Logger.error(
                 'Cannot have no contents and no size. Must have at least one.', InsufficientArgumentsError)
-
+            
+        
         self._update_frame()
 
     @property
@@ -115,10 +122,11 @@ class Frame:
 
         frame += f'╰{"─" * self.inner_width}╯\n'
 
-        print(frame)
-
+        # if self.colors:
+        #     #self.matrix = Matrix(frame, *self.colors, ColorCoord((-1, 0), Colors.DEFAULT))
+        # else:
         self.matrix = Matrix(frame)
-
+            
     def __getitem__(self, item) -> None:
         return self.matrix[item]
 
@@ -167,9 +175,9 @@ class Frame:
         bottom_right = pos + frame.bottom_right_corner
 
         print(repr(frame.matrix))
-        print(repr(self.matrix[top_left: frame.size]))
+        print(repr(self.matrix[top_left: frame.size + 1]))
 
-        self.matrix[top_left: frame.size] = frame.matrix
+        self.matrix[top_left: frame.size + pos] = frame.matrix
 
         print(repr(self.matrix))
 
