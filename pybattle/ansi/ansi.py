@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Cursor(Enum):
+class CursorCode(Enum):
     """Codes for moving the cursor."""
     UP = 0
     DOWN = 1
@@ -29,7 +29,7 @@ class AnsiEscSeq:
     ESC = '\033'
     CSI = ESC + '['
 
-    def __init__(self, code: Cursor | str, *args: str | int) -> None:
+    def __init__(self, code: CursorCode | str, *args: str | int) -> None:
         self.__code = code
         self.__args = args
 
@@ -40,15 +40,15 @@ class AnsiEscSeq:
             return self.__code
 
         match self.__code:
-            case Cursor.UP:
+            case CursorCode.UP:
                 return 'A'
-            case Cursor.DOWN:
+            case CursorCode.DOWN:
                 return 'B'
-            case Cursor.LEFT:
+            case CursorCode.LEFT:
                 return 'C'
-            case Cursor.RIGHT:
+            case CursorCode.RIGHT:
                 return 'D'
-            case Cursor.MOVE:
+            case CursorCode.MOVE:
                 return 'H'
             case _:
                 return self.__code
