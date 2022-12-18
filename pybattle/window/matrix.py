@@ -143,9 +143,6 @@ class Matrix:
             stop = Size.convert_reference(stop)
 
             for coord in Range(stop, slice_.start):
-                for color in cell_s.colors:
-                    if coord == color.coord + slice_.start:
-                        self.colors.append(color)
                 self[coord] = cell_s[coord - slice_.start]
 
     @property
@@ -194,7 +191,7 @@ class Matrix:
 
         def wrapper(self: Self, *args) -> Any:
             for i, (coord, code) in enumerate(self.colors):
-                self.insert((coord.x + i, coord.y), code)
+                self.insert((coord.y, coord.x + i), code)
 
             res = func(self, *args)
 
