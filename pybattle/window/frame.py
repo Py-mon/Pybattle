@@ -122,10 +122,10 @@ class Frame:
 
         frame += f'╰{"─" * self.inner_width}╯\n'
 
-        # if self.colors:
-        #     #self.matrix = Matrix(frame, *self.colors, ColorCoord((-1, 0), Colors.DEFAULT))
-        # else:
-        self.matrix = Matrix(frame)
+        if self.colors:
+            self.matrix = Matrix(frame, *self.colors)
+        else:
+            self.matrix = Matrix(frame)
             
     def __getitem__(self, item) -> None:
         return self.matrix[item]
@@ -165,8 +165,13 @@ class Frame:
     @property
     def bottom_right_corner(self) -> Coord:
         return Coord(self.irows, self.icols)
+    
+    def __str__(self) -> str:
+        return str(self.matrix)
 
     def add_frame(self, frame: Self, pos: CoordReference = Coord(0, 0)):
+        # TODO: Make colors work change in adding frames
+        
         pos = Coord.convert_reference(pos)
 
         top_left = pos
@@ -210,10 +215,5 @@ class Frame:
         if self.name is not None:
             for i, char in enumerate(' ' + self.name + ' '):
                 self.matrix[i + 2, 0] = char
-
+        
         print(self.matrix)
-
-
-class Window(Frame):
-    """The main border screen."""
-    pass
