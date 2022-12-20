@@ -31,4 +31,8 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 
 ```$ pip install . ```
 
-```$ python main.py```
+**Windows:**
+
+```pip install --upgrade setuptools```
+
+```pip install . ```
