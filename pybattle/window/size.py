@@ -14,6 +14,14 @@ class Size(Coord, Range):
     @property
     def width(self) -> int:
         return self.x
+    
+    @property
+    def inner_height(self) -> int:
+        return self.height - 2
+    
+    @property
+    def inner_width(self) -> int:
+        return self.width - 2
 
     def __repr__(self) -> str:
         return f'Size(height={self.height}, width={self.width})'

@@ -58,16 +58,10 @@ class Frame:
             if isinstance(contents, str):
                 self.contents = Matrix(contents)
             self.size = self.contents.size + 2
-            
-            self.colors = self.contents.colors
-            for color in self.colors:
-                color.coord += 2
-
         else:
             raise Logger.error(
                 'Cannot have no contents and no size. Must have at least one.', InsufficientArgumentsError)
             
-        
         self._update_frame()
 
     @property

@@ -1,5 +1,6 @@
 from pybattle.types_ import CoordReference, SizeReference
-from typing import Any, Sequence, Self, Tuple
+from typing import Any, Sequence, Self, Tuple, Type, TypeVar
+
 
 
 class Coord:

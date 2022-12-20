@@ -27,7 +27,7 @@ while commits > 99:
     version_ += 1
     commits -= 100
 
-version = f'0.1.{version_}.{commits}'
+version = f'0.{version_}.{commits}'
 
 print(version)
 
