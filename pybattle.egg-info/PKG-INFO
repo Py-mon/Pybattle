@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: pybattle
-Version: 0.2.53
-Summary: A python ascii text art pokemon style game in the terminal using ANSI escape codes.
-Home-page: https://github.com/PythonDominator/Pybattle
-Author: Jacob Ophoven
-Requires-Python: >=3.11
-License-File: LICENSE
