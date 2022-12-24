@@ -1,9 +1,25 @@
 from pybattle.window.coord import Coord
 from pybattle.window.range import Range
+from typing import overload, Self, Any
 
 
 class Size(Coord, Range):
-    def __init__(self, height: int, width: int) -> None:
+    @overload
+    def __init__(self, height: int, width: int, /) -> None: ...
+    
+    @overload
+    def __init__(self, hw: int, /) -> None: ...
+    
+    @overload
+    def __init__(self, size: Self, /) -> None: ...
+    
+    @overload
+    def __init__(self, tup: tuple[int, int], /) -> None: ...
+    
+    @overload
+    def __init__(self, other: Any, /) -> None: ...
+    
+    def __init__(self, height, width = None, /) -> None:
         Coord.__init__(self, height, width)
         Range.__init__(self, self.coords)
 

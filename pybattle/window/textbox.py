@@ -4,10 +4,11 @@ from typing import Optional
 
 from keyboard import is_pressed, wait
 
-from pybattle.ansi.color import Colors
+from pybattle.ansi.colors import Colors
 from pybattle.ansi.screen import Cursor, Screen
 from pybattle.types_ import SizeReference
 from pybattle.window.frame import Frame, Size
+from pybattle.window.matrix import Matrix, ColorCoord
 
 
 class TextBox:
@@ -23,7 +24,7 @@ class TextBox:
         block_char: str = '⏷'
     ) -> None:
         self.text = text
-        self.size = Size.convert_reference(size)
+        self.size = Size(size)
         self.alignment = alignment
         self.author = author
         
@@ -57,7 +58,7 @@ class TextBox:
                 
             string += line
 
-        self.textbox = Frame(string)
+        self.textbox = Frame(Matrix(string, ColorCoord((-3, -1), Colors.BLUE)))
 
         return str(self.textbox)
     

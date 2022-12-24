@@ -6,14 +6,14 @@ from shutil import get_terminal_size
 
 from pybattle.types_ import CoordReference
 from pybattle.window.coord import Coord
-from pybattle.ansi.color import Colors
+from pybattle.ansi.colors import Colors
 from pybattle.ansi.ansi import AnsiEscSeq, CursorCode
 from pybattle.window.size import Size
 
 
 class Cursor:
     """Keeps track of the cursor pos."""
-    pos = Coord()
+    pos = Coord(0, 0)
 
     @classmethod
     def up(cls, n: int = 1) -> AnsiEscSeq:
@@ -42,7 +42,7 @@ class Cursor:
     @classmethod
     def move(cls, pos: CoordReference) -> AnsiEscSeq:
         """Moves the cursor to the given pos."""
-        pos = Coord.convert_reference(pos)
+        pos = Coord(pos)
         cls.pos = pos
         return AnsiEscSeq(CursorCode.MOVE, *pos)
 
@@ -56,7 +56,7 @@ class Screen:
         move_cursor: bool = True
     ) -> None:
         """Print text to the screen."""
-        pos = Coord.convert_reference(pos)
+        pos = Coord(pos)
 
         txt = str(txt)
 
@@ -79,7 +79,7 @@ class Screen:
     def clear() -> None:
         """Clear the screen. Works on all operating systems."""
         system('cls' if os_name == 'nt' else 'clear')
-    
+        
     @property
     @staticmethod
     def terminal_size() -> Size:
