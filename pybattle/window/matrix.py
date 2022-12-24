@@ -1,7 +1,7 @@
-from typing import Any, Callable, Generator, Iterator, List, Self, Tuple
+from typing import Any, Callable, Generator, Iterator, List, Self, Tuple, overload
 
 from pybattle.ansi.colors import Color, Colors
-from pybattle.error import OutOfBoundsError
+from pybattle.errors import OutOfBoundsError
 from pybattle.log import Logger
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
@@ -20,15 +20,25 @@ class ColorCoord:
         return iter((self.coord, self.color))
 
 
-class Matrix:
-    # TODO: Clean up
-    
-    def __new__(cls, data, *args):
+class Matrix:  
+    def __new__(cls, data, *_):
         if isinstance(data, cls):
             return data
         return super().__new__(cls)
+    
+    @overload
+    def __init__(self, size: SizeReference, /, *colors: ColorCoord) -> None: ...
+    
+    @overload
+    def __init__(self, string: str, /, *colors: ColorCoord) -> None: ...
+    
+    @overload
+    def __init__(self, nested_list:  list[Any] | list[list[Any]], /, *colors: ColorCoord) -> None: ...
 
-    def __init__(self, data: str | List[List] | List | SizeReference, *colors: ColorCoord) -> None:
+    @overload
+    def __init__(self, matrix: Self, /, *colors: ColorCoord) -> None: ...
+
+    def __init__(self, data, /, *colors: ColorCoord) -> None:
         if data is self:
             return
 
@@ -38,20 +48,18 @@ class Matrix:
             data = Size(data)
             self.array = [[' ' for _ in range(data.width)]
                           for _ in range(data.height)]
+            
         elif isinstance(data, str):
             if data[0] == '\n':
                 data = data[1:]
             self.array = [[cell for cell in row] for row in data.splitlines()]
-        else:
-            self.array = data
-            if not all([isinstance(row, list) for row in self.array]):
-                self.array = [self.array]
+            
+        elif isinstance(data, list):
+            self.array = [list(row) if hasattr(row, '__iter__') else [row] for row in data]
 
         if self.rows:
             width = max([len(row) for row in self.rows])
-        else:
-            width = 0
-        self.array = [row + [" "] * (width - len(row)) for row in self.rows]
+            self.array = [row + [" "] * (width - len(row)) for row in self.rows]
 
         for color in self.colors:
             if color.coord.x >= self.width:
@@ -59,16 +67,12 @@ class Matrix:
                     f'Coord x: {color.coord.x} is passed the bounds of {self.width}. This may cause unintended problems.')
 
     @property
-    def coords(self) -> List[Coord]:
+    def coords(self) -> list[Coord]:
         return list(iter(Range(self.size)))
 
     @property
-    def rows_coords(self, row: int) -> List[Coord]:
+    def rows_coords(self) -> list[list[Coord]]:
         return Range(self.size).rows_coords
-
-    @property
-    def row_coords(self, row: int) -> List[Coord]:
-        return Range((len(row), row), (0, row))
 
     def __contains__(self, coord_or_cell: CoordReference | Any) -> bool:
         """Check if a coord or cell is in the Matrix."""
@@ -93,15 +97,21 @@ class Matrix:
                 res = func(self, *args)
             except IndexError:
                 Logger.error('Index out of range.', OutOfBoundsError)
+                return
             return res
         return wrapper
+    
+    @overload
+    def __getitem__(self, row: int) -> Self: ...
+    
+    @overload
+    def __getitem__(self, slice_: slice) -> Self: ...
 
+    @overload
+    def __getitem__(self, coord: CoordReference) -> Any: ...
+    
     @log_out_of_bounds
-    def __getitem__(
-        self,
-        slice_: int | tuple[int, int] | Tuple[CoordReference,
-                                              CoordReference] | slice
-    ) -> Self | Any:
+    def __getitem__(self, slice_):
         """
         ```
         matrix[n] -> Row n
@@ -116,21 +126,23 @@ class Matrix:
             return self.array[coord.y][coord.x]
 
         elif isinstance(slice_, slice):
-            stop = slice_.stop
+            stop = Size(slice_.stop)
             if stop is None:
                 stop = Size(self.width, self.height) - slice_.start
 
-            stop = Size(stop)
-
             return Matrix([[self[coord] for coord in row] for row in Range(stop, slice_.start).rows_coords])
+    
+    @overload
+    def __setitem__(self, row: int, new_row: list[Any]) -> None: ...
 
+    @overload
+    def __setitem__(self, coord: CoordReference | SizeReference, cell: Any) -> None: ...
+    
+    @overload
+    def __setitem__(self, slice_: slice, matrix: Self) -> Self: ...
+    
     @log_out_of_bounds
-    def __setitem__(
-        self,
-        slice_: int | Tuple[int, int] | Tuple[CoordReference,
-                                              CoordReference] | slice,
-        cell_s: Any | List | Self | List[List]
-    ) -> None:
+    def __setitem__(self, slice_, cell_s) -> None:
         """
         ```
         matrix[n] -> Row n
@@ -147,11 +159,9 @@ class Matrix:
             self.array[coord.y][coord.x] = cell_s
 
         elif isinstance(slice_, slice):
-            stop = slice_.stop
+            stop = Size(slice_.stop)
             if stop is None:
                 stop = Size(self.width, self.height) - slice_.start
-
-            stop = Size(stop)
 
             for coord in Range(stop, slice_.start):
                 self[coord] = cell_s[coord - slice_.start]
@@ -230,3 +240,4 @@ class Matrix:
     @with_colors
     def __str__(self) -> str:
         return "".join([str(char) for row in self.array for char in row + ['\n']])[:-1] + str(Colors.DEFAULT)
+    
