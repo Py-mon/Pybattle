@@ -1,7 +1,7 @@
 from logging import DEBUG, FileHandler, Formatter, getLogger
 from pathlib import Path
 from pybattle.traceback import Traceback
-from pybattle.error import Error
+from pybattle.errors import Error
 from typing import Type
 
 
