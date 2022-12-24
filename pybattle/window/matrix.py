@@ -1,9 +1,9 @@
 from typing import Any, Callable, Generator, Iterator, List, Self, Tuple
 
-from pybattle.ansi.color import Color, Colors
+from pybattle.ansi.colors import Color, Colors
 from pybattle.error import OutOfBoundsError
 from pybattle.log import Logger
-from pybattle.types_ import CoordReference
+from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
 from pybattle.window.range import Range
 from pybattle.window.size import Size
@@ -13,7 +13,7 @@ class ColorCoord:
     """A Color assigned to a coordinate."""
 
     def __init__(self, coord: CoordReference, color: Color) -> None:
-        self.coord = Coord.convert_reference(coord)
+        self.coord = Coord(coord)
         self.color = color
 
     def __iter__(self) -> Iterator[Coord | Color]:
@@ -21,10 +21,24 @@ class ColorCoord:
 
 
 class Matrix:
-    def __init__(self, data: str | List[List] | List, *colors: ColorCoord) -> None:
+    # TODO: Clean up
+    
+    def __new__(cls, data, *args):
+        if isinstance(data, cls):
+            return data
+        return super().__new__(cls)
+
+    def __init__(self, data: str | List[List] | List | SizeReference, *colors: ColorCoord) -> None:
+        if data is self:
+            return
+
         self.colors = list(colors)
 
-        if isinstance(data, str):
+        if isinstance(Size(data), Size):
+            data = Size(data)
+            self.array = [[' ' for _ in range(data.width)]
+                          for _ in range(data.height)]
+        elif isinstance(data, str):
             if data[0] == '\n':
                 data = data[1:]
             self.array = [[cell for cell in row] for row in data.splitlines()]
@@ -43,14 +57,11 @@ class Matrix:
             if color.coord.x >= self.width:
                 Logger.warning(
                     f'Coord x: {color.coord.x} is passed the bounds of {self.width}. This may cause unintended problems.')
-            for color_ in self.colors:
-                # TODO if color.coord.x == color_.coord.x: not == but around by 1
-                ...
 
     @property
     def coords(self) -> List[Coord]:
         return list(iter(Range(self.size)))
-    
+
     @property
     def rows_coords(self, row: int) -> List[Coord]:
         return Range(self.size).rows_coords
@@ -61,7 +72,7 @@ class Matrix:
 
     def __contains__(self, coord_or_cell: CoordReference | Any) -> bool:
         """Check if a coord or cell is in the Matrix."""
-        coord_or_cell = Coord.convert_reference(coord_or_cell)
+        coord_or_cell = Coord(coord_or_cell)
         if isinstance(coord_or_cell, Coord):
             return coord_or_cell in self.coords
         else:
@@ -101,7 +112,7 @@ class Matrix:
             return Matrix(self.array[slice_])
 
         elif isinstance(slice_, Size | Coord | tuple):
-            coord = Coord.convert_reference(slice_)
+            coord = Coord(slice_)
             return self.array[coord.y][coord.x]
 
         elif isinstance(slice_, slice):
@@ -109,8 +120,8 @@ class Matrix:
             if stop is None:
                 stop = Size(self.width, self.height) - slice_.start
 
-            stop = Size.convert_reference(stop)
-            
+            stop = Size(stop)
+
             return Matrix([[self[coord] for coord in row] for row in Range(stop, slice_.start).rows_coords])
 
     @log_out_of_bounds
@@ -126,13 +137,13 @@ class Matrix:
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
         """
-        # TODO: Remove colors in area
+        # TODO: Remove and add colors in area
 
         if isinstance(slice_, int):
             self.array[slice_] = cell_s
 
         elif isinstance(slice_, Size | Coord | tuple):
-            coord = Coord.convert_reference(slice_)
+            coord = Coord(slice_)
             self.array[coord.y][coord.x] = cell_s
 
         elif isinstance(slice_, slice):
@@ -140,7 +151,7 @@ class Matrix:
             if stop is None:
                 stop = Size(self.width, self.height) - slice_.start
 
-            stop = Size.convert_reference(stop)
+            stop = Size(stop)
 
             for coord in Range(stop, slice_.start):
                 self[coord] = cell_s[coord - slice_.start]
@@ -168,12 +179,12 @@ class Matrix:
 
     def insert(self, pos: CoordReference, cell: Any) -> None:
         """Insert a cell at a given pos."""
-        pos = Coord.convert_reference(pos)
+        pos = Coord(pos)
         self.array[pos.y].insert(pos.x, cell)
 
     def pop(self, pos: CoordReference) -> None:
         """Remove the cell at a given pos."""
-        pos = Coord.convert_reference(pos)
+        pos = Coord(pos)
         self.array[pos.y].pop(pos.x)
 
     def remove(self, cell: Any) -> None:
