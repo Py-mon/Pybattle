@@ -17,15 +17,14 @@ def get_commits_count(owner_name: str, repo_name: str) -> int:
     return commits_count
 
 
-
 name = "PythonDominator"
 repo = "Pybattle"
 version_ = 1
 
 commits = get_commits_count(name, repo)
-while commits > 99:
+while commits > 49:
     version_ += 1
-    commits -= 100
+    commits -= 49
 
 version = f'0.{version_}.{commits}'
 
