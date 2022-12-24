@@ -14,7 +14,7 @@ from pybattle.creatures.attributes.status_ailment import StatusAilment
 from pybattle.creatures.attributes.trait import Trait
 from pybattle.log import Logger
 from pybattle.types_ import Creature, ElementReference, Humanoid
-from pybattle.ansi.color import Colors
+from pybattle.ansi.colors import Colors
 
 
 class ID:
