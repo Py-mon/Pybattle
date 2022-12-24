@@ -5,6 +5,7 @@ from random import choice, choices, randint
 from string import ascii_letters, digits
 from typing import Any, Dict, Self
 
+from pybattle.ansi.colors import Colors
 from pybattle.creatures.attributes.ability import Ability
 from pybattle.creatures.attributes.element import Element
 from pybattle.creatures.attributes.item import Item
@@ -14,7 +15,6 @@ from pybattle.creatures.attributes.status_ailment import StatusAilment
 from pybattle.creatures.attributes.trait import Trait
 from pybattle.log import Logger
 from pybattle.types_ import Creature, ElementReference, Humanoid
-from pybattle.ansi.colors import Colors
 
 
 class ID:
@@ -50,28 +50,13 @@ class Pymon:
 
     INHERITANCE_CHANCE = Fraction(1, 4)
 
-    def __init_subclass__(cls) -> None:
-        """Set default attrs."""
-        if 'name' not in cls.__dict__:
-            cls.name = cls.__name__
-
-        if 'leveling_moves' not in cls.__dict__:
-            cls.leveling_moves: dict[int, Move] = {}
-
-        if 'bases' not in cls.__dict__:
-            cls.bases: dict[str, int] = {}
-
-        if 'elements' not in cls.__dict__:
-            cls.elements: list[ElementReference] = []
-
-        if 'abilities' not in cls.__dict__:
-            cls.abilities: list[Ability] = []
-
-        if 'unique_abilities' not in cls.__dict__:
-            cls.unique_abilities: list[Ability] = []
-
-        if 'graphics' not in cls.__dict__:
-            cls.graphics: str = ''
+    name: str = Self.__name__
+    leveling_moves: dict[int, Move] = {}
+    bases: dict[str, int] = {}
+    elements: list[ElementReference] = []
+    abilities: list[Ability] = []
+    unique_abilities: list[Ability] = []
+    graphics: str = ''
 
     def __init__(self, dct: dict[str, Any] = {}) -> None:
         """
@@ -90,7 +75,6 @@ class Pymon:
             - `'moves': list[Move]`
             - `'starting_level': int`
             """
-        self.__init_subclass__()
 
         Logger.info(
             f'---------------------- {self.name} Created ----------------------')
@@ -138,12 +122,17 @@ class Pymon:
         self.damage_to = 0.0
 
         self.moves: list[Move] = dct.get('moves', [])
+
         self.move: Move
 
         self.experience = 0.0
         self.max_experience = self.STARTING_MAX_XP
         self.level: int = 1
         self.level_to(dct.get('starting_level', self.STARTING_LEVEL))
+
+        for level, move in self.leveling_moves.items():
+            if self.level >= level:
+                self.moves.append(move)
 
         self.debug()
 
@@ -227,7 +216,7 @@ class Pymon:
                 else:
                     x[key] = common[key]
             return x
-        
+
         if level is ...:
             level = randint(1, 5)
 
