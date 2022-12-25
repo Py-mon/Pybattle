@@ -59,7 +59,7 @@ class Frame:
             frame = f'╭{"─" * self.inner_width}╮\n'
         else:
             if self.inner_width - len(self.title) - 3 == 0:
-                Logger.warning(f'Title is too long for size: {self.size}.')
+                Logger.warning(f'Title is too long for size: {self.size}. May cause unintended problems.')
 
             # - 3 for  vv            v
             frame = f'╭─ {self.title} {"─" * (self.inner_width - len(self.title) - 3)}╮\n'
@@ -113,8 +113,12 @@ class Frame:
     def __str__(self) -> str:
         return str(self.matrix)
 
-    def add_frame(self, frame: "Frame", pos: CoordReference = Coord(0, 0)):
+    def add_frame(self, frame: "Frame", pos: CoordReference = Coord(0, 0)) -> None:
         # TODO: Make colors work in adding frames
+        # TODO: Fix corner going like this:
+        # ╭──────────┬───────┬
+        # │          ╰───────┤
+        # ╰──────────────────╯
 
         pos = Coord(pos)
 
@@ -123,17 +127,12 @@ class Frame:
         bottom_left = pos + frame.bottom_left_corner
         bottom_right = pos + frame.bottom_right_corner
 
-        print(repr(frame.matrix))
-        print(repr(self.matrix[top_left: frame.size + 1]))
+        Logger.info_debug(repr(frame.matrix))
+        Logger.info_debug(repr(self.matrix[top_left: frame.size + 1]))
 
         self.matrix[top_left: frame.size + pos] = frame.matrix
 
-        print(repr(self.matrix))
-
-        # TODO: Fix corner going like this:
-        # ╭──────────┬───────┬
-        # │          ╰───────┤
-        # ╰──────────────────╯
+        Logger.info_debug(repr(self.matrix))
 
         if top_left in self.top_edge_positions:
             self.matrix[top_left] = '┬'
@@ -155,9 +154,9 @@ class Frame:
         elif bottom_right in self.right_edge_positions:
             self.matrix[bottom_right] = '┤'
 
-        # Overlaps Name
+        # Overlap Name
         if self.title is not None:
             for i, char in enumerate(' ' + self.title + ' '):
-                self.matrix[i + 2, 0] = char
+                self.matrix[0, i + 2] = char
 
-        print(self.matrix)
+        Logger.info_debug(self.matrix)

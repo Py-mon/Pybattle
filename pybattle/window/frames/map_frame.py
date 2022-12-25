@@ -3,6 +3,7 @@ from typing import Optional
 from pybattle.window.frames.frame import Frame
 from pybattle.window.matrix import Matrix
 from pybattle.window.size import Size
+from pybattle.types_ import MatrixReference
 
 
 class MapFrame(Frame):
@@ -23,7 +24,7 @@ class MapFrame(Frame):
 
     def __init__(
         self,
-        contents: str | Matrix,
+        contents: MatrixReference,
         title: Optional[str] = None,
     ) -> None:
         self.contents = Matrix(contents)

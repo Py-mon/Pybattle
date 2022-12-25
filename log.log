@@ -1,0 +1,37 @@
+DEBUG: Log from: File c:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py on line 130
+        Logger.info_debug(repr(frame.matrix))
+[[╭,─,─,─,─,─,─,─,╮],
+ [╰,─,─,─,─,─,─,─,╯]]
+DEBUG: Log from: File c:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py on line 131
+        Logger.info_debug(repr(self.matrix[top_left: frame.size + 1]))
+[[E,D,R,O,O,M],
+ [ , , , , , ],
+ [ , , , , , ]]
+DEBUG: Log from: File c:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py on line 135
+        Logger.info_debug(repr(self.matrix))
+[[╭,─, ,B,╭,─,─,─,─,─,─,─,╮,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,╮],
+ [│, , , ,╰,─,─,─,─,─,─,─,╯, , , , , , , ,|,|,|,|, , , , , , , ,│],
+ [│, , , , , , , , , , , , , , , , , , , ,|,|,|,|, , , , , , , ,│],
+ [│, , , , , , , , , , , , , , , , , , , , , ,─,┬,─,┬,─,┬,─,┬,─,│],
+ [│, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,│],
+ [│, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,│],
+ [│,╭,│,╮, , , ,╶,─,╮, , , , , , , , , , , , , , , , , , , , , ,│],
+ [│,│,│,│, , , , ,░,│, , , , , , , , , , , , , , , , , , , , , ,│],
+ [│,╰,│,╯, , , ,╶,─,╯, , , , , , , , , , , ,╭,─,─,─,─,─,┬,─,╮, ,│],
+ [│, , , , , , , , , , , , , , , , , , , , ,│,░,░,░,░,░,│,▓,│, ,│],
+ [│, , , , , , , , , , , , , , , , , , , , ,╰,─,─,─,─,─,┴,─,╯, ,│],
+ [╰,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,─,╯]]
+DEBUG: Log from: File c:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py on line 162
+        Logger.info_debug(self.matrix)
+╭─ BEDROOM ─┬──────────────────╮
+│   ╰───────╯       ||||       │
+│                   ||||       │
+│                     ─┬─┬─┬─┬─│
+│                              │
+│                              │
+│╭│╮   ╶─╮                     │
+││││    ░│                     │
+│╰│╯   ╶─╯           ╭─────┬─╮ │
+│                    │░░░░░│▓│ │
+│                    ╰─────┴─╯ │
+╰──────────────────────────────╯

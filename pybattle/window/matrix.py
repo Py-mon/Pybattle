@@ -221,8 +221,19 @@ class Matrix:
             return res
         return wrapper
 
-    @with_colors
     def __repr__(self) -> str:
+        res = '['
+        for row in self.array:
+            row_ = '['
+            for cell in row:
+                row_ += str(cell) + ','
+            res += row_[:-1] + '],\n '
+        res = res[:-3] + ']'
+        return res
+    
+    @with_colors
+    @property
+    def colored_repr(self) -> str:
         color = str(Colors.DEFAULT)
         res = '['
         for row in self.array:
@@ -239,5 +250,7 @@ class Matrix:
 
     @with_colors
     def __str__(self) -> str:
-        return "".join([str(char) for row in self.array for char in row + ['\n']])[:-1] + str(Colors.DEFAULT)
+        if self.colors: 
+            return "".join([str(char) for row in self.array for char in row + ['\n']])[:-1] + str(Colors.DEFAULT)
+        return "".join([str(char) for row in self.array for char in row + ['\n']])[:-1]
     

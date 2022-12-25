@@ -10,7 +10,7 @@ class Logger:
 
     logger.setLevel(DEBUG)
 
-    __handler = FileHandler(Path('log.log'), mode='w')
+    __handler = FileHandler(Path('log.log'), mode='w', encoding="utf-8")
     __formatter = Formatter(
         "%(levelname)s: %(message)s")  # LEVEL: message
 
@@ -21,7 +21,7 @@ class Logger:
     @classmethod
     def error(cls, msg: str = '', error: Type[Error] = Error, traceback: bool = True) -> None:
         if traceback:
-            cls.logger.error(Traceback().trace + error.__name__ + ': ' + msg)
+            cls.logger.error(f'{Traceback().trace} {error.__name__}: {msg}')
         else:
             cls.logger.error(error.__name__ + ': ' + msg)
         raise error(msg)
@@ -32,6 +32,10 @@ class Logger:
             cls.logger.debug(Traceback().trace + msg)
         else:
             cls.logger.debug(msg)
+            
+    @classmethod
+    def info_debug(cls, msg: str) -> None:
+        cls.logger.debug(f'Log from: {Traceback(1).trace}{msg}')
 
     @classmethod
     def warning(cls, msg: str, traceback: bool = True) -> None:
