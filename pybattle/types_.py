@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from pybattle.creatures.pymon import Pymon
     from pybattle.window.coord import Coord
     from pybattle.window.size import Size
+    from pybattle.window.matrix import Matrix
 
 
 Creature = Union["Pymon", "Humanoid"]
@@ -16,5 +17,6 @@ User: TypeAlias = "Humanoid"
 ElementReference = Union[str, "Element"]
 CoordReference = Union["Coord", tuple, int]
 SizeReference = Union["Size", tuple, int]
+MatrixReference = Union["Matrix", str, list, SizeReference, list, list[list]]
 
 Reference2D = tuple | int
