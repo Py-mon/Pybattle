@@ -1,11 +1,11 @@
-from typing import TYPE_CHECKING, Union, TypeAlias, Tuple
+from typing import TYPE_CHECKING, TypeAlias, Union
 
 if TYPE_CHECKING:
     from pybattle.creatures.attributes.element import Element
     from pybattle.creatures.humanoid import Humanoid
     from pybattle.creatures.pymon import Pymon
     from pybattle.window.coord import Coord
-    from pybattle.window.range import Size
+    from pybattle.window.size import Size
 
 
 Creature = Union["Pymon", "Humanoid"]
@@ -14,7 +14,7 @@ Defender = Creature
 User: TypeAlias = "Humanoid"
 
 ElementReference = Union[str, "Element"]
-CoordReference = Union["Coord", Tuple, int]
-SizeReference = Union["Size", Tuple, int]
+CoordReference = Union["Coord", tuple, int]
+SizeReference = Union["Size", tuple, int]
 
-Reference2D = Tuple | int
+Reference2D = tuple | int

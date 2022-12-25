@@ -1,7 +1,7 @@
 from enum import Enum
 from os import name as os_name
 from os import system
-from typing import Optional, Tuple
+from typing import Optional
 from shutil import get_terminal_size
 
 from pybattle.types_ import CoordReference

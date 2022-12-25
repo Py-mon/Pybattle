@@ -1,4 +1,4 @@
-from typing import Optional, Self, Sequence, Tuple, overload, Any
+from typing import Optional, Self, Sequence, overload, Any
 
 from pybattle.types_ import CoordReference, SizeReference
 
@@ -43,7 +43,7 @@ class Coord:
         self.x: int = x
 
     @property
-    def coords(self) -> Tuple[int, int]:
+    def coords(self) -> tuple[int, int]:
         return (self.y, self.x)
 
     @property

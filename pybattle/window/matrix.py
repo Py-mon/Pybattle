@@ -1,4 +1,4 @@
-from typing import Any, Callable, Generator, Iterator, List, Self, Tuple, overload
+from typing import Any, Callable, Generator, Iterator, Self, overload
 
 from pybattle.ansi.colors import Color, Colors
 from pybattle.errors import OutOfBoundsError
@@ -167,11 +167,11 @@ class Matrix:
                 self[coord] = cell_s[coord - slice_.start]
 
     @property
-    def rows(self) -> List[List]:
+    def rows(self) -> list[list]:
         return self.array
 
     @property
-    def cols(self) -> List[List]:
+    def cols(self) -> list[list]:
         return [list(col) for col in list(zip(*self.rows))]
 
     @property

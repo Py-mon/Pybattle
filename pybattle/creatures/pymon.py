@@ -3,7 +3,7 @@ from fractions import Fraction
 from math import floor
 from random import choice, choices, randint
 from string import ascii_letters, digits
-from typing import Any, Dict, Self
+from typing import Any, Self
 
 from pybattle.ansi.colors import Colors
 from pybattle.creatures.attributes.ability import Ability
@@ -208,7 +208,7 @@ class Pymon:
         if isinstance(with_, Humanoid):
             raise AttributeError('Breeding is not allowed for Humanoids.')
 
-        def inherit(common: Dict[str, float], rare: Dict[str, float]) -> Dict[str, float]:
+        def inherit(common: dict[str, float], rare: dict[str, float]) -> dict[str, float]:
             x = {}
             for key in common.keys():
                 if roll(self.INHERITANCE_CHANCE):

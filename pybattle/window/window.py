@@ -1,10 +1,9 @@
 from pybattle.ansi.screen import Screen
 from pybattle.window.frame import Frame
-from typing import List
 
 
 class Window:
-    windows: List[Frame] = []
+    windows: list[Frame] = []
     window = None
 
     def __init__(self, frame: Frame) -> None:
