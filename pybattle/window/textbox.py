@@ -7,8 +7,9 @@ from keyboard import is_pressed, wait
 from pybattle.ansi.colors import Colors
 from pybattle.ansi.screen import Cursor, Screen
 from pybattle.types_ import SizeReference
-from pybattle.window.frame import Frame, Size
-from pybattle.window.matrix import Matrix, ColorCoord
+from pybattle.window.frames.map_frame import MapFrame
+from pybattle.window.matrix import ColorCoord, Matrix
+from pybattle.window.size import Size
 
 
 class TextBox:
@@ -34,7 +35,7 @@ class TextBox:
         self.block_char = block_char
 
     def __str__(self) -> str:
-        self.textbox = Frame(
+        self.textbox = MapFrame(
             (' ' * self.size.inner_width + '\n') * self.size.inner_height)
         self.textbox.name = self.author
 
@@ -58,7 +59,7 @@ class TextBox:
                 
             string += line
 
-        self.textbox = Frame(Matrix(string, ColorCoord((-3, -1), Colors.BLUE)))
+        self.textbox = MapFrame(Matrix(string, ColorCoord((-3, -1), Colors.BLUE)))
 
         return str(self.textbox)
     
