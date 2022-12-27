@@ -3,7 +3,7 @@ A python ascii text art pokemon style game in the terminal using ANSI escape cod
 
 Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI_escape_code
 
-**Ascii Text Art:**
+**Ascii Text Art Examples:**
 ```
 ╭─ BEDROOM ─┬──────────────────╮
 │   ╰───────╯       ||||       │
@@ -17,6 +17,15 @@ Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI
 │                    │░░░░░│▓│ │
 │                    ╰─────┴─╯ │
 ╰──────────────────────────────╯
+```
+```
+   __/\       _─────_  
+  / ,  \____ /       \ 
+  \_____    \|    /  | 
+ _|____/ ____ \   |  / 
+|   |___/    \ \  |_/  
+ \_/ ___|      | /     
+    /____\_____//    
 ```
 Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 
