@@ -1,7 +1,6 @@
 ![Pybattle-ascii-close](https://user-images.githubusercontent.com/102424561/209715947-1e3f2be8-f469-4645-be9d-ee505122e819.png)
 
-# Pybattle
-A python ascii text art pokemon style game in the terminal using ANSI escape codes.
+**Pybattle** is a python ascii text art pokemon style game in the terminal using ANSI escape codes.
 
 Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI_escape_code
 
