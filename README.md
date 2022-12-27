@@ -36,6 +36,7 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 ```pip install -e .```
 
 **Uninstall:**
+
 ```pip uninstall pybattle```
 
 # Socials:
