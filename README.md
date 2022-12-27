@@ -36,3 +36,5 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 ```pip install --upgrade setuptools```
 
 ```pip install . ```
+
+Learn more on our discord server: https://discord.gg/WC6smsxh
