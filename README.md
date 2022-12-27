@@ -32,6 +32,7 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 # Installation:
 
 ```pip install --upgrade setuptools```
+
 ```pip install -e .```
 
 **Uninstall:**
