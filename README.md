@@ -30,21 +30,12 @@ Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI
 Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 
 # Installation:
-**Linux:**
-
-```$ pip install --upgrade setuptools```
-
-```$ python3 -m venv env```
-
-```$ source env/bin/activate```
-
-```$ pip install . ```
-
-**Windows:**
 
 ```pip install --upgrade setuptools```
+```pip install -e .```
 
-```pip install . ```
+**Uninstall:**
+```pip uninstall pybattle```
 
-# Socials
+# Socials:
 Learn more on our discord server: https://discord.gg/WC6smsxh
