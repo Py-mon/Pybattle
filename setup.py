@@ -1,8 +1,9 @@
 from urllib.parse import parse_qs, urlparse
 
 import requests
-from github import Github
 from setuptools import find_packages, setup
+from shutil import rmtree
+from time import sleep
 
 
 def get_commits_count(owner_name: str, repo_name: str) -> int:
@@ -30,6 +31,7 @@ version = f'0.{version_}.{commits}'
 
 print(version)
 
+
 setup(
     name="pybattle",
     version=version,
@@ -39,6 +41,6 @@ setup(
     packages=find_packages(),
     python_requires='>=3.11',
     install_requires=[
-                'colorama'
+                'colorama',
     ],
 )

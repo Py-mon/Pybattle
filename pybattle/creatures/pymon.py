@@ -14,7 +14,8 @@ from pybattle.creatures.attributes.stats import Stats
 from pybattle.creatures.attributes.status_ailment import StatusAilment
 from pybattle.creatures.attributes.trait import Trait
 from pybattle.log import Logger
-from pybattle.types_ import Creature, ElementReference, Humanoid
+from pybattle.types_ import Creature, ElementReference
+
 
 
 class ID:
@@ -205,8 +206,8 @@ class Pymon:
 
     def breed(self, with_: Self, level: int = ...) -> Self:
         """Create a offspring between `self` and `with_`. The species with be `self`'s species and some stats will be inherited from `with_`."""
-        if isinstance(with_, Humanoid):
-            raise AttributeError('Breeding is not allowed for Humanoids.')
+        # if isinstance(with_, "Humanoid"):
+        #     raise AttributeError('Breeding is not allowed for Humanoids.')
 
         def inherit(common: dict[str, float], rare: dict[str, float]) -> dict[str, float]:
             x = {}

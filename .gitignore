@@ -1,4 +1,6 @@
 *.pyc
 __pycache__
 .vscode
+settings.json
 log.log
+pybattle.egg-info
