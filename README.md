@@ -32,11 +32,17 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 
 # Installation:
 
+**Clone the repository:**
+```git clone https://github.com/PythonDominator/Pybattle```
+
+**Install setuptools:**
 ```pip install --upgrade setuptools```
 
+**Install pybattle**
 ```pip install -e .```
 
-**Uninstall:**
+
+### Uninstall:
 
 ```pip uninstall pybattle```
 
