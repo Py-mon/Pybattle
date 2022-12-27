@@ -1,4 +1,4 @@
-![Pybattle-ascii-close](https://user-images.githubusercontent.com/102424561/209715947-1e3f2be8-f469-4645-be9d-ee505122e819.png)
+![image](https://user-images.githubusercontent.com/102424561/209717522-fecafed7-ddd2-4f9c-988b-a1c7ac2262c8.png)
 
 **Pybattle** is a python ascii text art pokemon style game in the terminal using ANSI escape codes.
 
