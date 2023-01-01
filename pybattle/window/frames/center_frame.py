@@ -5,6 +5,7 @@ from pybattle.types_ import SizeReference
 from pybattle.window.frames.frame import Frame
 from pybattle.window.matrix import Matrix
 from pybattle.window.size import Size
+from pybattle.ansi.colors import Color
 
 
 class CenteredFrame(Frame):
@@ -15,10 +16,10 @@ class CenteredFrame(Frame):
         size: SizeReference,
         text: str | Matrix,
         title: Optional[str] = None,
+        border_color: Optional[Color] = None,
+        title_color: Optional[Color] = None
     ) -> None:
-        self.title = title
-
-        self.size = Size(size)
+        super().__init__(size, title, border_color, title_color)
 
         self.contents = Matrix(text)
 
