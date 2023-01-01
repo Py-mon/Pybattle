@@ -16,7 +16,7 @@ User: TypeAlias = "Humanoid"
 
 ElementReference = Union[str, "Element"]
 CoordReference = Union["Coord", tuple, int]
-SizeReference = Union["Size", tuple, int]
+SizeReference = Union["Size", CoordReference]
 MatrixReference = Union["Matrix", str, list, SizeReference, list, list[list]]
 
 Reference2D = tuple | int
