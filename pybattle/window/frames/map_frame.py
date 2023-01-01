@@ -4,6 +4,7 @@ from pybattle.window.frames.frame import Frame
 from pybattle.window.matrix import Matrix
 from pybattle.window.size import Size
 from pybattle.types_ import MatrixReference
+from pybattle.ansi.colors import Color
 
 
 class MapFrame(Frame):
@@ -26,9 +27,16 @@ class MapFrame(Frame):
         self,
         contents: MatrixReference,
         title: Optional[str] = None,
+        border_color: Optional[Color] = None,
+        title_color: Optional[Color] = None,
+        contents_color: list = [],
     ) -> None:
+        self.size = Size(Matrix(contents).size) + 3
+        
+        super().__init__(self.size, title, border_color, title_color)
+        
+        self.contents_color = contents_color
+        
         self.contents = Matrix(contents)
-        self.size = Size(self.contents.size) + 2
-        self.title = title
-
+        
         self._update_frame()
