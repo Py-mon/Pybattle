@@ -79,10 +79,12 @@ class Coord:
 
     def __eq__(self, other: CoordReference | SizeReference) -> bool:
         other = self.__class__(other)
-        if self.x == other.x and self.y == other.y:
-            return True
-        return False
-
+        return self.coords == other.coords
+    
+    def __lt__(self, other: CoordReference | SizeReference) -> bool:
+        other = self.__class__(other)
+        return self.coords < other.coords
+    
     def __contains__(self, sequence: Sequence[CoordReference | SizeReference]) -> bool:
         for coord in sequence:
             coord = self.__class__(coord)
