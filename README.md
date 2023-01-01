@@ -49,5 +49,19 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 
 ```pip uninstall pybattle```
 
+# Run:
+
+**Naviagate to the tests folder:**
+
+```cd tests```
+
+**Run a test:**
+
+```python bedroom.py```
+
+```python textbox.py```
+
+There will be more tests coming soon.
+
 # Socials:
 Learn more on our discord server: https://discord.gg/WC6smsxh
