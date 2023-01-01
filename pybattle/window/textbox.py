@@ -4,16 +4,15 @@ from typing import Optional
 
 from keyboard import is_pressed, wait
 
-from pybattle.ansi.colors import Colors
+from pybattle.ansi.colors import Color
 from pybattle.ansi.screen import Cursor, Screen
 from pybattle.types_ import SizeReference
 from pybattle.window.frames.map_frame import MapFrame
-from pybattle.window.matrix import ColorCoord, Matrix
+from pybattle.window.matrix import Matrix
 from pybattle.window.size import Size
 
 
 class TextBox:
-    # TODO: Color Support
     """A outlined box that can display text in the terminal."""
         
     def __init__(
@@ -21,6 +20,9 @@ class TextBox:
         text: str = '',
         author: Optional[str] = None,
         size: SizeReference = Size(4, 70),
+        author_color: Optional[Color] = None,
+        border_color: Optional[Color] = None,
+        text_color: Optional[Color] = None,
         alignment: str = 'left',
         block_char: str = '⏷'
     ) -> None:
@@ -29,16 +31,19 @@ class TextBox:
         self.alignment = alignment
         self.author = author
         
+        self.author_color = author_color
+        self.border_color = border_color
+        
+        self.text_color = text_color
+        if self.text_color is None:
+            self.text_color = Color.DEFAULT
+        
         self.wrap_width = self.size.inner_width - 6  # | x ⏷ |
         self.text_width = self.size.inner_width - 3  # | x |
         self.block = False
         self.block_char = block_char
 
     def __str__(self) -> str:
-        self.textbox = MapFrame(
-            (' ' * self.size.inner_width + '\n') * self.size.inner_height)
-        self.textbox.name = self.author
-
         lines = wrap(self.text, self.wrap_width)[-self.size.inner_height:]  # Last lines
         
         string = ''
@@ -59,7 +64,8 @@ class TextBox:
                 
             string += line
 
-        self.textbox = MapFrame(Matrix(string, ColorCoord((-3, -1), Colors.BLUE)))
+        matrix = Matrix(string, ((0, 0), self.text_color))
+        self.textbox = MapFrame(matrix, self.author, self.border_color, self.author_color)
 
         return str(self.textbox)
     
