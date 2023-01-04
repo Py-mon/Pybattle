@@ -30,7 +30,6 @@ class CenteredFrame(Frame):
         inner_frame_center = self.inner_size.center
 
         starting = inner_frame_center - text_center
-
         ending = inner_frame_center + text_center
         if self.contents.width % 2 == 1:
             ending = inner_frame_center + text_center + 1
