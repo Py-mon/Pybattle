@@ -34,8 +34,6 @@ class Frame:
         self.border_color = border_color
         self.title_color = title_color
         
-        self.contents_color = []
-        
         self._update_frame()
 
     @property
@@ -93,8 +91,8 @@ class Frame:
             colors += [((0, len(self.title)), self.border_color)]
             colors += [((0, 3), self.title_color)]
         
-        #colors += [(coord.coords, cell.color) for coord, cell in zip(self.inside, self.contents)]
-        self.matrix = Matrix(frame, *colors, *self.contents_color)
+        colors += [(Coord(coord) + 1, color) for coord, color in self.contents.colors]
+        self.matrix = Matrix(frame, *colors)
 
     def __getitem__(self, item) -> None:
         return self.matrix[item]
