@@ -3,9 +3,10 @@ from typing import Callable
 from pybattle.ansi.colors import Colors
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
-from pybattle.window.frame import Frame
+from pybattle.window.frames.center_frame import CenteredFrame
+from pybattle.window.frames.frame import Frame
+from pybattle.window.matrix import Matrix
 from pybattle.window.size import Size
-from pybattle.window.matrix import Matrix, ColorCoord
 
 
 class Selection:
@@ -17,7 +18,8 @@ class Selection:
 
 class SelectionMenu:
     def __init__(
-        self, size: SizeReference,
+        self, 
+        size: SizeReference,
         selections: list[Selection],
         default_color: str = Colors.GRAY
     ) -> None:
@@ -25,14 +27,13 @@ class SelectionMenu:
         
         self.selection = selections[0]
         
-        self.frame = Frame(size=size)
+        self.frame = Frame(size)
+        
         for selection in self.selections:
-            print(selection == self.selection)
             if selection == self.selection:
-                self.frame.add_frame(Frame(selection.label, selection.size), selection.location)
+                self.frame.add_frame(CenteredFrame(selection.size, selection.label), selection.location)
             else:
-                print(repr(Matrix(selection.label, ColorCoord(0, default_color))))
-                self.frame.add_frame(Frame(Matrix(selection.label, ColorCoord(0, default_color)), selection.size), selection.location)  
+                self.frame.add_frame(CenteredFrame(Matrix(selection.label, (0, default_color)), selection.size), selection.location)  
   
 def func(p1, p2):
     x1, x2 = p1
