@@ -1,9 +1,6 @@
 from pybattle.window.frames.map_frame import MapFrame
 from pybattle.window.frames.frame import Frame
-from pybattle.window.frames.center_frame import CenteredFrame
 from pybattle.ansi.colors import Color
-from pybattle.window.matrix import Matrix
-
 
 
 map_ = MapFrame('''
