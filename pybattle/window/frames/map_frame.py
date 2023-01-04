@@ -29,14 +29,11 @@ class MapFrame(Frame):
         title: Optional[str] = None,
         border_color: Optional[Color] = None,
         title_color: Optional[Color] = None,
-        contents_color: list = [],
     ) -> None:
-        self.size = Size(Matrix(contents).size) + 3
+        self.size = Matrix(contents).size + 3
         
         super().__init__(self.size, title, border_color, title_color)
-        
-        self.contents_color = contents_color
-        
+
         self.contents = Matrix(contents)
         
         self._update_frame()
