@@ -82,16 +82,15 @@ class Frame:
 
         frame += f'╰{"─" * self.inner_width}╯\n'
 
-        colors = []
+        colors = [((i, 1), Color.DEFAULT) for i in range(1, self.irows)]
+        colors += [((Coord(coord) + 1).coords, color) for coord, color in self.contents.colors]
         if self.border_color is not None:
             colors += [((i, 0), self.border_color) for i in range(self.height)]
-            colors += [((i, 1), Color.DEFAULT) for i in range(1, self.irows)]
             colors += [((i, self.width - 1), self.border_color) for i in range(self.height)]
         if self.title_color is not None and self.title is not None:
             colors += [((0, len(self.title)), self.border_color)]
             colors += [((0, 3), self.title_color)]
         
-        colors += [(Coord(coord) + 1, color) for coord, color in self.contents.colors]
         self.matrix = Matrix(frame, *colors)
 
     def __getitem__(self, item) -> None:
@@ -179,7 +178,8 @@ class Frame:
         if self.title is not None:
             for i, char in enumerate(' ' + self.title + ' '):
                 self.matrix[0, i + 2] = Cell(char, self.title_color)
-                
-        self.matrix.add_color((0, len(self.title) + 4), self.border_color)
+        
+        if self.title is not None:
+            self.matrix.add_color((0, len(self.title) + 4), self.border_color)
         
         Logger.info_debug(repr(self.matrix))

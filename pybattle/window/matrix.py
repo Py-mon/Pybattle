@@ -68,11 +68,14 @@ class Matrix:
             self.cells = [[Cell(value) for value in row] for row in array]
             
         elif isinstance(Size(data), Size):
-            self.cells = [[Cell(' ') for _ in __] for __ in Size(data).array_coords]
+            size = Size(data)
+            self.cells = [[Cell(' ') for _ in range(size.x)] for __ in range(size.y)]
 
         if self.rows:
-            width = max([len(row) for row in self.rows])
-            self.cells = [row + Cell(" ") * (width - len(row)) for row in self.rows]
+            row_lengths = [len(row) for row in self.rows]
+            if row_lengths.count(row_lengths[0]) != len(row_lengths):
+                width = max(row_lengths)
+                self.cells = [row + Cell(" ") * (width - len(row)) for row in self.rows]
             
         self.add_colors(*colors)
             
@@ -274,9 +277,3 @@ class Matrix:
     def __str__(self) -> str:
         return "".join([str(cell.color) + repr(cell) for row in self.cells for cell in row + [Cell('\n')]])[:-1] + str(Color.DEFAULT)
     
-    
-m = Matrix('123\n456\n789', ((1, 1), Color.RED))
-
-m.add_rect_color((1, 1), Color.BLUE)
-
-print(m.colored_repr)

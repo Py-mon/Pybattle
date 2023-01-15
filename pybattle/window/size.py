@@ -6,7 +6,7 @@ from pybattle.types_ import CoordReference
 
 class Size(Coord, RectRange):
     def __new__(cls, data, *_) -> Any:
-        if not isinstance(data, int | cls | tuple | str):
+        if not isinstance(data, (int, cls, tuple, str)):
             return data
         return object.__new__(cls)
     

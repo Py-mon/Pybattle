@@ -31,15 +31,20 @@ class CenteredFrame(Frame):
 
         starting = inner_frame_center - text_center
         ending = inner_frame_center + text_center
-        if self.contents.width % 2 == 1:
-            ending = inner_frame_center + text_center + 1
+
+        # if self.contents.width % 2 == 1:
+        #     ending = inner_frame_center + text_center + 1
+        # if self.contents.width % 2 == 0:
+        #     ending.x += 1
             
         Logger.info_debug(repr(matrix))
         Logger.info_debug(repr(matrix[starting: ending]))
         Logger.info_debug(repr(self.contents))
-
+        
         matrix[starting: ending] = self.contents
+        
+        matrix.colors += self.contents.colors
 
         self.contents = matrix
-
+        
         self._update_frame()

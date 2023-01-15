@@ -73,7 +73,7 @@ class Screen:
         Cursor.pos.y += len(max(txt.split('\n')))
 
         if not move_cursor:
-            Cursor.up(txt.count('\n') + 1).execute()
+            Cursor.up(txt.count('\n') + 2).execute()
 
     @staticmethod
     def clear() -> None:

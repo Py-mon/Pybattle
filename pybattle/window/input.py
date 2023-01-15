@@ -1,19 +1,45 @@
-from typing import Callable
+from typing import Literal
 
-from pybattle.ansi.colors import Colors
+from pybattle.ansi.colors import Color
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.coord import Coord
 from pybattle.window.frames.center_frame import CenteredFrame
 from pybattle.window.frames.frame import Frame
 from pybattle.window.matrix import Matrix
 from pybattle.window.size import Size
+from pybattle.ansi.screen import Screen
+from keyboard import is_pressed
+
+
+def func(coord: CoordReference, compare_coord: CoordReference) -> Literal['right', 'left', 'up', 'down', 'equal']:
+    y1, x1 = coord
+    y2, x2 = compare_coord
+    
+    if abs(x2 - x1) > abs(y2 - y1):
+        if x1 > x2:
+            return 'left'
+        else:
+            return 'right'
+    else:
+        if y1 > y2:
+            return 'up'
+        elif y1 == y2:
+            return 'equal'
+        else:
+            return 'down'
 
 
 class Selection:
     def __init__(self, label: str, location: CoordReference, size: SizeReference = ...) -> None:
         self.location = Coord(location)
-        self.size = Size(size)
         self.label = label
+        
+        self.size = Size(size)
+        if self.size is ...:
+            self.size = Size(label) - 1
+    
+    def __repr__(self):
+        return str(self.location)
 
 
 class SelectionMenu:
@@ -21,33 +47,64 @@ class SelectionMenu:
         self, 
         size: SizeReference,
         selections: list[Selection],
-        default_color: str = Colors.GRAY
+        default_color: Color = Color.BLUE
     ) -> None:
+        self.default_color = default_color
         self.selections = selections
         
         self.selection = selections[0]
         
-        self.frame = Frame(size)
-        
+        self._frame = Frame(size)
+
+    @property
+    def frame(self):
         for selection in self.selections:
             if selection == self.selection:
-                self.frame.add_frame(CenteredFrame(selection.size, selection.label), selection.location)
+                self._frame.add_frame(CenteredFrame(selection.size, Matrix(selection.label, ((0, 0), self.default_color))), selection.location)
             else:
-                self.frame.add_frame(CenteredFrame(Matrix(selection.label, (0, default_color)), selection.size), selection.location)  
-  
-def func(p1, p2):
-    x1, x2 = p1
-    y1, y2 = p2
+                self._frame.add_frame(CenteredFrame(selection.size, selection.label), selection.location)
+        return self._frame
     
-    if abs(x2-x1) > abs(y2-y1):
-        if x1 > x2:
-            return 'right'
-        else:
-            return 'left'
-    else:
-        if y1 > y2:
-            return 'up'
-        else:
-            return 'down'
+    @property
+    def directions(self) -> list[str]:
+        return [func(self.selection.location, location.location) for location in self.selections]
+
+    def move(self, direction: Literal['right', 'left', 'up', 'down']) -> None:
+        if direction in self.directions:
+            selection_index = self.directions.index('equal')
+            if direction in self.directions[:selection_index]:
+                index = self.directions.index(direction, selection_index - 1)
+            else:
+                index = self.directions.index(direction)
+                
+            self.selection = self.selections[index]
+
+    def right(self) -> None:
+        self.move('right')
+
+    def left(self) -> None:
+        self.move('left')
+        
+    def up(self) -> None:
+        self.move('up')
+        
+    def down(self) -> None:
+        self.move('down')
+
+    def loop(self) -> None:
+        while True:
+            Screen.write(self.frame, move_cursor=False)
             
-print(func((0, 0), (3,4)))
+            if is_pressed('right'):
+                self.right()
+            elif is_pressed('left'):
+                self.left()
+            elif is_pressed('up'):
+                self.up()
+            elif is_pressed('down'):
+                self.down()
+
+selection_menu = SelectionMenu((12, 15), [Selection('1', (1, 1), (3, 3)), Selection('2', (1, 4), (3, 3)), Selection('3', (1, 7), (3, 3)), Selection('4', (1, 10), (3, 3))])
+selection_menu.loop()
+
+print(selection_menu.frame)

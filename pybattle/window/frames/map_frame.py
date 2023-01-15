@@ -36,4 +36,6 @@ class MapFrame(Frame):
 
         self.contents = Matrix(contents)
         
+        # self.contents.colors += contents.colors
+        
         self._update_frame()
