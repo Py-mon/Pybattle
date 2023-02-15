@@ -176,7 +176,7 @@ class Frame:
         # Overlap Name
         if self.title is not None:
             for i, char in enumerate(' ' + self.title + ' '):
-                self.matrix[0, i + 2] = Cell(char, self.title_color)
+                self.matrix[Coord(0, i + 2)] = Cell(char, self.title_color)
         
         if self.title is not None:
             self.matrix.add_color(Coord(0, len(self.title) + 4), self.border_color)
