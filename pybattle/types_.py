@@ -4,9 +4,9 @@ if TYPE_CHECKING:
     from pybattle.creatures.attributes.element import Element
     from pybattle.creatures.humanoid import Humanoid
     from pybattle.creatures.pymon import Pymon
-    from pybattle.window.coord import Coord
-    from pybattle.window.size import Size
-    from pybattle.window.matrix import Matrix
+    from pybattle.window.grid.coord import Coord
+    from pybattle.window.grid.size import Size
+    from pybattle.window.grid.matrix import Matrix
 
 
 Creature = Union["Pymon", "Humanoid"]

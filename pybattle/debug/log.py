@@ -1,7 +1,7 @@
 from logging import DEBUG, FileHandler, Formatter, getLogger
 from pathlib import Path
-from pybattle.traceback import Traceback
-from pybattle.errors import Error
+from pybattle.debug.traceback import Traceback
+from pybattle.debug.errors import Error
 from typing import Type
 
 
@@ -10,7 +10,7 @@ class Logger:
 
     logger.setLevel(DEBUG)
 
-    __handler = FileHandler(Path('log.log'), mode='w', encoding="utf-8")
+    __handler = FileHandler(Path('Pybattle/log.log'), mode='w', encoding="utf-8")
     __formatter = Formatter(
         "%(levelname)s: %(message)s")  # LEVEL: message
 

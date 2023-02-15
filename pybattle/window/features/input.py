@@ -2,11 +2,11 @@ from typing import Literal
 
 from pybattle.ansi.colors import Color
 from pybattle.types_ import CoordReference, SizeReference
-from pybattle.window.coord import Coord
+from pybattle.window.grid.coord import Coord
 from pybattle.window.frames.center_frame import CenteredFrame
 from pybattle.window.frames.frame import Frame
-from pybattle.window.matrix import Matrix
-from pybattle.window.size import Size
+from pybattle.window.grid.matrix import Matrix
+from pybattle.window.grid.size import Size
 from pybattle.ansi.screen import Screen
 from keyboard import is_pressed
 

@@ -1,6 +1,6 @@
-from pybattle.window.coord import Coord
-from pybattle.window.range import RectRange
-from typing import overload, Self, Any
+from pybattle.window.grid.coord import Coord
+from pybattle.window.grid.range import RectRange
+from typing import overload, Self, Any, Optional
 from pybattle.types_ import CoordReference
 
 
@@ -12,35 +12,31 @@ class Size(Coord, RectRange):
     def __init__(self, hw: int, /) -> None: ...
     
     @overload
-    def __init__(self, size: Self, /) -> None: ...
-    
-    @overload
     def __init__(self, tup: tuple[int, int], /) -> None: ...
     
     @overload
     def __init__(self, array: list[list], /) -> None: ...
     
     @overload
-    def __init__(self, coord: CoordReference, /) -> None: ...
+    def __init__(self, coord: Coord, /) -> None: ...
     
     @overload
     def __init__(self, string: str, /) -> None: ...
     
-    @overload
-    def __init__(self, other: Any, /) -> None: ...
-    
-    def __init__(self, data, width = None, /) -> None:
+    def __init__(self, data, width: Optional[int] = None, /) -> None:
         if isinstance(data, str):
             height = data.count('\n') + 1
             width = max([len(row) for row in data.splitlines()])
         elif isinstance(data, list):
             height = len(data)
             width = max([len(row) for row in data])
+        elif isinstance(data, Coord):
+            height, width = data
         else:
             height = data
-            
+        
         Coord.__init__(self, height, width)
-        RectRange.__init__(self, self.coords)
+        RectRange.__init__(self, self)
 
     @property
     def height(self) -> int:

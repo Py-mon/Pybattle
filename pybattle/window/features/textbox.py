@@ -4,12 +4,12 @@ from typing import Optional
 
 from keyboard import is_pressed, wait
 
-from pybattle.ansi.colors import Color, Colors
+from pybattle.ansi.colors import Color, Color
 from pybattle.ansi.screen import Cursor, Screen
-from pybattle.types_ import SizeReference
+from pybattle.window.grid.coord import Coord
 from pybattle.window.frames.map_frame import MapFrame
-from pybattle.window.matrix import Matrix
-from pybattle.window.size import Size
+from pybattle.window.grid.matrix import Matrix
+from pybattle.window.grid.size import Size
 
 
 class TextBox:
@@ -19,10 +19,10 @@ class TextBox:
         self,
         text: str = '',
         author: Optional[str] = None,
-        size: SizeReference = Size(4, 70),
-        author_color: Optional[Colors] = None,
-        border_color: Optional[Colors] = None,
-        text_color: Optional[Colors] = None,
+        size: Size = Size(4, 70),
+        author_color: Optional[Color] = None,
+        border_color: Optional[Color] = None,
+        text_color: Optional[Color] = None,
         alignment: str = 'left',
         block_char: str = '⏷'
     ) -> None:
@@ -64,7 +64,7 @@ class TextBox:
                 
             string += line
 
-        matrix = Matrix(string, *[((i, 1), self.text_color) for i in range(self.size.height - 2)])
+        matrix = Matrix(string, *[(Coord(i, 1), self.text_color) for i in range(self.size.height - 2)])
         self.textbox = MapFrame(matrix, self.author, self.border_color, self.author_color)
 
         return str(self.textbox)

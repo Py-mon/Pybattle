@@ -1,10 +1,9 @@
 from typing import Optional
 
-from pybattle.log import Logger
-from pybattle.types_ import SizeReference
+from pybattle.debug.log import Logger
 from pybattle.window.frames.frame import Frame
-from pybattle.window.matrix import Matrix
-from pybattle.window.size import Size
+from pybattle.window.grid.matrix import Matrix
+from pybattle.window.grid.size import Size
 from pybattle.ansi.colors import Color
 
 
@@ -13,7 +12,7 @@ class CenteredFrame(Frame):
 
     def __init__(
         self,
-        size: SizeReference,
+        size: Size,
         text: str | Matrix,
         title: Optional[str] = None,
         border_color: Optional[Color] = None,

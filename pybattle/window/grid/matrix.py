@@ -1,12 +1,12 @@
 from operator import itemgetter
-from typing import Any, Callable, Generator, Self, overload
+from typing import Generator, Self, overload, Optional, Any
 
-from pybattle.ansi.colors import Color
-from pybattle.log import Logger
+from pybattle.ansi.colors import Color, Colors
+from pybattle.debug.log import Logger
 from pybattle.types_ import CoordReference, SizeReference
-from pybattle.window.coord import Coord
-from pybattle.window.range import RectRange, SelectionRange
-from pybattle.window.size import Size
+from pybattle.window.grid.coord import Coord
+from pybattle.window.grid.range import RectRange, SelectionRange
+from pybattle.window.grid.size import Size
 
 
 class Cell:
@@ -15,12 +15,12 @@ class Cell:
             return value
         return super().__new__(cls)
     
-    def __init__(self, value: Any, color: Color = None) -> None:
+    def __init__(self, value: Any, color: Optional[Color] = None) -> None:
         if self is value:
             return
         
         if color is None:
-            color = Color.DEFAULT
+            color = Colors.DEFAULT
         
         self.value = value
         self.color = color
@@ -40,18 +40,18 @@ class Matrix:
         return super().__new__(cls)
     
     @overload
-    def __init__(self, size: SizeReference, *colors: tuple[CoordReference, Color]) -> None: ...
+    def __init__(self, size: Size, *colors: tuple[Coord, Color]) -> None: ...
     
     @overload
-    def __init__(self, string: str, *colors: tuple[CoordReference, Color]) -> None: ...
+    def __init__(self, string: str, *colors: tuple[Coord, Color]) -> None: ...
     
     @overload
-    def __init__(self, nested_list: list[Any | Cell] | list[list[Any | Cell]], *colors: tuple[CoordReference, Color]) -> None: ...
+    def __init__(self, nested_list: list[Any | Cell] | list[list[Any | Cell]], *colors: tuple[Coord, Color]) -> None: ...
 
     @overload
     def __init__(self, matrix: Self) -> None: ...
 
-    def __init__(self, data, *colors: tuple[CoordReference, Color]) -> None:
+    def __init__(self, data, *colors: tuple[Coord, Color]) -> None:
         if data is self:
             return
         
@@ -82,7 +82,7 @@ class Matrix:
             
         self.add_colors(*colors)
             
-    def next_color(self, coord: CoordReference) -> None:
+    def next_color(self, coord: Coord) -> Coord:
         color_coords = [color_coord[0] for color_coord in self.colors]
 
         if len(color_coords) == 0:
@@ -98,19 +98,21 @@ class Matrix:
             copied_list.sort()
             index = copied_list.index(coord)
 
-        coord = Coord(color_coords[index])
+        coord = color_coords[index]
         coord = Coord(coord.y, coord.x - 1)
         return coord
 
-    def add_color(self, coord: CoordReference, color: Color) -> None:
+    def add_color(self, coord: Coord, color: Color) -> None:
+        if not isinstance(coord, Coord):
+            raise TypeError()
         for coord in SelectionRange(self.width, self.next_color(coord), coord):
             self[coord].color = color
             
-    def add_colors(self, *colors: tuple[CoordReference, Color]) -> None:
+    def add_colors(self, *colors: tuple[Coord, Color]) -> None:
         for (coord, color) in colors:
             self.add_color(coord, color)
             
-    def add_rect_color(self, coord: CoordReference, color: Color) -> None:
+    def add_rect_color(self, coord: Coord, color: Color) -> None:
         for coord in RectRange(self.next_color(coord), coord):
             self[coord].color = color
 
@@ -143,7 +145,7 @@ class Matrix:
     def __getitem__(self, slice_: slice) -> Self: ...
 
     @overload
-    def __getitem__(self, coord: CoordReference) -> Cell: ...
+    def __getitem__(self, coord: Coord) -> Cell: ...
     
     def __getitem__(self, slice_) -> Cell:
         """
@@ -152,8 +154,8 @@ class Matrix:
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
         """
-        if isinstance(slice_, Size | Coord | tuple):
-            coord = Coord(slice_)
+        if isinstance(slice_, Size | Coord):
+            coord = slice_
             return self.cells[coord.y][coord.x]
 
         elif isinstance(slice_, slice):
@@ -179,8 +181,8 @@ class Matrix:
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
         """
-        if isinstance(slice_, Size | Coord | tuple):
-            coord = Coord(slice_)
+        if isinstance(slice_, Size | Coord):
+            coord = slice_
             self.cells[coord.y][coord.x] = Cell(cell_s)
 
         elif isinstance(slice_, slice):
@@ -204,8 +206,8 @@ class Matrix:
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
         """
-        if isinstance(slice_, Size | Coord | tuple):
-            coord = Coord(slice_)
+        if isinstance(slice_, Size | Coord):
+            coord = slice_
             self.cells[coord.y][coord.x].value = value
 
         elif isinstance(slice_, slice):
@@ -272,11 +274,11 @@ class Matrix:
         for row in self.cells:
             row_ = '['
             for cell in row:
-                row_ += str(cell.color) + cell.value + str(Color.DEFAULT) + ','
+                row_ += str(cell.color) + cell.value + str(Colors.DEFAULT) + ','
             res += row_[:-1] + '],\n '
-        res = res[:-3] + str(Color.DEFAULT) + ']'
+        res = res[:-3] + str(Colors.DEFAULT) + ']'
         return res
 
     def __str__(self) -> str:
-        return "".join([str(cell.color) + repr(cell) for row in self.cells for cell in row + [Cell('\n')]])[:-1] + str(Color.DEFAULT)
+        return "".join([str(cell.color) + repr(cell) for row in self.cells for cell in row + [Cell('\n')]])[:-1] + str(Colors.DEFAULT)
     

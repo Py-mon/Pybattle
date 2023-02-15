@@ -1,8 +1,8 @@
 from pybattle.ansi.screen import Screen
-from pybattle.window.frame import Frame
+from pybattle.window.frames.frame import Frame
 
 
-class Window:
+class Scene:
     windows: list[Frame] = []
     window = None
 
@@ -16,6 +16,7 @@ class Window:
         index: 
         ```
         0 -> first one
+        1 -> second one
         -1 -> previous one
         ...
         """
@@ -25,9 +26,9 @@ class Window:
         
     def set(self) -> None:
         """Set the window."""
-        Window.window = self.__window
-        Window.windows.append(Window.window)
+        Scene.window = self.__window
+        Scene.windows.append(Scene.window)
 
     def set_and_show(self) -> None:
         self.set()
-        Window.show()
+        Scene.show()

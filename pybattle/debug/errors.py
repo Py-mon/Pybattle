@@ -1,4 +1,4 @@
-from pybattle.traceback import Traceback
+from pybattle.debug.traceback import Traceback
 
 
 class Error(Exception):
@@ -23,7 +23,7 @@ class OutOfBoundsError(Error):
 
 
 class InsufficientArgumentsError(Error):
-    """Too few arguments required."""
+    """Not enough arguments required."""
     pass
 
 

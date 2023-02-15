@@ -1,12 +1,11 @@
 from typing import Optional, Self
 
-from pybattle.ansi.colors import Color
-from pybattle.log import Logger
-from pybattle.types_ import CoordReference, SizeReference
-from pybattle.window.coord import Coord
-from pybattle.window.matrix import Matrix, Cell
-from pybattle.window.range import RectRange
-from pybattle.window.size import Size
+from pybattle.ansi.colors import Color, Colors
+from pybattle.debug.log import Logger
+from pybattle.window.grid.coord import Coord
+from pybattle.window.grid.matrix import Matrix, Cell
+from pybattle.window.grid.range import RectRange
+from pybattle.window.grid.size import Size
 
 
 class Frame:
@@ -16,20 +15,23 @@ class Frame:
 
     def __init__(
         self,
-        size: SizeReference,
+        size: Size | str,
         title: Optional[str] = None,
         border_color: Optional[Color] = None,
         title_color: Optional[Color] = None,
     ) -> None:
-        self.size = Size(size)
+        if isinstance(size, str):
+            self.size = Size(size)
+        else:
+            self.size = size
         self.contents = Matrix(self.inner_size)
         self.title = title
         
         if border_color is None:
-            border_color = Color.DEFAULT
+            border_color = Colors.DEFAULT
         
         if title_color is None:
-            title_color = Color.DEFAULT
+            title_color = Colors.DEFAULT
         
         self.border_color = border_color
         self.title_color = title_color
@@ -82,14 +84,14 @@ class Frame:
 
         frame += f'╰{"─" * self.inner_width}╯\n'
 
-        colors = [((i, 1), Color.DEFAULT) for i in range(1, self.irows)]
-        colors += [((Coord(coord) + 1).coords, color) for coord, color in self.contents.colors]
+        colors = [(Coord(i, 1), Colors.DEFAULT) for i in range(1, self.irows)]
+        colors += [(coord + 1, color) for coord, color in self.contents.colors]
         if self.border_color is not None:
-            colors += [((i, 0), self.border_color) for i in range(self.height)]
-            colors += [((i, self.width - 1), self.border_color) for i in range(self.height)]
+            colors += [(Coord(i, 0), self.border_color) for i in range(self.height)]
+            colors += [(Coord(i, self.width - 1), self.border_color) for i in range(self.height)]
         if self.title_color is not None and self.title is not None:
-            colors += [((0, len(self.title)), self.border_color)]
-            colors += [((0, 3), self.title_color)]
+            colors += [(Coord(0, len(self.title)), self.border_color)]
+            colors += [(Coord(0, 3), self.title_color)]
         
         self.matrix = Matrix(frame, *colors)
 
@@ -134,14 +136,11 @@ class Frame:
     def __str__(self) -> str:
         return str(self.matrix)
 
-    def add_frame(self, frame: "Frame", pos: CoordReference = Coord(0, 0)) -> None:
+    def add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
         # TODO: Fix corner going like this:
         # ╭──────────┬───────┬
         # │          ╰───────┤
         # ╰──────────────────╯
-
-        pos = Coord(pos)
-
         top_left = pos
         top_right = pos + frame.top_right_corner
         bottom_left = pos + frame.bottom_left_corner
@@ -180,6 +179,6 @@ class Frame:
                 self.matrix[0, i + 2] = Cell(char, self.title_color)
         
         if self.title is not None:
-            self.matrix.add_color((0, len(self.title) + 4), self.border_color)
+            self.matrix.add_color(Coord(0, len(self.title) + 4), self.border_color)
         
         Logger.info_debug(repr(self.matrix))

@@ -62,6 +62,7 @@ class AnsiEscSeq:
 
     @property
     def code(self) -> str:
+        """Get the full escape sequence."""
         return self.CSI + self.__escape_args + self.__escape_code
 
     def execute(self) -> None:

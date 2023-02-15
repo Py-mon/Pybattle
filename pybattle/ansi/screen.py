@@ -1,14 +1,12 @@
-from enum import Enum
 from os import name as os_name
 from os import system
 from typing import Optional
 from shutil import get_terminal_size
 
-from pybattle.types_ import CoordReference
-from pybattle.window.coord import Coord
+from pybattle.window.grid.coord import Coord
 from pybattle.ansi.colors import Color
 from pybattle.ansi.ansi import AnsiEscSeq, CursorCode
-from pybattle.window.size import Size
+from pybattle.window.grid.size import Size
 
 
 class Cursor:
@@ -40,9 +38,8 @@ class Cursor:
         return AnsiEscSeq(CursorCode.LEFT, n - 1)
 
     @classmethod
-    def move(cls, pos: CoordReference) -> AnsiEscSeq:
+    def move(cls, pos: Coord) -> AnsiEscSeq:
         """Moves the cursor to the given pos."""
-        pos = Coord(pos)
         cls.pos = pos
         return AnsiEscSeq(CursorCode.MOVE, *pos)
 
@@ -51,13 +48,11 @@ class Screen:
     @staticmethod
     def write(
         txt: object,
-        pos: CoordReference = ...,
+        pos: Coord = ...,
         color: Optional[Color] = None,
         move_cursor: bool = True
     ) -> None:
         """Print text to the screen."""
-        pos = Coord(pos)
-
         txt = str(txt)
 
         if pos is not ...:

@@ -1,8 +1,8 @@
 from typing import Optional
 
 from pybattle.window.frames.frame import Frame
-from pybattle.window.matrix import Matrix
-from pybattle.window.size import Size
+from pybattle.window.grid.matrix import Matrix
+from pybattle.window.grid.size import Size
 from pybattle.types_ import MatrixReference
 from pybattle.ansi.colors import Color
 

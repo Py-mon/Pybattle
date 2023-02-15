@@ -1,24 +1,29 @@
 from typing import Optional, Generator
 
 from pybattle.types_ import CoordReference
-from pybattle.window.coord import Coord
+from pybattle.window.grid.coord import Coord
 
 
 class RectRange:
     def __init__(
         self, 
-        stop: CoordReference,
-        start: Optional[CoordReference] = None
+        stop: Coord,
+        start: Optional[Coord] = None
     ) -> None:
-        self._start = Coord(start or 0)
-        self._stop = Coord(stop)
+        if start is None:
+            self._start = Coord(0, 0)
+        else:
+            self._start = start
+            if isinstance(start, tuple):
+                raise ValueError()
+        self._stop = stop
 
     def __iter__(self) -> Generator[Coord, None, None]:
         lst = [coord for row in self.array_coords for coord in row]
         yield from lst
 
-    def __contains__(self, coord: CoordReference) -> bool:
-        return Coord(coord) in iter(self)
+    def __contains__(self, coord: Coord) -> bool:
+        return coord in iter(self)
 
     @property
     def array_coords(self) -> list[list[Coord]]:
@@ -35,14 +40,14 @@ class SelectionRange(RectRange):
     def __init__(
         self, 
         width: int,
-        stop: CoordReference,
-        start: Optional[CoordReference] = None,        
+        stop: Coord,
+        start: Optional[Coord] = None,        
     ) -> None:
         super().__init__(stop, start)
         self.width = width
         
     @property
-    def array_coords(self) -> list[Coord]:
+    def array_coords(self) -> list[list[Coord]]:
         res = [[
             Coord(y, x) for x in range(self.width)]
             for y in range(self._start.y, self._stop.y + 1)]

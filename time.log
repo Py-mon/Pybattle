@@ -1,0 +1,634 @@
+Tue Feb 14 18:55:20 2023    binary.txt
+
+         1812841 function calls (1812277 primitive calls) in 0.623 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   112300    0.079    0.000    0.138    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:64(__eq__)
+   171101    0.047    0.000    0.075    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:24(__init__)
+     4500    0.047    0.000    0.116    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:51(<listcomp>)
+   111200    0.041    0.000    0.058    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:13(__new__)
+   248000    0.032    0.000    0.032    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:35(coords)
+   171101    0.028    0.000    0.028    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:39(coords)
+   124500    0.025    0.000    0.035    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:47(_convert)
+     3400    0.024    0.000    0.379    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:105(add_color)
+   298962    0.022    0.000    0.022    0.000 {built-in method builtins.isinstance}
+    45200    0.021    0.000    0.088    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:150(__getitem__)
+   111200    0.020    0.000    0.020    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:18(__init__)
+     1200    0.019    0.000    0.057    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:64(<listcomp>)
+    34000    0.019    0.000    0.031    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:68(<listcomp>)
+     1000    0.015    0.000    0.042    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:75(<listcomp>)
+     3400    0.015    0.000    0.175    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:85(next_color)
+78411/78406    0.009    0.000    0.009    0.000 {built-in method __new__ of type object at 0x00007FFE43D28F90}
+    11700    0.008    0.000    0.015    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:68(__lt__)
+     3300    0.008    0.000    0.071    0.000 {method 'index' of 'list' objects}
+     3500    0.008    0.000    0.010    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:236(<listcomp>)
+    47600    0.007    0.000    0.137    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:21(__iter__)
+     3400    0.007    0.000    0.007    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:86(<listcomp>)
+     3400    0.007    0.000    0.127    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:49(array_coords)
+      182    0.007    0.000    0.007    0.000 {built-in method nt.stat}
+     1000    0.006    0.000    0.009    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:67(<listcomp>)
+    35000    0.006    0.000    0.006    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:135(__iter__)
+     1000    0.006    0.000    0.012    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:83(<listcomp>)
+89341/89258    0.006    0.000    0.006    0.000 {built-in method builtins.len}
+     1200    0.005    0.000    0.561    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:54(__init__)
+     1200    0.005    0.000    0.007    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:78(<listcomp>)
+      100    0.004    0.000    0.544    0.005 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:71(_update_frame)
+       33    0.003    0.000    0.003    0.000 {built-in method marshal.loads}
+      182    0.003    0.000    0.010    0.000 <frozen importlib._bootstrap_external>:140(_path_stat)
+     3500    0.003    0.000    0.015    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:233(width)
+     3400    0.003    0.000    0.003    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:22(<listcomp>)
+    34211    0.003    0.000    0.003    0.000 {built-in method builtins.hasattr}
+        1    0.002    0.002    0.637    0.637 main.py:1(<module>)
+     3400    0.002    0.000    0.004    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:40(__init__)
+     1200    0.002    0.000    0.017    0.000 {method 'sort' of 'list' objects}
+      362    0.002    0.000    0.003    0.000 <frozen importlib._bootstrap_external>:96(_path_join)
+        1    0.002    0.002    0.002    0.002 {built-in method _imp.create_dynamic}
+     4600    0.002    0.000    0.003    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:8(__init__)
+     1200    0.002    0.000    0.005    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\size.py:26(__init__)
+      138    0.002    0.000    0.007    0.000 {built-in method builtins.__build_class__}
+     1200    0.002    0.000    0.380    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:111(add_colors)
+       33    0.001    0.000    0.001    0.000 {built-in method io.open_code}
+       33    0.001    0.000    0.001    0.000 {method '__exit__' of '_io._IOBase' objects}
+     3782    0.001    0.000    0.001    0.000 {built-in method builtins.max}
+       33    0.001    0.000    0.001    0.000 {method 'read' of '_io.BufferedReader' objects}
+     7000    0.001    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:221(rows)
+      100    0.001    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:225(cols)
+        9    0.001    0.000    0.001    0.000 {built-in method nt.listdir}
+     1200    0.001    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:37(__new__)
+       69    0.001    0.000    0.014    0.000 <frozen importlib._bootstrap_external>:1604(find_spec)
+      100    0.001    0.000    0.002    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:91(<listcomp>)
+      100    0.001    0.000    0.591    0.006 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:16(__init__)
+     39/7    0.001    0.000    0.002    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:507(_parse)
+      500    0.001    0.000    0.005    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:60(__sub__)
+      100    0.001    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:240(<listcomp>)
+       23    0.001    0.000    0.001    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:241(_optimize_charset)
+      100    0.001    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:227(<listcomp>)
+     1438    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+      100    0.000    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:90(<listcomp>)
+      100    0.000    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:87(<listcomp>)
+       33    0.000    0.000    0.010    0.000 <frozen importlib._bootstrap_external>:1007(get_code)
+       42    0.000    0.000    0.016    0.000 <frozen importlib._bootstrap>:1056(_find_spec)
+     76/7    0.000    0.000    0.001    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:37(_compile)
+      200    0.000    0.000    0.000    0.000 {method 'splitlines' of 'str' objects}
+     1200    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:41(width)
+     42/1    0.000    0.000    0.043    0.043 <frozen importlib._bootstrap>:1167(_find_and_load)
+       66    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:437(cache_from_source)
+       42    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:748(find_spec)
+      393    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+     2152    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+     1146    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+      362    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:119(<listcomp>)
+      100    0.000    0.000    0.004    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:229(size)
+     1369    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+      400    0.000    0.000    0.004    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:57(inner_size)
+      100    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\size.py:29(<listcomp>)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.eval}
+     42/1    0.000    0.000    0.043    0.043 <frozen importlib._bootstrap>:1122(_find_and_load_unlocked)
+       41    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:493(_init_module_attrs)
+     35/1    0.000    0.000    0.637    0.637 {built-in method builtins.exec}
+     29/7    0.000    0.000    0.002    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:447(_parse_sub)
+      565    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:231(__next)
+     41/4    0.000    0.000    0.041    0.010 <frozen importlib._bootstrap>:666(_load_unlocked)
+      200    0.000    0.000    0.002    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:53(inner_width)
+       37    0.000    0.000    0.015    0.000 <frozen importlib._bootstrap_external>:1464(_get_spec)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\collections\__init__.py:348(namedtuple)
+     1400    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\size.py:45(width)
+       45    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:179(_get_module_lock)
+     1200    0.000    0.000    0.000    0.000 {method 'count' of 'list' objects}
+    94/25    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:172(getwidth)
+       33    0.000    0.000    0.004    0.000 <frozen importlib._bootstrap_external>:727(_compile_bytecode)
+     1319    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method io.open}
+      433    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:162(__getitem__)
+       39    0.000    0.000    0.000    0.000 {built-in method _ctypes.POINTER}
+       18    0.000    0.000    0.000    0.000 {built-in method builtins.issubclass}
+       34    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:778(spec_from_file_location)
+      100    0.000    0.000    0.002    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:238(height)
+      100    0.000    0.000    0.000    0.000 {method 'count' of 'str' objects}
+       33    0.000    0.000    0.004    0.000 <frozen importlib._bootstrap_external>:1127(get_data)
+        9    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1655(_fill_cache)
+      469    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:252(get)
+      300    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:45(height)
+      363    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:244(_verbose_message)
+        1    0.000    0.000    0.005    0.005 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:1(<module>)
+       66    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:132(_path_split)
+       45    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:125(release)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1293(_get_parent_path)
+       86    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+     33/4    0.000    0.000    0.041    0.010 <frozen importlib._bootstrap_external>:934(exec_module)
+       45    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:100(acquire)
+       40    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:168(_type_check)
+       41    0.000    0.000    0.004    0.000 <frozen importlib._bootstrap>:566(module_from_spec)
+      121    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1280(__setattr__)
+       71    0.000    0.000    0.006    0.000 <frozen importlib._bootstrap_external>:150(_path_is_mode_type)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:233(__set_name__)
+       43    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:172(_path_isabs)
+       99    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:84(_unpack_uint32)
+        7    0.000    0.000    0.004    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\__init__.py:272(_compile)
+       34    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1599(_get_spec)
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.dir}
+      100    0.000    0.000    0.001    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:49(inner_height)
+       81    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1421(_path_importer_cache)
+     91/3    0.000    0.000    0.042    0.014 <frozen importlib._bootstrap>:233(_call_with_frames_removed)
+        1    0.000    0.000    0.006    0.006 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1(<module>)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:642(_classify_pyc)
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.create_builtin}
+      198    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:134(<genexpr>)
+        6    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+      100    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:66(irows)
+       16    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1336(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:838(Thread)
+      246    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:26(__init__)
+       42    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:169(__enter__)
+       34    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:567(_get_cached)
+       69    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:67(_relax_case)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:1(<module>)
+       42    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\_distutils_hack\__init__.py:89(find_spec)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\win32.py:118(GetConsoleScreenBufferInfo)
+        6    0.000    0.000    0.000    0.000 {built-in method builtins.compile}
+      400    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\size.py:41(height)
+       42    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:71(__init__)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:599(_check_name_wrapper)
+      105    0.000    0.000    0.000    0.000 {built-in method builtins.setattr}
+      133    0.000    0.000    0.000    0.000 {method 'rfind' of 'str' objects}
+      159    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1032(__exit__)
+       42    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:198(cb)
+        7    0.000    0.000    0.002    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:571(_code)
+       12    0.000    0.000    0.001    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:652(Union)
+        7    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:509(_compile_info)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1559(__init__)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:443(__getattr__)
+       38    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:922(find_spec)
+       43    0.000    0.000    0.000    0.000 {built-in method nt._path_splitroot}
+        7    0.000    0.000    0.004    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:738(compile)
+       67    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:392(cached)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:675(_validate_timestamp_pyc)
+        1    0.000    0.000    0.004    0.004 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:466(__new__)
+       18    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
+        9    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1408(_path_hooks)
+        1    0.000    0.000    0.011    0.011 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\win32.py:1(<module>)
+      121    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1229(_is_dunder)
+       37    0.000    0.000    0.015    0.000 <frozen importlib._bootstrap_external>:1496(find_spec)
+    26/23    0.000    0.000    0.001    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:357(inner)
+      224    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:247(match)
+      9/5    0.000    0.000    0.011    0.002 <frozen importlib._bootstrap>:1209(_handle_fromlist)
+      159    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1028(__enter__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1(<module>)
+       58    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        7    0.000    0.000    0.002    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:970(parse)
+       60    0.000    0.000    0.006    0.000 <frozen importlib._bootstrap_external>:159(_path_isfile)
+       33    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1146(path_stats)
+       24    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:367(_escape)
+        9    0.000    0.000    0.000    0.000 <frozen zipimport>:64(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\log.py:8(Logger)
+       44    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:357(__init__)
+      166    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:158(__len__)
+       36    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:48(_new_module)
+       42    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:173(__exit__)
+       14    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1483(__and__)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1696(path_hook_for_FileFinder)
+       23    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:214(_compile_charset)
+       90    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:170(append)
+        1    0.000    0.000    0.001    0.001 <frozen posixpath>:1(<module>)
+      101    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:284(tell)
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.exec_builtin}
+      178    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:36(Matrix)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\traceback.py:1(<module>)
+       22    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:2532(overload)
+        9    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:352(__setitem__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\_endian.py:1(<module>)
+       49    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:405(parent)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\colors.py:28(Colors)
+      174    0.000    0.000    0.000    0.000 {built-in method builtins.min}
+        1    0.000    0.000    0.012    0.012 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\winterm.py:1(<module>)
+       12    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:320(_remove_dups_flatten)
+        6    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:386(<listcomp>)
+      104    0.000    0.000    0.000    0.000 {built-in method nt.fspath}
+        1    0.000    0.000    0.015    0.015 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansitowin32.py:1(<module>)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1684(<setcomp>)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1530(__getitem__)
+       47    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
+       10    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:393(__getitem__)
+      246    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
+        1    0.000    0.000    0.040    0.040 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:1(<module>)
+      246    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:11(Frame)
+       12    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:306(_deduplicate)
+       18    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:82(opengroup)
+       38    0.000    0.000    0.000    0.000 {built-in method _imp.find_frozen}
+       18    0.000    0.000    0.000    0.000 {built-in method builtins.locals}
+       13    0.000    0.000    0.000    0.000 {built-in method nt.getcwd}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:1(<module>)
+       40    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:159(_type_convert)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:143(WIN32_FIND_DATAA)
+       80    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:109(__init__)
+       33    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
+       99    0.000    0.000    0.000    0.000 {built-in method from_bytes}
+       33    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:396(_simple)
+        1    0.000    0.000    0.002    0.002 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:1(<module>)
+       14    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:144(_check_size)
+        1    0.000    0.000    0.015    0.015 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\log.py:1(<module>)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:254(_requires_builtin_wrapper)
+       16    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:245(_collect_parameters)
+       16    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1241(__init__)
+       15    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:669(__call__)
+       15    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1074(__new__)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\functools.py:35(update_wrapper)
+      7/6    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:434(_get_literal_prefix)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:422(spec_from_loader)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:455(PurePath)
+        6    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:384(_mk_bitmap)
+       38    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:12(code_to_chars)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:155(WIN32_FIND_DATAW)
+       23    0.000    0.000    0.000    0.000 {built-in method sys.intern}
+       15    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:444(_uniq)
+       61    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1341(<genexpr>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:6(Coord)
+       41    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:684(<genexpr>)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1097(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:1(<module>)
+       42    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:165(__init__)
+       71    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
+      9/6    0.000    0.000    0.015    0.003 {built-in method builtins.__import__}
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1539(copy_with)
+       18    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:94(closegroup)
+    15/12    0.000    0.000    0.001    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:477(__getitem__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:857(Path)
+       92    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+        7    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:222(__init__)
+       58    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:451(__prepare__)
+      100    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\frame.py:88(<listcomp>)
+        1    0.000    0.000    0.019    0.019 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\colors.py:1(<module>)
+        1    0.000    0.000    0.016    0.016 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\initialise.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:128(<setcomp>)
+       47    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
+       72    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1565(<genexpr>)
+       24    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1156(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\types_.py:1(<module>)
+        2    0.000    0.000    0.000    0.000 {method 'search' of 're.Pattern' objects}
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:342(__init__)
+       91    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
+        6    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:832(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:112(_WindowsFlavour)
+       50    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:79(groups)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\string.py:1(<module>)
+       11    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:164(_path_isdir)
+       79    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\fnmatch.py:1(<module>)
+       34    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:891(__hash__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1646(addHandler)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\string.py:69(__init_subclass__)
+       51    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:882(__eq__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:56(parse_parts)
+        1    0.000    0.000    0.017    0.017 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\__init__.py:1(<module>)
+       56    0.000    0.000    0.000    0.000 {method 'partition' of 'str' objects}
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\coord.py:1(<module>)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\functools.py:518(decorating_function)
+        9    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:728(__delattr__)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1311(__iter__)
+       40    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1631(__eq__)
+        7    0.000    0.000    0.000    0.000 {built-in method _sre.compile}
+       12    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1535(<genexpr>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:439(LibraryLoader)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:576(__init__)
+        6    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:809(__setattr__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1402(__init__)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:882(__init__)
+       93    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:389(_bytes_to_codes)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:692(Optional)
+        7    0.000    0.000    0.004    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\__init__.py:225(compile)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\colors.py:8(Color)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:265(getuntil)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\functools.py:479(lru_cache)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1357(_missing_)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1432(Logger)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1327(getLogger)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1067(StreamHandler)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1297(_recalculate)
+       15    0.000    0.000    0.000    0.000 {built-in method fromkeys}
+       34    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:166(__setitem__)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansitowin32.py:72(AnsiToWin32)
+       10    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:386(__getattr__)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:90(RLock)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:484(_parse_args)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:959(_find_data_type_)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\size.py:7(Size)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1447(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:2081(getLogger)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1283(_find_parent_path_names)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\errors.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1803(LoggerAdapter)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:1(<module>)
+       41    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:413(has_location)
+       11    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:47(_is_dunder)
+        7    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:954(fix_flags)
+        7    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1636(__hash__)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1122(get_filename)
+       21    0.000    0.000    0.000    0.000 {method '__contains__' of 'frozenset' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\struct.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\weakref.py:104(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:849(__init__)
+       18    0.000    0.000    0.000    0.000 {built-in method _struct.calcsize}
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:435(validate)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:772(create_module)
+        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_init}
+        9    0.000    0.000    0.000    0.000 {built-in method builtins.delattr}
+       14    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:568(isstring)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\ansi.py:13(AnsiEscSeq)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:753(__getattr__)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:923(_get_mixins_)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:863(_addHandlerRef)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\size.py:1(<module>)
+       22    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:31(_combine_flags)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\winterm.py:30(__init__)
+       92    0.000    0.000    0.000    0.000 {built-in method builtins.ord}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:264(_reset_cache)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:7(RectRange)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:143(_NetlocResultMixinBase)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:912(createLock)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:913(_check_for_existing_members_)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1008(_set_tstate_lock)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansitowin32.py:16(StreamWrapper)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:465(_get_charset_prefix)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:228(_acquireLock)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:504(_from_parts)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1239(exec_module)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:873(Handler)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\traceback.py:372(StackSummary)
+        7    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:73(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1415(_clear_cache)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:216(_lock_unlock_module)
+        2    0.000    0.000    0.000    0.000 {built-in method _ctypes.LoadLibrary}
+        9    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:78(_is_private)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\ansi.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:257(contextmanager)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:236(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\traceback.py:1(<module>)
+       36    0.000    0.000    0.000    0.000 {built-in method _sre.unicode_iscased}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:987(_find_new_)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:237(_releaseLock)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:72(CFUNCTYPE)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\traceback.py:636(TracebackException)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:421(PercentStyle)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1303(Manager)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1276(__init__)
+        1    0.000    0.000    0.000    0.000 <frozen ntpath>:577(abspath)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:931(create_module)
+        9    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:58(_is_sunder)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:780(exec_module)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:536(__str__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\string.py:188(Formatter)
+       40    0.000    0.000    0.000    0.000 {built-in method _sre.unicode_tolower}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\winterm.py:28(WinTerm)
+       21    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\collections\__init__.py:422(<genexpr>)
+        1    0.000    0.000    0.002    0.002 <frozen importlib._bootstrap_external>:1231(create_module)
+       41    0.000    0.000    0.000    0.000 {built-in method builtins.hash}
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:266(_check_generic)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1337(_iter_member_by_value_)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:188(__get__)
+        1    0.000    0.000    0.001    0.001 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:454(StrFormatStyle)
+        1    0.000    0.000    0.000    0.000 {built-in method time.time}
+       42    0.000    0.000    0.000    0.000 {built-in method _ctypes.sizeof}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:637(Barrier)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:894(_parse_flags)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:868(__new__)
+        1    0.000    0.000    0.000    0.000 <frozen abc>:105(__new__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1473(__or__)
+       11    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:426(_get_iscased)
+        6    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:202(_checkLevel)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:822(_maintain_shutdown_locks)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.sorted}
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_compiler.py:405(_generate_overlap_table)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:531(Formatter)
+        1    0.000    0.000    0.000    0.000 {built-in method _imp.exec_dynamic}
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:295(checkgroupname)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:224(Condition)
+        6    0.000    0.000    0.000    0.000 {method 'translate' of 'bytearray' objects}
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1347(_iter_member_by_def_)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1460(setLevel)
+        1    0.000    0.000    0.000    0.000 <frozen ntpath>:51(normcase)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:447(__getattr__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1207(_open)
+        2    0.000    0.000    0.000    0.000 {method 'cast' of 'memoryview' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:945(_find_data_repr_)
+       16    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\ansi.py:32(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1076(__init__)
+        2    0.000    0.000    0.000    0.000 {method 'tolist' of 'memoryview' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:345(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\string.py:57(Template)
+       16    0.000    0.000    0.000    0.000 {method 'get' of 'mappingproxy' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\traceback.py:247(FrameSummary)
+        1    0.000    0.000    0.000    0.000 {built-in method nt._getfullpathname}
+       25    0.000    0.000    0.000    0.000 {method 'isidentifier' of 'str' objects}
+       16    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\colors.py:11(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\matrix.py:12(Cell)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\initialise.py:9(_wipe_internal_state_for_tests)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:753(Filter)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:389(notify_all)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:555(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\grid\range.py:39(SelectionRange)
+        5    0.000    0.000    0.000    0.000 {method 'setter' of 'property' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\_weakrefset.py:37(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\ansi.py:4(CursorCode)
+        4    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:795(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:129(<setcomp>)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:37(_is_descriptor)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:456(__repr__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\weakref.py:289(update)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:583(set)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:370(_FuncPtr)
+        1    0.000    0.000    0.000    0.000 <frozen os>:1080(__subclasshook__)
+        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_subclasscheck}
+        1    0.000    0.000    0.000    0.000 {built-in method atexit.unregister}
+        1    0.000    0.000    0.000    0.000 {built-in method _winapi.LCMapStringEx}
+       12    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:256(c_wchar_p)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1005(_set_native_id)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:897(_resolve_filename)
+        1    0.000    0.000    0.000    0.000 <frozen _collections_abc>:78(_check_methods)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1308(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\winterm.py:45(set_attrs)
+        1    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap>:977(exec_module)
+        1    0.000    0.000    0.000    0.000 <frozen ntpath>:545(normpath)
+        4    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:428(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\win32.py:23(CONSOLE_SCREEN_BUFFER_INFO)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:321(CDLL)
+       18    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\_distutils_hack\__init__.py:96(<lambda>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\functools.py:65(wraps)
+        9    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:69(_is_internal_class)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:1357(__or__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:49(AnsiFore)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:546(__fspath__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\__init__.py:253(escape)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:36(AnsiCursor)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:422(_PathParents)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1420(<listcomp>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1152(FileHandler)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:231(_PosixFlavour)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:147(splitroot)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1243(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1421(_DummyThread)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:353(_fix_result_transcoding)
+        7    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1378(_fixupParents)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1792(__init__)
+        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_register}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:103(_RLock)
+        1    0.000    0.000    0.000    0.000 {method 'translate' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:795(_Quoter)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:116(_iter_bits_lsb)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:503(PYFUNCTYPE)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:488(StringTemplateStyle)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:544(Event)
+        1    0.000    0.000    0.000    0.000 <frozen abc>:110(register)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\_weakrefset.py:85(add)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:410(Semaphore)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:786(__getattr__)
+        5    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method _ctypes.byref}
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\typing.py:465(__or__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:156(py_object)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:790(Filterer)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1237(_StderrHandler)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1317(_make_invoke_excepthook)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\errors.py:4(Error)
+        1    0.000    0.000    0.000    0.000 {built-in method _thread._set_sentinel}
+       10    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        5    0.000    0.000    0.000    0.000 {method 'clear' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:711(BufferingFormatter)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:280(LogRecord)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:2213(NullHandler)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:53(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:49(_Flavour)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\traceback.py:4(Traceback)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\re\_parser.py:286(seek)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\winterm.py:12(WinColor)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:440(__init__)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:504(CFunctionType)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:964(create_module)
+        1    0.000    0.000    0.000    0.000 <frozen abc>:121(__subclasscheck__)
+        3    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1226(value)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:71(AnsiBack)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:359(notify)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1261(PlaceHolder)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:182(_NetlocResultMixinStr)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:264(__enter__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:378(_RecursiveWildcardSelector)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:127(_ResultMixinStr)
+        7    0.000    0.000    0.000    0.000 {built-in method builtins.iter}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1220(__init__)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:797(is_package)
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:230(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:93(AnsiStyle)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:498(BoundedSemaphore)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:300(_Selector)
+        1    0.000    0.000    0.000    0.000 <frozen codecs>:186(__init__)
+        4    0.000    0.000    0.000    0.000 {built-in method sys._getframe}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:97(RECT)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:101(CFunctionType)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\_endian.py:23(_swapped_meta)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1786(RootLogger)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\traceback.py:613(_ExceptionPrintContext)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1370(Timer)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:135(_ResultMixinBytes)
+        2    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:104(_SMALL_RECT)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:240(c_char_p)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:399(PyDLL)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:212(_NetlocResultMixinBytes)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:523(_format_parsed_parts)
+        1    0.000    0.000    0.000    0.000 {built-in method atexit.register}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.any}
+        1    0.000    0.000    0.000    0.000 {built-in method _imp.get_frozen_object}
+        5    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1125(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:133(MSG)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:120(SIZE)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:323(SplitResult)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:267(__exit__)
+        4    0.000    0.000    0.000    0.000 {built-in method _sre.ascii_tolower}
+        1    0.000    0.000    0.000    0.000 {built-in method nt._path_normpath}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\winterm.py:23(WinStyle)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:20(VARIANT_BOOL)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\traceback.py:90(_Sentinel)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:1323(disable)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:325(_TerminatingSelector)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:315(DefragResult)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:331(_PreciseSelector)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:347(_WildcardSelector)
+        5    0.000    0.000    0.000    0.000 {method 'release' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'values' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\enum.py:1354(<lambda>)
+        2    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:248(_register_at_fork_reinit_lock)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\site-packages\colorama\ansi.py:25(AnsiCodes)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:417(HRESULT)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:111(_COORD)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:128(FILETIME)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:347(ParseResultBytes)
+        4    0.000    0.000    0.000    0.000 {built-in method _sre.ascii_iscased}
+        1    0.000    0.000    0.000    0.000 {method 'difference_update' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 <string>:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:279(_is_owned)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py:983(setFormatter)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:173(c_long)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:198(c_double)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:408(WinDLL)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:430(OleDLL)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\_endian.py:48(BigEndianStructure)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\wintypes.py:115(POINT)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\_endian.py:34(_swapped_struct_meta)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1391(PosixPath)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:328(ParseResult)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:342(SplitResultBytes)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:834(PurePosixPath)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:844(PureWindowsPath)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\errors.py:20(OutOfBoundsError)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\errors.py:25(InsufficientArgumentsError)
+        1    0.000    0.000    0.000    0.000 {built-in method _thread.get_native_id}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:165(c_short)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:194(c_float)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:212(c_longlong)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:230(c_byte)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:235(c_char)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:251(c_bool)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:261(c_wchar)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\_endian.py:55(BigEndianUnion)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1001(_set_ident)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1199(daemon)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:1400(_MainThread)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\parse.py:334(DefragResultBytes)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1398(WindowsPath)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\urllib\__init__.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\debug\errors.py:30(InvalidMethodError)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1363(exec_module)
+        1    0.000    0.000    0.000    0.000 {built-in method io.text_encoding}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\frames\__init__.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\ansi\__init__.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:169(c_ushort)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:177(c_ulong)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:202(c_longdouble)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:216(c_ulonglong)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:223(c_ubyte)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\__init__.py:246(c_void_p)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\ctypes\_endian.py:35(_swapped_union_meta)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:832(<listcomp>)
+        1    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'reverse' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\__init__.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\Downloads\Programing\Python\PyBattle\Now\GitHub\Pybattle\pybattle\window\__init__.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 C:\Users\jacob\AppData\Local\Programs\Python\Python311\Lib\threading.py:798(BrokenBarrierError)
+        1    0.000    0.000    0.000    0.000 {method '__init_subclass__' of 'object' objects}
+
+
