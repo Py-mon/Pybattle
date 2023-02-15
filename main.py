@@ -1,10 +1,7 @@
-
-import time
 from pybattle.window.frames.frame import Frame
 
-a = time.time()
-for _ in range(1000):
-    Frame('''╭─ BEDROOM ────────────────────╮
+
+Frame('''╭─ BEDROOM ────────────────────╮
 │                   ||||       │
 │                   ||||       │
 │                     ─┬─┬─┬─┬─│
@@ -16,8 +13,5 @@ for _ in range(1000):
 │                    │░░░░░│▓│ │
 │                    ╰─────┴─╯ │
 ╰──────────────────────────────╯''')
-
-b = time.time()
-print(b - a)
 
 

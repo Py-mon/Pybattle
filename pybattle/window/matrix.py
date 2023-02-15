@@ -66,9 +66,12 @@ class Matrix:
         elif isinstance(data, list):
             array = [list(row) if hasattr(row, '__iter__') else [row] for row in data]
             self.cells = [[Cell(value) for value in row] for row in array]
-            
-        elif isinstance(Size(data), Size):
-            size = Size(data)
+        
+        elif isinstance(data, (Size, tuple, Coord)):
+            if not isinstance(data, Size):
+                size = Size(data)
+            else:
+                size = data
             self.cells = [[Cell(' ') for _ in range(size.x)] for __ in range(size.y)]
 
         if self.rows:
@@ -149,10 +152,7 @@ class Matrix:
         matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
         matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
         """
-        if isinstance(slice_, int):
-            return Matrix(self.cells[slice_])
-
-        elif isinstance(slice_, Size | Coord | tuple):
+        if isinstance(slice_, Size | Coord | tuple):
             coord = Coord(slice_)
             return self.cells[coord.y][coord.x]
 
@@ -162,6 +162,9 @@ class Matrix:
                 stop = Size(self.width, self.height) - slice_.start
 
             return Matrix([[self[coord] for coord in row] for row in RectRange(stop, slice_.start).array_coords])
+
+        elif isinstance(slice_, int):
+            return Matrix(self.cells[slice_])
         
     @overload
     def __setitem__(self, coord: CoordReference | SizeReference, cell: Cell) -> None: ...

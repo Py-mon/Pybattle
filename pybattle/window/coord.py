@@ -48,7 +48,7 @@ from pybattle.types_ import CoordReference, SizeReference
     
 #     @coords.setter
 #     def coord(self, to):
-#         to = self.__class__(to)
+#         to = type(self)(to)
 #         self.y = to.y
 #         self.x = to.x
 
@@ -57,16 +57,16 @@ from pybattle.types_ import CoordReference, SizeReference
 #         return self.floor_div(2)
 
 #     def add(self, other: CoordReference | SizeReference) -> Self:
-#         other = self.__class__(other)
-#         return self.__class__(self.y + other.y, self.x + other.x)
+#         other = type(self)(other)
+#         return type(self)(self.y + other.y, self.x + other.x)
 
 #     def subtract(self, other: CoordReference | SizeReference) -> Self:
-#         other = self.__class__(other)
-#         return self.__class__(self.y - other.y, self.x - other.x)
+#         other = type(self)(other)
+#         return type(self)(self.y - other.y, self.x - other.x)
 
 #     def floor_div(self, other: CoordReference | SizeReference) -> Self:
-#         other = self.__class__(other)
-#         return self.__class__(self.y // other.y, self.x // other.x)
+#         other = type(self)(other)
+#         return type(self)(self.y // other.y, self.x // other.x)
 
 #     def __add__(self, other: CoordReference | SizeReference) -> Self:
 #         return self.add(other)
@@ -84,16 +84,16 @@ from pybattle.types_ import CoordReference, SizeReference
 #         return iter(self.coords)
 
 #     def __eq__(self, other: CoordReference | SizeReference) -> bool:
-#         other = self.__class__(other)
+#         other = type(self)(other)
 #         return self.coords == other.coords
     
 #     def __lt__(self, other: CoordReference | SizeReference) -> bool:
-#         other = self.__class__(other)
+#         other = type(self)(other)
 #         return self.coords < other.coords
     
 #     def __contains__(self, sequence: Sequence[CoordReference | SizeReference]) -> bool:
 #         for coord in sequence:
-#             coord = self.__class__(coord)
+#             coord = type(self)(coord)
 #             if self.x == coord.x and self.y == coord.y:
 #                 return True
 #         return False
@@ -105,11 +105,6 @@ from pybattle.types_ import CoordReference, SizeReference
 class Coord:
     """2D coordinates `(y, x)` `(row, col)`."""
 
-    def __new__(cls, data, *_) -> Any:
-        if isinstance(data, cls):
-            return data
-        return super().__new__(cls)
-        
     @overload
     def __init__(self, y: int, x: Optional[int], /) -> None: ...
 
@@ -126,14 +121,13 @@ class Coord:
     def __init__(self, other: Any, /) -> None: ...
 
     def __init__(self, y, x=None, /) -> None:
-        if y is self:
-            return
-        
         if x is None:
-            if isinstance(y, (tuple, self.__class__)):
+            if isinstance(y, tuple):
                 self.coords = y
             elif isinstance(y, int):
                 self.coords = y, y
+            else:
+                raise TypeError(f'Invalid Type: {type(y)}')
         else:
             self.coords = y, x
 
@@ -150,16 +144,17 @@ class Coord:
         return self.floor_div(2)
 
     def add(self, other: CoordReference | SizeReference) -> Self:
-        other = self.__class__(other)
-        return self.__class__(self.y + other.y, self.x + other.x)
-
+        if not isinstance(other, type(self)):
+            other = type(self)(other)
+        return type(self)(self.y + other.y, self.x + other.x)
+    
     def subtract(self, other: CoordReference | SizeReference) -> Self:
-        other = self.__class__(other)
-        return self.__class__(self.y - other.y, self.x - other.x)
+        other = type(self)(other)
+        return type(self)(self.y - other.y, self.x - other.x)
 
     def floor_div(self, other: CoordReference | SizeReference) -> Self:
-        other = self.__class__(other)
-        return self.__class__(self.y // other.y, self.x // other.x)
+        other = type(self)(other)
+        return type(self)(self.y // other.y, self.x // other.x)
 
     def __add__(self, other: CoordReference | SizeReference) -> Self:
         return self.add(other)
@@ -177,11 +172,11 @@ class Coord:
         return iter(self.coords)
 
     def __eq__(self, other: CoordReference | SizeReference) -> bool:
-        other = self.__class__(other)
+        other = type(self)(other)
         return self.coords == other.coords
     
     def __lt__(self, other: CoordReference | SizeReference) -> bool:
-        other = self.__class__(other)
+        other = type(self)(other)
         return self.coords < other.coords
     
     def __contains__(self, sequence: Sequence[CoordReference | SizeReference]) -> bool:
