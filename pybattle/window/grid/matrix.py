@@ -1,118 +1,117 @@
 from operator import itemgetter
-from typing import Generator, Self, overload, Optional, Any
+from typing import Generator, Self, overload, Optional, Any, Iterator, Callable
 
-from pybattle.ansi.colors import Color, Colors
+from pybattle.ansi.colors import ColorType, Colors
 from pybattle.debug.log import Logger
-from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.range import RectRange, SelectionRange
 from pybattle.window.grid.size import Size
+from pybattle.window.frames.conjunctions import Conjunction
+from copy import copy
 
 
 class Cell:
-    def __new__(cls, value, *_) -> Self:
-        if isinstance(value, cls):
+    def __new__(cls, value, *_, **__):
+        if isinstance(value, Cell):
             return value
         return super().__new__(cls)
     
-    def __init__(self, value: Any, color: Optional[Color] = None) -> None:
-        if self is value:
+    def __init__(self, value: Any, color: ColorType = Colors.DEFAULT, conjunction: Optional[Conjunction] = None) -> None:      
+        if value is self:
             return
-        
-        if color is None:
-            color = Colors.DEFAULT
         
         self.value = value
         self.color = color
-
+        
+        self.conjunction = conjunction
+        if self.conjunction is None:
+            self.conjunction = {}
+        
     def __repr__(self) -> str:
         return str(self.value)
     
     def __mul__(self, times: int) -> list[Self]:
-        return [Cell(self.value, self.color) for _ in range(times)]
-
+        return [Cell(self.value, self.color, self.conjunction) for _ in range(times)]
 
 
 class Matrix:  
-    def __new__(cls, data, *_):
-        if isinstance(data, cls):
-            return data
-        return super().__new__(cls)
+    @overload
+    def __init__(self, size: Size, /, *colors: tuple[Coord, ColorType]) -> None: ...
     
     @overload
-    def __init__(self, size: Size, *colors: tuple[Coord, Color]) -> None: ...
+    def __init__(self, string: str, /, *colors: tuple[Coord, ColorType]) -> None: ...
     
     @overload
-    def __init__(self, string: str, *colors: tuple[Coord, Color]) -> None: ...
+    def __init__(self, list: list[Any], /, *colors: tuple[Coord, ColorType]) -> None: ...
     
     @overload
-    def __init__(self, nested_list: list[Any | Cell] | list[list[Any | Cell]], *colors: tuple[Coord, Color]) -> None: ...
-
-    @overload
-    def __init__(self, matrix: Self) -> None: ...
-
-    def __init__(self, data, *colors: tuple[Coord, Color]) -> None:
-        if data is self:
-            return
+    def __init__(self, nested_list: list[list[Any]], /, *colors: tuple[Coord, ColorType]) -> None: ...
+    
+    def __init__(self, data, /, *colors: tuple[Coord, ColorType]) -> None:     
+        cells = lambda row: [Cell(value) for value in row]
         
-        self.colors = list(colors)
-        self.colors.sort(key=itemgetter(0))
-
         if isinstance(data, str):
             if data[0] == '\n':
                 data = data[1:]
-            self.cells = [[Cell(value) for value in row] for row in data.splitlines()]
-
+            self.cells = [cells(row) for row in data.splitlines()]
+            
         elif isinstance(data, list):
-            array = [list(row) if hasattr(row, '__iter__') else [row] for row in data]
-            self.cells = [[Cell(value) for value in row] for row in array]
+           self.cells = [cells(row) if hasattr(row, '__iter__') else cells([row]) for row in data]
         
-        elif isinstance(data, (Size, tuple, Coord)):
-            if not isinstance(data, Size):
-                size = Size(data)
-            else:
-                size = data
-            self.cells = [[Cell(' ') for _ in range(size.x)] for __ in range(size.y)]
+        elif isinstance(data, (Size, Coord, tuple)):
+            self.cells = self.create_empty_array(*data)
+        else:
+            raise TypeError(f'Invalid Type of {type(data)}: {data}')
 
+        self.level_out()
+        
+        self.colors = []
+        self.add_colors(*colors)
+    
+    create_empty_cells = lambda self, amount: Cell(' ') * amount
+    create_empty_array = lambda self, height, width: [self.create_empty_cells(width) for _ in range(height)]
+            
+    def level_out(self):
+        """Level out the matrix so that all the widths are the same."""
         if self.rows:
             row_lengths = [len(row) for row in self.rows]
             if row_lengths.count(row_lengths[0]) != len(row_lengths):
                 width = max(row_lengths)
-                self.cells = [row + Cell(" ") * (width - len(row)) for row in self.rows]
-            
-        self.add_colors(*colors)
-            
+                self.cells = [row + self.create_empty_cells(width - len(row)) for row in self.rows]
+        
     def next_color(self, coord: Coord) -> Coord:
+        """Lexicographically find the next coord where a color is. Returns the size if there are none beyond it."""
+        # If there are no colors then there are no more colors beyond it
+        if len(self.colors) == 0:
+            return self.size
+        
         color_coords = [color_coord[0] for color_coord in self.colors]
 
-        if len(color_coords) == 0:
+        if coord not in color_coords:
+             color_coords.append(coord)
+
+        color_coords.sort()
+        
+        if coord == color_coords[-1]:
             return self.size
 
-        if coord in color_coords:
-            if coord == color_coords[-1]:
-                return self.size
-            index = color_coords.index(coord) + 1
-        else:
-            copied_list = color_coords.copy()
-            copied_list.append(coord)
-            copied_list.sort()
-            index = copied_list.index(coord)
-
-        coord = color_coords[index]
-        coord = Coord(coord.y, coord.x - 1)
+        index = color_coords.index(coord) + 1
+        
+        coord = copy(color_coords[index])
+        coord.x -= 1
+        
         return coord
 
-    def add_color(self, coord: Coord, color: Color) -> None:
-        if not isinstance(coord, Coord):
-            raise TypeError()
+    def add_color(self, coord: Coord, color: ColorType) -> None:
+        self.colors.append((coord, color))
         for coord in SelectionRange(self.width, self.next_color(coord), coord):
             self[coord].color = color
             
-    def add_colors(self, *colors: tuple[Coord, Color]) -> None:
-        for (coord, color) in colors:
+    def add_colors(self, *colors: tuple[Coord, ColorType]) -> None:
+        for coord, color in colors:
             self.add_color(coord, color)
             
-    def add_rect_color(self, coord: Coord, color: Color) -> None:
+    def add_rect_color(self, coord: Coord, color: ColorType) -> None:
         for coord in RectRange(self.next_color(coord), coord):
             self[coord].color = color
 
@@ -123,100 +122,82 @@ class Matrix:
     @property
     def rows_coords(self) -> list[list[Coord]]:
         return RectRange(self.size).array_coords
-
-    def __contains__(self, coord_or_cell: CoordReference | Any) -> bool:
+    
+    @overload
+    def __contains__(self, cell: Any, /) -> bool: ...
+        
+    @overload
+    def __contains__(self, coord: Any, /) -> bool: ...
+ 
+    def __contains__(self, item: Coord | Any) -> bool:
         """Check if a coord or cell is in the Matrix."""
-        coord_or_cell = Coord(coord_or_cell)
-        if isinstance(coord_or_cell, Coord):
-            return coord_or_cell in self.coords
+        if isinstance(item, Coord):
+            return item in self.coords
         else:
-            return coord_or_cell in iter(self)
+            return Cell(item) in iter(self)
 
     def __iter__(self) -> Generator[Cell, None, None]:
         """Iterate through every cell."""
         for row in self.rows:
             for cell in row:
-                yield cell
+                yield cell 
+                
+    def coords_for(self, cell: Coord | slice) -> Iterator[Coord]:
+        if isinstance(cell, Coord):
+            yield cell
+            return
+        stop = Size(cell.stop)
+        if stop is None:
+            stop = Size(self.width, self.height) - cell.start
+        yield from RectRange(stop, cell.start)
+                
+    @overload
+    def __getitem__(self, row: int, /) -> Self: ...
     
     @overload
-    def __getitem__(self, row: int) -> Self: ...
-    
-    @overload
-    def __getitem__(self, slice_: slice) -> Self: ...
+    def __getitem__(self, slice_: slice, /) -> Self: ...
 
     @overload
-    def __getitem__(self, coord: Coord) -> Cell: ...
+    def __getitem__(self, coord: Coord, /) -> Cell: ...
     
-    def __getitem__(self, slice_) -> Cell:
+    def __getitem__(self, item, /):
         """
         ```
-        matrix[n] -> Row n
-        matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
-        matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
+        matrix[Coord(x, y)] -> Cell at (x, y)
+        matrix[Coord(y, x):Coord(y, x)] -> Matrix from Coord(y, x) to Coord(y, x)
         """
-        if isinstance(slice_, Size | Coord):
-            coord = slice_
-            return self.cells[coord.y][coord.x]
+        if isinstance(item, Coord):
+            return self.cells[item.y][item.x]
 
-        elif isinstance(slice_, slice):
-            stop = Size(slice_.stop)
+        elif isinstance(item, slice):
+            stop = Size(item.stop)
             if stop is None:
-                stop = Size(self.width, self.height) - slice_.start
+                stop = Size(self.width, self.height) - item.start
 
-            return Matrix([[self[coord] for coord in row] for row in RectRange(stop, slice_.start).array_coords])
-
-        elif isinstance(slice_, int):
-            return Matrix(self.cells[slice_])
+            return Matrix([[self[coord] for coord in row] for row in RectRange(stop, item.start).array_coords])
         
+        elif isinstance(item, int):
+            return Matrix(self.cells[item])
+
     @overload
-    def __setitem__(self, coord: CoordReference | SizeReference, cell: Cell) -> None: ...
+    def __setitem__(self, coord: Coord, cell: Cell, /) -> None: ...
     
     @overload
-    def __setitem__(self, slice_: slice, matrix: Self) -> Self: ...
+    def __setitem__(self, slice_: slice, matrix: Self, /) -> None: ...
 
-    def __setitem__(self, slice_, cell_s: Self | Cell) -> None:
-        """
-        ```
-        matrix[n] -> Row n
-        matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
-        matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
-        """
-        if isinstance(slice_, Size | Coord):
-            coord = slice_
-            self.cells[coord.y][coord.x] = Cell(cell_s)
+    def __setitem__(self, cells, new_cells, /) -> None:
+        if isinstance(cells, Coord):
+            self.cells[cells.y][cells.x] = new_cells
 
-        elif isinstance(slice_, slice):
-            stop = Size(slice_.stop)
+        elif isinstance(cells, slice):
+            stop = Size(cells.stop)
             if stop is None:
-                stop = Size(self.width, self.height) - slice_.start
+                stop = Size(self.width, self.height) - cells.start
 
-            for coord in RectRange(stop, slice_.start):
-                self[coord] = cell_s[coord - slice_.start]
-                
-    @overload
-    def change_cell_value(self, coord: CoordReference | SizeReference, value: Any) -> None: ...
-    
-    @overload
-    def change_cell_value(self, slice_: slice, matrix: Self) -> Self: ...
-                
-    def change_cell_value(self, slice_, value: Any) -> None:
-        """
-        ```
-        matrix[n] -> Row n
-        matrix[x, y] -> Cell at (x, y) # Note: array[(x, y)] == array[x, y]
-        matrix[(sx, sy):(ex, ey)] -> Matrix from (sx, sy) to (ex, ey)
-        """
-        if isinstance(slice_, Size | Coord):
-            coord = slice_
-            self.cells[coord.y][coord.x].value = value
-
-        elif isinstance(slice_, slice):
-            stop = Size(slice_.stop)
-            if stop is None:
-                stop = Size(self.width, self.height) - slice_.start
-
-            for coord in RectRange(stop, slice_.start):
-                self[coord].value = value[coord - slice_.start]
+            for coord in RectRange(stop, cells.start):
+                self[coord].value = new_cells[coord - cells.start].value
+                self[coord].color = new_cells[coord - cells.start].color
+                self[coord].conjunction = new_cells[coord - cells.start].conjunction
 
     @property
     def rows(self) -> list[list[Cell]]:
@@ -232,28 +213,28 @@ class Matrix:
 
     @property
     def width(self) -> int:
-        """The max width."""
         return max([len(row) for row in self.rows])
 
     @property
     def height(self) -> int:
         return max([len(col) for col in self.cols])
 
-    def insert(self, pos: CoordReference, cell: Cell) -> None:
-        """Insert a cell at a given pos."""
-        pos = Coord(pos)
+    def insert(self, pos: Coord, cell: Cell) -> None:
+        """Insert a cell at the given pos."""
         self.cells[pos.y].insert(pos.x, cell)
+        self.level_out()
 
-    def pop(self, pos: CoordReference) -> None:
-        """Remove the cell at a given pos."""
-        pos = Coord(pos)
+    def pop(self, pos: Coord) -> None:
+        """Remove the cell at the given pos."""
         self.cells[pos.y].pop(pos.x)
+        self.level_out()
 
     def remove(self, cell: Cell) -> None:
         """Remove the first occurrence of a cell."""
         for i, row in enumerate(self.rows):
             if cell in row:
                 self.cells[i].remove(cell)
+        self.level_out()
 
     def remove_colors(self) -> None:
         self.colors = []
@@ -263,7 +244,7 @@ class Matrix:
         for row in self.cells:
             row_ = '['
             for cell in row:
-                row_ += cell.value + ','
+                row_ += str(cell.value) + ','
             res += row_[:-1] + '],\n '
         res = res[:-3] + ']'
         return res

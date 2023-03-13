@@ -17,9 +17,9 @@ class Traceback:
                 self.line = stack()[n].code_context[0].rstrip('\n')
                 n += 1
             except:
-                self.filename = stack()[n - 1 - back].filename
-                self.line_num = stack()[n - 1 - back].lineno
-                self.line = stack()[n - 1 - back].code_context[0].rstrip('\n')
+                self.filename = stack()[n - back - 2].filename
+                self.line_num = stack()[n - back - 2].lineno
+                self.line = stack()[n - back - 2].code_context[0].rstrip('\n')
                 break
 
     @property

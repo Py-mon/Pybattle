@@ -2,9 +2,9 @@ from typing import Optional
 
 from pybattle.window.frames.frame import Frame
 from pybattle.window.grid.matrix import Matrix
-from pybattle.window.grid.size import Size
-from pybattle.types_ import MatrixReference
-from pybattle.ansi.colors import Color
+from pybattle.ansi.colors import Colors, ColorType
+from pybattle.window.grid.coord import Coord
+from pybattle.window.frames.border_type import BorderType, Borders
 
 
 class MapFrame(Frame):
@@ -25,17 +25,20 @@ class MapFrame(Frame):
 
     def __init__(
         self,
-        contents: MatrixReference,
+        contents: str,
         title: Optional[str] = None,
-        border_color: Optional[Color] = None,
-        title_color: Optional[Color] = None,
+        border_color: ColorType = Colors.DEFAULT,
+        title_color: ColorType = Colors.DEFAULT,
+        border_type: BorderType =  Borders.THIN,
+        colors: list[tuple[Coord, ColorType]] = [],
     ) -> None:
-        self.size = Matrix(contents).size + 3
+        contents_ = Matrix(contents)
         
-        super().__init__(self.size, title, border_color, title_color)
+        self.size = contents_.size + 3
 
-        self.contents = Matrix(contents)
-        
-        # self.contents.colors += contents.colors
-        
-        self._update_frame()
+        super().__init__(self.size, title, border_color, title_color, border_type)
+
+        self.contents = contents_
+        self.contents.add_colors(*colors)
+
+        self._construct_frame()

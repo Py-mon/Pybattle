@@ -4,11 +4,11 @@ from typing import Optional
 
 from keyboard import is_pressed, wait
 
-from pybattle.ansi.colors import Color, Color
+from pybattle.ansi.colors import ColorType, Colors
 from pybattle.ansi.screen import Cursor, Screen
 from pybattle.window.grid.coord import Coord
 from pybattle.window.frames.map_frame import MapFrame
-from pybattle.window.grid.matrix import Matrix
+from pybattle.window.frames.border_type import Borders, BorderType
 from pybattle.window.grid.size import Size
 
 
@@ -20,11 +20,12 @@ class TextBox:
         text: str = '',
         author: Optional[str] = None,
         size: Size = Size(4, 70),
-        author_color: Optional[Color] = None,
-        border_color: Optional[Color] = None,
-        text_color: Optional[Color] = None,
+        author_color: ColorType = Colors.DEFAULT,
+        border_color: ColorType = Colors.DEFAULT,
+        text_color: ColorType = Colors.DEFAULT,
         alignment: str = 'left',
-        block_char: str = '⏷'
+        block_char: str = '⏷',
+        border_type: BorderType = Borders.THIN,
     ) -> None:
         self.text = text
         self.size = Size(size)
@@ -33,10 +34,7 @@ class TextBox:
         
         self.author_color = author_color
         self.border_color = border_color
-        
         self.text_color = text_color
-        if self.text_color is None:
-            self.text_color = Color.DEFAULT
         
         self.wrap_width = self.size.inner_width - 6  # | x ⏷ |
         self.text_width = self.size.inner_width - 3  # | x |
@@ -64,8 +62,7 @@ class TextBox:
                 
             string += line
 
-        matrix = Matrix(string, *[(Coord(i, 1), self.text_color) for i in range(self.size.height - 2)])
-        self.textbox = MapFrame(matrix, self.author, self.border_color, self.author_color)
+        self.textbox = MapFrame(string, self.author, self.border_color, self.author_color, colors=[(Coord(i, 0), self.text_color) for i in range(self.size.height - 2)])
 
         return str(self.textbox)
     

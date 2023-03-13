@@ -4,7 +4,7 @@ from typing import Optional
 from shutil import get_terminal_size
 
 from pybattle.window.grid.coord import Coord
-from pybattle.ansi.colors import Color
+from pybattle.ansi.colors import ColorType
 from pybattle.ansi.ansi import AnsiEscSeq, CursorCode
 from pybattle.window.grid.size import Size
 
@@ -49,7 +49,7 @@ class Screen:
     def write(
         txt: object,
         pos: Coord = ...,
-        color: Optional[Color] = None,
+        color: Optional[ColorType] = None,
         move_cursor: bool = True
     ) -> None:
         """Print text to the screen."""

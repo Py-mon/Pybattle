@@ -7,6 +7,11 @@ run_file = 'main.py'
 # The file it will make temporarily to store binary data.
 binary_data_file = 'binary.txt'
 
+try:
+    open(binary_data_file, 'x')
+except FileExistsError:
+    pass
+
 system(f'python -m cProfile -o {binary_data_file} {run_file}')
 
 # Takes binary_data_file and translates it into text in time.log

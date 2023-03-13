@@ -10,7 +10,7 @@ class Logger:
 
     logger.setLevel(DEBUG)
 
-    __handler = FileHandler(Path('Pybattle/log.log'), mode='w', encoding="utf-8")
+    __handler = FileHandler(Path('log.log'), mode='w', encoding="utf-8")
     __formatter = Formatter(
         "%(levelname)s: %(message)s")  # LEVEL: message
 

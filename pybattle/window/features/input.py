@@ -1,17 +1,17 @@
 from typing import Literal
 
-from pybattle.ansi.colors import Color
+from pybattle.ansi.colors import ColorType
 from pybattle.types_ import CoordReference, SizeReference
 from pybattle.window.grid.coord import Coord
 from pybattle.window.frames.center_frame import CenteredFrame
-from pybattle.window.frames.frame import Frame
+from pybattle.window.frames.frame3 import Frame
 from pybattle.window.grid.matrix import Matrix
 from pybattle.window.grid.size import Size
 from pybattle.ansi.screen import Screen
 from keyboard import is_pressed
 
 
-def func(coord: CoordReference, compare_coord: CoordReference) -> Literal['right', 'left', 'up', 'down', 'equal']:
+def func(coord: Coord, compare_coord: Coord) -> Literal['right', 'left', 'up', 'down', 'equal']:
     y1, x1 = coord
     y2, x2 = compare_coord
     
@@ -47,7 +47,7 @@ class SelectionMenu:
         self, 
         size: SizeReference,
         selections: list[Selection],
-        default_color: Color = Color.BLUE
+        default_color: ColorType = ColorType.BLUE
     ) -> None:
         self.default_color = default_color
         self.selections = selections

@@ -1,6 +1,5 @@
 from typing import Optional, Generator
 
-from pybattle.types_ import CoordReference
 from pybattle.window.grid.coord import Coord
 
 
@@ -10,12 +9,11 @@ class RectRange:
         stop: Coord,
         start: Optional[Coord] = None
     ) -> None:
-        if start is None:
-            self._start = Coord(0, 0)
-        else:
+        if start:
             self._start = start
-            if isinstance(start, tuple):
-                raise ValueError()
+        else:
+            self._start = Coord(0, 0)
+
         self._stop = stop
 
     def __iter__(self) -> Generator[Coord, None, None]:
@@ -34,7 +32,8 @@ class RectRange:
     def __repr__(self) -> str:
         return str(self.array_coords)
 
-
+    def __add__(self, coord: Coord):
+        return RectRange(self._stop + coord, self._start + coord)
 
 class SelectionRange(RectRange):
     def __init__(

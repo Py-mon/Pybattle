@@ -1,5 +1,5 @@
 from pybattle.ansi.screen import Screen
-from pybattle.window.frames.frame import Frame
+from pybattle.window.frames.frame3 import Frame
 
 
 class Scene:

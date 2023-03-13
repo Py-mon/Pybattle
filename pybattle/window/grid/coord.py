@@ -72,3 +72,6 @@ class Coord:
 
     def __repr__(self) -> str:
         return f'Coord(y={self.y}, x={self.x})'
+    
+    def __hash__(self) -> int:
+        return hash(self.coords)

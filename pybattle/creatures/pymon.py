@@ -5,7 +5,7 @@ from random import choice, choices, randint
 from string import ascii_letters, digits
 from typing import Any, Self
 
-from pybattle.ansi.colors import Color
+from pybattle.ansi.colors import ColorType
 from pybattle.creatures.attributes.ability import Ability
 from pybattle.creatures.attributes.element import Element
 from pybattle.creatures.attributes.item import Item
@@ -149,9 +149,9 @@ class Pymon:
         self,
         stat: str,
         bar_amount: int = 20,
-        high_color=Color.GREEN,
-        medium_color=Color.YELLOW,
-        low_color=Color.RED,
+        high_color=ColorType.GREEN,
+        medium_color=ColorType.YELLOW,
+        low_color=ColorType.RED,
     ) -> str:
         """Get a percentage bar.
 
@@ -181,7 +181,7 @@ class Pymon:
         elif percent <= 1/3:
             color = low_color
 
-        bars = f"{str(color) + '━' * bars + str(Color.DEFAULT):─<{bar_amount + len(str(color)) + len(str(Color.DEFAULT))}}"
+        bars = f"{str(color) + '━' * bars + str(ColorType.DEFAULT):─<{bar_amount + len(str(color)) + len(str(ColorType.DEFAULT))}}"
         return bars
 
     def level_up(self) -> None:
