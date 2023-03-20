@@ -3,13 +3,14 @@ from time import sleep
 from typing import Optional
 
 from keyboard import is_pressed, wait
-
-from pybattle.ansi.colors import ColorType, Colors
+from pybattle.ansi.colors import Colors, ColorType
 from pybattle.ansi.screen import Cursor, Screen
-from pybattle.window.grid.coord import Coord
+from pybattle.types_ import Direction, Align
+from pybattle.window.frames.border.border_type import Borders, BorderType
 from pybattle.window.frames.map_frame import MapFrame
-from pybattle.window.frames.border_type import Borders, BorderType
+from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.size import Size
+from pybattle.window.grid.range import RectRange
 
 
 class TextBox:
@@ -23,21 +24,23 @@ class TextBox:
         author_color: ColorType = Colors.DEFAULT,
         border_color: ColorType = Colors.DEFAULT,
         text_color: ColorType = Colors.DEFAULT,
-        alignment: str = 'left',
+        text_alignment: Align = Align.LEFT,
         block_char: str = '⏷',
         border_type: BorderType = Borders.THIN,
     ) -> None:
         self.text = text
         self.size = Size(size)
-        self.alignment = alignment
-        self.author = author
         
+        self.text_alignment = text_alignment
+        self.author = author
         self.author_color = author_color
         self.border_color = border_color
         self.text_color = text_color
+        self.border_type = border_type
         
         self.wrap_width = self.size.inner_width - 6  # | x ⏷ |
         self.text_width = self.size.inner_width - 3  # | x |
+        
         self.block = False
         self.block_char = block_char
 
@@ -48,12 +51,14 @@ class TextBox:
         for i in range(self.size.inner_height):
             line = None
             if i <= len(lines) - 1:
-                if self.alignment.lower() == 'center':
-                    line = f' {lines[i]:^{self.text_width}} \n'
-                elif self.alignment.lower() == 'right': 
-                    line = f' {lines[i]:>{self.text_width}} \n'
-                else:  # left alignment
-                    line = f' {lines[i]:<{self.text_width}} \n'
+                line = ''
+                match self.text_alignment:
+                    case Align.CENTER:
+                        line = f' {lines[i]:^{self.text_width}} \n'
+                    case Align.RIGHT: 
+                        line = f' {lines[i]:>{self.text_width}} \n'
+                    case Align.LEFT:
+                        line = f' {lines[i]:<{self.text_width}} \n'
 
                 if self.block and i == len(lines) - 1:
                     line = line[:-3] + self.block_char + line[-2:]
@@ -62,7 +67,7 @@ class TextBox:
                 
             string += line
 
-        self.textbox = MapFrame(string, self.author, self.border_color, self.author_color, colors=[(Coord(i, 0), self.text_color) for i in range(self.size.height - 2)])
+        self.textbox = MapFrame(string, self.author, self.border_color, self.author_color, self.border_type, [(self.text_color, RectRange(Coord(self.size.inner_height - 1, self.size.inner_width - 2), Coord(self.size.inner_height - 1, 1)))])
 
         return str(self.textbox)
     
@@ -75,15 +80,16 @@ class TextBox:
         self.text = ''
         
     def refresh(self) -> None:
-        Cursor.up(self.size.height + 1).execute()
-        print(str(self))
+        Screen.write(str(self))
+        
+        # print(str(self))
 
     def speech(
         self,
         text: str = ...,
 
-        default_delay: float = 0.05,
-        default_sped_up_delay: float = 0.02,
+        default_delay: float = 0.02,
+        default_sped_up_delay: float = 0.01,
         delays: dict[str, float] = ...,
         sped_up_delays: dict[str, float] = ...,
         speed_key: str = ' ',
