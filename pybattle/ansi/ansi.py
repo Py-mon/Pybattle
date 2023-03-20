@@ -65,6 +65,9 @@ class AnsiEscSeq:
         """Get the full escape sequence."""
         return self.CSI + self.__escape_args + self.__escape_code
 
-    def execute(self) -> None:
+    def exec(self) -> None:
         """Execute the ANSI escape code."""
         print(self.code, end='')
+        
+    def __repr__(self) -> str:
+        return repr(self.code)
