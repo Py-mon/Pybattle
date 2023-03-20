@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Iterator, Optional
 
 from colorama import Fore
@@ -22,7 +23,7 @@ class ColorType:
         return self.__color_code.code
     
     def use(self) -> None:
-        self.__color_code.execute()
+        self.__color_code.exec()
 
 
 class Colors:
@@ -45,3 +46,27 @@ class Colors:
     MAGENTA = ColorType(AnsiEscSeq(Fore.MAGENTA), 'MAGENTA')                        # 0xBC3FBC
     BRIGHT_MAGENTA = ColorType(AnsiEscSeq(Fore.LIGHTMAGENTA_EX), 'BRIGHT_MAGENTA')  # 0xD670D6
 
+
+
+def next_color(self, coord, coords):
+    """Lexicographically find the next coord where a color is. Returns None if there are none beyond it.
+
+    Now unused but still here because it is beautiful."""
+    # If there are no colors then there are no more colors beyond it
+    if len(coords) == 0:
+        return None
+    
+    if coord not in coords:
+        coords.append(coord)
+
+    coords.sort()
+
+    if coord == coords[-1]:
+        return None
+
+    index = coords.index(coord) + 1
+
+    coord = copy(coords[index])
+    coord.x -= 1
+
+    return coord
