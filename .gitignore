@@ -5,3 +5,4 @@ settings.json
 log.log
 pybattle.egg-info
 suspect.py
+dist.py
