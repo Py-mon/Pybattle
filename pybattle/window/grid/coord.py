@@ -1,4 +1,4 @@
-from typing import Optional, Self, Sequence, overload, Any
+from typing import Any, Optional, Self, overload
 
 from pybattle.types_ import CoordReference
 
@@ -17,7 +17,7 @@ class Coord:
 
     @overload
     def __init__(self, tup: tuple[int, int], /) -> None: ...
-    
+
     @overload
     def __init__(self, other: Any, /) -> None: ...
 
@@ -32,10 +32,12 @@ class Coord:
         else:
             self.coords = y, x
 
+        self.coords = self.coords
+        
     @property
     def coords(self) -> tuple[int, int]:
-        return (self.y, self.x)
-    
+        return (max(0, self.y), max(0, self.x))
+
     @coords.setter
     def coords(self, to: Self | tuple):
         self.y, self.x = to
@@ -43,13 +45,13 @@ class Coord:
     @property
     def center(self) -> Self:
         return type(self)(self.y // 2, self.x // 2)
-    
+
     @classmethod
     def _convert(cls, obj: CoordReference) -> Self:
         if not isinstance(obj, cls):
             obj = cls(obj)
         return obj
-    
+
     def __iter__(self):
         return iter(self.coords)
 
@@ -64,7 +66,7 @@ class Coord:
     def __eq__(self, other: CoordReference) -> bool:
         other = type(self)._convert(other)
         return self.coords == other.coords
-    
+
     def __lt__(self, other: CoordReference) -> bool:
         """Lexicographically sorted."""
         other = type(self)._convert(other)
@@ -72,6 +74,6 @@ class Coord:
 
     def __repr__(self) -> str:
         return f'Coord(y={self.y}, x={self.x})'
-    
+
     def __hash__(self) -> int:
         return hash(self.coords)

@@ -1,13 +1,14 @@
 from typing import Optional, Self
 
-from pybattle.ansi.colors import ColorType, Colors
+from pybattle.ansi.colors import Colors, ColorType
 from pybattle.debug.log import Logger
+from pybattle.types_ import Direction
+from pybattle.window.frames.border.border_type import (Borders, BorderType,
+                                                       get_junction)
 from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Matrix, Cell
+from pybattle.window.grid.matrix import Cell, Matrix
 from pybattle.window.grid.range import RectRange
 from pybattle.window.grid.size import Size
-from pybattle.window.frames.border_type import Borders, BorderType
-from pybattle.window.frames.conjunctions import get_conjunction, Conjunction
 
 
 class Frame:
@@ -90,7 +91,7 @@ class Frame:
         space = Cell(' ')
 
         length = border.horizontal_cell * self.inner_width
-        
+
         if self.title:
             if self.inner_width - len(self.title) - 3 == 0:
                 Logger.error(f'Title is too big for size: {self.size}.')
@@ -123,18 +124,22 @@ class Frame:
         self.matrix = Matrix(frame)
 
     def _color_frame(self) -> None:
-        content_colors = [(coord + 1, color)
-                          for coord, color in self.contents.colors]
+        content_colors = [(color, range_)
+                          for color, range_ in self.contents.colors]
 
-        border_colors = [(Coord(i, 0), self.border_color) for i in range(self.height)] \
-            + [(Coord(i + 1, 1), Colors.DEFAULT) for i in range(self.inner_height)] \
-            + [(Coord(i, self.width - 1), self.border_color)
-                for i in range(self.height)]
+        border_colors = [
+            (self.border_color, RectRange(Coord(self.irows, 0), Coord(0, 0))),
+            (self.border_color, RectRange(
+                Coord(self.irows, self.icols), Coord(self.irows, 0))),
+            (self.border_color, RectRange(
+                Coord(self.irows, self.icols), Coord(0, self.icols))),
+            (self.border_color, RectRange(Coord(0, self.icols), Coord(0, 0))),
+        ]
 
         title_colors = []
         if self.title:
-            title_colors = [(Coord(0, 3), self.title_color)] \
-                + [(Coord(0, len(self.title) + 3), self.border_color)]
+            title_colors = [(self.title_color, RectRange(
+                Coord(0, len(self.title) + 3), Coord(0, 3)))]
 
         self.matrix.add_colors(*content_colors, *border_colors, *title_colors)
 
@@ -195,52 +200,60 @@ class Frame:
 
     def __str__(self) -> str:
         return str(self.matrix)
-    
+
     def add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
-        conjunctions = []
+        junctions = []
         for coord in frame.border_coords:
             coord_pos = coord + pos
-            
-            if self.matrix[coord_pos].conjunction:
-                if coord_pos == Coord(0, 12):
-                    print(self.matrix[coord_pos].conjunction | frame.matrix[coord].conjunction)
-                conjunctions.append((self.matrix[coord_pos].conjunction | frame.matrix[coord].conjunction, coord_pos))
-                
+
+            self_junction = self.matrix[coord_pos].junction
+            frame_junction = frame.matrix[coord].junction
+            if self_junction and frame_junction:
+                junctions.append((self_junction | frame_junction, coord_pos))
+
         top_left = pos
         bottom_right = pos + frame.bottom_right_corner
+        
+        Logger.debug(repr(self.matrix[top_left: bottom_right]))
+        Logger.debug(repr(frame.matrix))
 
         self.matrix[top_left: bottom_right] = frame.matrix
+        
+        Logger.debug(repr(self.matrix))
 
         if self.title is not None:
             for i, char in enumerate(' ' + self.title + ' '):
                 self.matrix[Coord(0, i + 2)] = Cell(char, self.title_color)
 
         if self.title is not None:
-            self.matrix.add_color(
-                Coord(0, len(self.title) + 4), self.border_color)
+            self.matrix.add_color(self.border_color, RectRange(
+                Coord(0, self.inner_width), Coord(0, len(self.title) + 4)))
             
-        for conjunction, coord in conjunctions:
-            if coord == Coord(0, 12):
-                print(conjunction)
-            for direction in conjunction.copy():
-                if direction == 'up':
-                    ahead = Coord(coord.y - 1, coord.x)
-                elif direction == 'down':
-                    ahead = Coord(coord.y + 1, coord.x)
-                elif direction == 'left':
-                    ahead = Coord(coord.y, coord.x - 1)
-                elif direction == 'right':
-                    ahead = Coord(coord.y, coord.x + 1)
+        Logger.debug(repr(self.matrix))
+        
+        for junction, coord in junctions.copy():
+            for direction in junction.copy():
+                ahead = Coord(0, 0)
+                match direction:
+                    case Direction.UP:
+                        ahead = Coord(coord.y - 1, coord.x)
+                    case Direction.DOWN:
+                        ahead = Coord(coord.y + 1, coord.x)
+                    case Direction.LEFT:
+                        ahead = Coord(coord.y, coord.x - 1)
+                    case Direction.RIGHT:
+                        ahead = Coord(coord.y, coord.x + 1)
                 try:
-                    if not self.matrix[ahead].conjunction:
-                        conjunction.pop(direction)
+                    if not self.matrix[ahead].junction:
+                        junction.pop(direction)
                 except IndexError:
                     pass
-            if coord == Coord(0, 12):
-                print(coord, get_conjunction(conjunction))
 
-            self.matrix[coord].value = get_conjunction(conjunction)
+            self.matrix[coord].value = get_junction(junction)
+            
+        Logger.debug(repr(self.matrix))
 
     @property
     def center(self):
         return self.size.center
+

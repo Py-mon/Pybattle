@@ -1,7 +1,8 @@
+from typing import Any, Optional, Self, overload
+
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.range import RectRange
-from typing import overload, Self, Any, Optional
-from pybattle.types_ import CoordReference
+from math import ceil
 
 
 class Size(Coord, RectRange):

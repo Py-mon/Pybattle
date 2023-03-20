@@ -1,6 +1,7 @@
-from typing import Optional, Generator
+from typing import Optional, Generator, Self
 
 from pybattle.window.grid.coord import Coord
+from math import ceil
 
 
 class RectRange:
@@ -10,11 +11,11 @@ class RectRange:
         start: Optional[Coord] = None
     ) -> None:
         if start:
-            self._start = start
+            self.start = start
         else:
-            self._start = Coord(0, 0)
+            self.start = Coord(0, 0)
 
-        self._stop = stop
+        self.stop = stop
 
     def __iter__(self) -> Generator[Coord, None, None]:
         lst = [coord for row in self.array_coords for coord in row]
@@ -26,14 +27,28 @@ class RectRange:
     @property
     def array_coords(self) -> list[list[Coord]]:
         return [[
-            Coord(y, x) for x in range(self._start.x, self._stop.x + 1)]
-            for y in range(self._start.y, self._stop.y + 1)]
+            Coord(y, x) for x in range(self.start.x, self.stop.x + 1)]
+            for y in range(self.start.y, self.stop.y + 1)]
     
     def __repr__(self) -> str:
-        return str(self.array_coords)
+        return f'{self.start}: {self.stop}'
 
     def __add__(self, coord: Coord):
-        return RectRange(self._stop + coord, self._start + coord)
+        return RectRange(self.stop + coord, self.start + coord)
+    
+    @classmethod
+    def center_range(cls, outer_size: Coord, inner_size: Coord) -> Self:
+        return cls(
+            Coord(
+                ceil((outer_size.y + inner_size.y) / 2 - 1),
+                ceil((outer_size.x + inner_size.x) / 2 - 1)
+            ),
+            Coord(
+                ceil((outer_size.y - inner_size.y) / 2 - 1),
+                ceil((outer_size.x - inner_size.x) / 2 - 1)
+            )
+        )
+
 
 class SelectionRange(RectRange):
     def __init__(
@@ -49,7 +64,7 @@ class SelectionRange(RectRange):
     def array_coords(self) -> list[list[Coord]]:
         res = [[
             Coord(y, x) for x in range(self.width)]
-            for y in range(self._start.y, self._stop.y + 1)]
-        res[0] = res[0][self._start.x:]
-        res[-1] = res[-1][:self._stop.x + 1]
+            for y in range(self.start.y, self.stop.y + 1)]
+        res[0] = res[0][self.start.x:]
+        res[-1] = res[-1][:self.stop.x + 1]
         return res
