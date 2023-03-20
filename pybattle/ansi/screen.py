@@ -1,47 +1,13 @@
 from os import name as os_name
 from os import system
-from typing import Optional
 from shutil import get_terminal_size
+from typing import Optional
 
-from pybattle.window.grid.coord import Coord
+from pybattle.ansi.cursor import Cursor
 from pybattle.ansi.colors import ColorType
-from pybattle.ansi.ansi import AnsiEscSeq, CursorCode
+from pybattle.window.frames.frame import Frame
+from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.size import Size
-
-
-class Cursor:
-    """Keeps track of the cursor pos."""
-    pos = Coord(0, 0)
-
-    @classmethod
-    def up(cls, n: int = 1) -> AnsiEscSeq:
-        """Moves the cursor `n` cells up."""
-        cls.pos.y -= 1
-        return AnsiEscSeq(CursorCode.UP, n - 1)
-
-    @classmethod
-    def down(cls, n: int = 1) -> AnsiEscSeq:
-        """Moves the cursor `n` cells down."""
-        cls.pos.y += 1
-        return AnsiEscSeq(CursorCode.DOWN, n - 1)
-
-    @classmethod
-    def right(cls, n: int = 1) -> AnsiEscSeq:
-        """Moves the cursor `n` cells right."""
-        cls.pos.x += 1
-        return AnsiEscSeq(CursorCode.RIGHT, n - 1)
-
-    @classmethod
-    def left(cls, n: int = 1) -> AnsiEscSeq:
-        """Moves the cursor `n` cells left."""
-        cls.pos.x -= 1
-        return AnsiEscSeq(CursorCode.LEFT, n - 1)
-
-    @classmethod
-    def move(cls, pos: Coord) -> AnsiEscSeq:
-        """Moves the cursor to the given pos."""
-        cls.pos = pos
-        return AnsiEscSeq(CursorCode.MOVE, *pos)
 
 
 class Screen:
@@ -56,7 +22,7 @@ class Screen:
         txt = str(txt)
 
         if pos is not ...:
-            Cursor.move(pos).execute()
+            Cursor.move(pos)
 
         if color is not None:
             print(color, end='')
@@ -67,16 +33,14 @@ class Screen:
         Cursor.pos.x += txt.count('\n')
         Cursor.pos.y += len(max(txt.split('\n')))
 
-        if not move_cursor:
-            Cursor.up(txt.count('\n') + 2).execute()
+        if move_cursor:
+            Cursor.up(txt.count('\n') + 2)
 
     @staticmethod
     def clear() -> None:
         """Clear the screen. Works on all operating systems."""
         system('cls' if os_name == 'nt' else 'clear')
-        
-    @property
+
     @staticmethod
     def terminal_size() -> Size:
-       return Size(get_terminal_size())
-
+        return Size(get_terminal_size())
