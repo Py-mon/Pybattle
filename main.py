@@ -4,9 +4,10 @@ from pybattle.window.grid.size import Size
 from pybattle.ansi.colors import Colors
 from pybattle.window.grid.range import RectRange
 
-frame = Frame(Size(10, 20))
-frame.add_frame(Frame(Size(3, 5)), Coord(2, 10))
 
-frame.add_frame(Frame(Size(3, 5)), Coord(3, 8))
+frame = Frame(Size(10, 20))
+frame.add_frame(Frame(Size(3, 5), border_type=Borders.DOUBLE), Coord(2, 10))
+
+frame.add_frame(Frame(Size(3, 5), border_type=Borders.THIN), Coord(3, 8))
 
 print(frame)
