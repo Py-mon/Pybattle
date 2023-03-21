@@ -4,7 +4,7 @@
 
 Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI_escape_code
 
-**Ascii Text Art Examples:**
+# Ascii Text Art Examples:
 ```
 ╭─ BEDROOM ─┬──────────────────╮
 │   ╰───────╯       ||||       │
@@ -19,6 +19,7 @@ Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI
 │                    ╰─────┴─╯ │
 ╰──────────────────────────────╯
 ```
+Get the the characters here: https://en.wikipedia.org/wiki/Box-drawing_character
 ```
    __/\       _─────_  
   / ,  \____ /       \ 
@@ -28,8 +29,25 @@ Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI
  \_/ ___|      | /     
     /____\_____//    
 ```
-Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
-
+```
+  _    _        
+ ( \  / )       
+  \ \/ /        
+  |, , \        
+  |     \       
+  /     \       
+ |  \ /  \ _\/_ 
+ \     /    /   
+__\_ __\___/    
+```
+```
+  _---_               
+<< ,   \_____         
+  \   /      \__       
+   |  \________/=====- 
+    \________/         
+        __|_     
+```
 # Installation:
 
 **Clone the repository:**
@@ -60,6 +78,8 @@ Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 ```python bedroom.py```
 
 ```python textbox.py```
+
+```python menu.py```
 
 There will be more tests coming soon.
 
