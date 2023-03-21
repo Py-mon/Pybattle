@@ -84,6 +84,3 @@ __\_ __\___/
 ```python menu.py```
 
 There will be more tests coming soon.
-
-# Socials:
-Learn more on our discord server: https://discord.gg/WC6smsxh
