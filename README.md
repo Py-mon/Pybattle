@@ -28,6 +28,26 @@ Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI
  \_/ ___|      | /     
     /____\_____//    
 ```
+```
+  _    _        
+ ( \  / )       
+  \ \/ /        
+  |, , \        
+  |     \       
+  /     \       
+ |  \ /  \ _\/_ 
+ \     /    /   
+__\_ __\___/    
+```
+```
+  _---_               
+<< ,   \_____         
+  \   /      \__       
+   |  \________/=====- 
+    \________/         
+        __|_     
+```
+
 Get the the chars here: https://en.wikipedia.org/wiki/Box-drawing_character
 
 # Installation:
