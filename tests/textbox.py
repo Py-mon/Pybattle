@@ -1,4 +1,4 @@
-from pybattle.window.features.textbox import TextBox
+from pybattle.window.textbox import TextBox
 from pybattle.ansi.colors import Colors
 from pybattle.ansi.screen import Cursor
 

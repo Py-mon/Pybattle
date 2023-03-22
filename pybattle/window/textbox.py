@@ -3,14 +3,15 @@ from time import sleep
 from typing import Optional
 
 from keyboard import is_pressed, wait
+
 from pybattle.ansi.colors import Colors, ColorType
-from pybattle.ansi.screen import Cursor, Screen
-from pybattle.types_ import Direction, Align
+from pybattle.ansi.screen import Screen
+from pybattle.types_ import Align
 from pybattle.window.frames.border.border_type import Borders, BorderType
 from pybattle.window.frames.map_frame import MapFrame
 from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.size import Size
 from pybattle.window.grid.range import RectRange
+from pybattle.window.grid.size import Size
 
 
 class TextBox:
