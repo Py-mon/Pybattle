@@ -31,17 +31,31 @@ class Coord:
                 raise TypeError(f'Invalid Type: {type(y)}')
         else:
             self.coords = y, x
-
-        self.coords = self.coords
         
     @property
     def coords(self) -> tuple[int, int]:
-        return (max(0, self.y), max(0, self.x))
+        return self.y, self.x
 
     @coords.setter
     def coords(self, to: Self | tuple):
         self.y, self.x = to
+        
+    @property
+    def x(self):
+        return self.__x
 
+    @x.setter
+    def x(self, to: int):
+        self.__x = max(0, to)
+        
+    @property
+    def y(self):
+        return self.__y
+
+    @y.setter
+    def y(self, to: int):
+        self.__y = max(0, to)
+    
     @property
     def center(self) -> Self:
         return type(self)(self.y // 2, self.x // 2)

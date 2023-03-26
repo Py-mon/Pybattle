@@ -16,11 +16,24 @@ class Cell:
             return value
         return super().__new__(cls)
 
-    def __init__(self, value: Any, color: ColorType = Colors.DEFAULT, junction: Optional[Junction] = None) -> None:
+    def __init__(
+        self,
+        value: Any,
+        color: ColorType = Colors.DEFAULT,
+        junction: Optional[Junction] = None,
+        collision: bool = ...,
+    ) -> None:
         if value is self:
             return
 
         self.value = value
+
+        self.collision = collision
+        if self.collision == ...:
+            self.collision = True
+            if self.value == " ":
+                self.collision = False
+
         self.color = color
 
         self.junction = junction
@@ -41,15 +54,21 @@ def level_out(array: list[list[Cell]], alignment: Align) -> list[list[Cell]]:
         if not all(length == max_length for length in row_lengths):
             width = max(row_lengths)
 
-            def cut(n): return (n // 2, n - (n // 2))
+            def cut(n):
+                return (n // 2, n - (n // 2))
 
             match alignment:
                 case Align.LEFT:
-                    return [row + Cell(' ') * (width - len(row)) for row in array]
+                    return [row + Cell(" ") * (width - len(row)) for row in array]
                 case Align.RIGHT:
-                    return [Cell(' ') * (width - len(row)) + row for row in array]
+                    return [Cell(" ") * (width - len(row)) + row for row in array]
                 case Align.CENTER:
-                    return [Cell(' ') * cut(width - len(row))[0] + row + Cell(' ') * cut(width - len(row))[1] for row in array]
+                    return [
+                        Cell(" ") * cut(width - len(row))[0]
+                        + row
+                        + Cell(" ") * cut(width - len(row))[1]
+                        for row in array
+                    ]
                 case _:
                     raise ValueError()
     return array
@@ -57,37 +76,53 @@ def level_out(array: list[list[Cell]], alignment: Align) -> list[list[Cell]]:
 
 class Matrix:
     @overload
-    def __init__(self, size: Size, /, *
-                 colors: ColorRange, alignment: Align = Align.LEFT) -> None: ...
+    def __init__(
+        self, size: Size, /, *colors: ColorRange, alignment: Align = Align.LEFT
+    ) -> None:
+        ...
 
     @overload
-    def __init__(self, string: str, /, *
-                 colors: ColorRange, alignment: Align = Align.LEFT) -> None: ...
+    def __init__(
+        self, string: str, /, *colors: ColorRange, alignment: Align = Align.LEFT
+    ) -> None:
+        ...
 
     @overload
-    def __init__(self, list: list[Any], /, *colors: ColorRange,
-                 alignment: Align = Align.LEFT) -> None: ...
+    def __init__(
+        self, list: list[Any], /, *colors: ColorRange, alignment: Align = Align.LEFT
+    ) -> None:
+        ...
 
     @overload
-    def __init__(self, nested_list: list[list[Any]], /, *
-                 colors: ColorRange, alignment: Align = Align.LEFT) -> None: ...
+    def __init__(
+        self,
+        nested_list: list[list[Any]],
+        /,
+        *colors: ColorRange,
+        alignment: Align = Align.LEFT,
+    ) -> None:
+        ...
 
-    def __init__(self, data, /, *colors: ColorRange, alignment: Align = Align.LEFT) -> None:
-        def cells(row): return [Cell(value) for value in row]
+    def __init__(
+        self, data, /, *colors: ColorRange, alignment: Align = Align.LEFT
+    ) -> None:
+        def cells(row):
+            return [Cell(value) for value in row]
 
         if isinstance(data, str):
-            if data[0] == '\n':
+            if data[0] == "\n":
                 data = data[1:]
             self.cells = [cells(row) for row in data.splitlines()]
 
         elif isinstance(data, list):
-            self.cells = [cells(row) if hasattr(
-                row, '__iter__') else cells([row]) for row in data]
+            self.cells = [
+                cells(row) if hasattr(row, "__iter__") else cells([row]) for row in data
+            ]
 
         elif isinstance(data, (Size, Coord, tuple)):
             self.cells = self.create_empty_array(*data)
         else:
-            raise TypeError(f'Invalid Type of {type(data)}: {data}')
+            raise TypeError(f"Invalid Type of {type(data)}: {data}")
 
         self.alignment = alignment
         self.level_out()
@@ -102,21 +137,28 @@ class Matrix:
             if not all(length == max_length for length in row_lengths):
                 width = max(row_lengths)
 
-                def cut(n): return (n // 2, n - (n // 2))
+                def cut(n):
+                    return (n // 2, n - (n // 2))
 
                 match self.alignment:
                     case Align.LEFT:
                         self.cells = [
-                            row + Cell(' ') * (width - len(row)) for row in self.rows]
+                            row + Cell(" ") * (width - len(row)) for row in self.rows
+                        ]
                     case Align.RIGHT:
                         self.cells = [
-                            Cell(' ') * (width - len(row)) + row for row in self.rows]
+                            Cell(" ") * (width - len(row)) + row for row in self.rows
+                        ]
                     case Align.CENTER:
-                        self.cells = [Cell(' ') * cut(width - len(row))[0] + row + Cell(
-                            ' ') * cut(width - len(row))[1] for row in self.rows]
+                        self.cells = [
+                            Cell(" ") * cut(width - len(row))[0]
+                            + row
+                            + Cell(" ") * cut(width - len(row))[1]
+                            for row in self.rows
+                        ]
 
     def create_empty_array(self, height, width):
-        return [Cell(' ') * width for _ in range(height)]
+        return [Cell(" ") * width for _ in range(height)]
 
     def add_color(self, color: ColorType, range_: RectRange | SelectionRange) -> None:
         self.colors.append((color, range_))
@@ -124,10 +166,13 @@ class Matrix:
             try:
                 self[coord].color = color
             except IndexError:
-                Logger.error(f'The color {color.name.lower()} is out of bounds at {coord} for {self.size} by {coord - self.size} (from {range_})', OutOfBoundsError)
+                Logger.error(
+                    f"The color {color.name.lower()} is out of bounds at {coord} for {self.size} by {coord - self.size} (from {range_})",
+                    OutOfBoundsError,
+                )
 
     def add_colors(self, *colors: ColorRange) -> None:
-        for (color, coord) in colors:
+        for color, coord in colors:
             self.add_color(color, coord)
 
     @property
@@ -139,10 +184,12 @@ class Matrix:
         return RectRange(self.size).array_coords
 
     @overload
-    def __contains__(self, cell: Any, /) -> bool: ...
+    def __contains__(self, cell: Any, /) -> bool:
+        ...
 
     @overload
-    def __contains__(self, coord: Any, /) -> bool: ...
+    def __contains__(self, coord: Any, /) -> bool:
+        ...
 
     def __contains__(self, item: Coord | Any) -> bool:
         """Check if a coord or cell is in the Matrix."""
@@ -158,55 +205,73 @@ class Matrix:
                 yield cell
 
     @overload
-    def __getitem__(self, row: int, /) -> Self: ...
+    def __getitem__(self, row: int, /) -> Self:
+        ...
 
     @overload
-    def __getitem__(self, slice_: slice, /) -> Self: ...
+    def __getitem__(self, slice_: slice, /) -> Self:
+        ...
 
     @overload
-    def __getitem__(self, coord: Coord, /) -> Cell: ...
+    def __getitem__(self, coord: Coord, /) -> Cell:
+        ...
 
     @overload
-    def __getitem__(self, rect_range: RectRange, /) -> None: ...
+    def __getitem__(self, rect_range: RectRange, /) -> None:
+        ...
 
     def __getitem__(self, item, /):
         if isinstance(item, Coord):
             try:
                 return self.cells[item.y][item.x]
             except IndexError:
-                Logger.error(f'{item} is out of bounds for {self.size} by {item - self.size}', OutOfBoundsError)
+                Logger.error(
+                    f"{item} is out of bounds for {self.size} by {item - self.size}",
+                    OutOfBoundsError,
+                )
 
         elif isinstance(item, RectRange):
-            return self[item.start: item.stop]
+            return self[item.start : item.stop]
 
         elif isinstance(item, slice):
             stop = Size(item.stop)
             if stop is None:
                 stop = Size(self.width, self.height) - item.start
 
-            return Matrix([[self[coord] for coord in row] for row in RectRange(stop, item.start).array_coords])
+            return Matrix(
+                [
+                    [self[coord] for coord in row]
+                    for row in RectRange(stop, item.start).array_coords
+                ]
+            )
 
         elif isinstance(item, int):
             return Matrix(self.cells[item])
 
     @overload
-    def __setitem__(self, rect_range: RectRange, matrix: Self, /) -> None: ...
+    def __setitem__(self, rect_range: RectRange, matrix: Self, /) -> None:
+        ...
 
     @overload
-    def __setitem__(self, coord: Coord, cell: Cell, /) -> None: ...
+    def __setitem__(self, coord: Coord, cell: Cell, /) -> None:
+        ...
 
     @overload
-    def __setitem__(self, slice_: slice, matrix: Self, /) -> None: ...
+    def __setitem__(self, slice_: slice, matrix: Self, /) -> None:
+        ...
 
     def __setitem__(self, item, new_cells, /) -> None:
         if isinstance(item, Coord):
             try:
                 self.cells[item.y][item.x] = new_cells
             except IndexError:
-                Logger.error(f'{item} is out of bounds for {self.size} by {item - self.size}', OutOfBoundsError)
+                Logger.error(
+                    f"{item} is out of bounds for {self.size} by {item - self.size}",
+                    OutOfBoundsError,
+                )
 
         elif isinstance(item, RectRange):
-            self[item.start: item.stop] = new_cells
+            self[item.start : item.stop] = new_cells
 
         elif isinstance(item, slice):
             stop = Size(item.stop)
@@ -217,6 +282,7 @@ class Matrix:
                 self[coord].value = new_cells[coord - item.start].value
                 self[coord].color = new_cells[coord - item.start].color
                 self[coord].junction = new_cells[coord - item.start].junction
+                self[coord].collision = new_cells[coord - item.start].collision
 
     @property
     def rows(self) -> list[list[Cell]]:
@@ -259,26 +325,37 @@ class Matrix:
         self.colors = []
 
     def __repr__(self) -> str:
-        res = '['
+        res = "["
         for row in self.cells:
-            row_ = '['
+            row_ = "["
             for cell in row:
-                row_ += str(cell.value) + ','
-            res += row_[:-1] + '],\n '
-        res = res[:-3] + ']'
+                row_ += str(cell.value) + ","
+            res += row_[:-1] + "],\n "
+        res = res[:-3] + "]"
         return res
 
     @property
     def colored_repr(self) -> str:
-        res = '['
+        res = "["
         for row in self.cells:
-            row_ = '['
+            row_ = "["
             for cell in row:
-                row_ += str(cell.color) + cell.value + \
-                    str(Colors.DEFAULT) + ','
-            res += row_[:-1] + '],\n '
-        res = res[:-3] + str(Colors.DEFAULT) + ']'
+                row_ += str(cell.color) + cell.value + str(Colors.DEFAULT) + ","
+            res += row_[:-1] + "],\n "
+        res = res[:-3] + str(Colors.DEFAULT) + "]"
         return res
 
     def __str__(self) -> str:
-        return "".join([str(cell.color) + repr(cell) for row in self.cells for cell in row + [Cell('\n')]])[:-1] + str(Colors.DEFAULT)
+        return "".join(
+            [
+                str(cell.color) + repr(cell)
+                for row in self.cells
+                for cell in row + [Cell("\n")]
+            ]
+        )[:-1] + str(Colors.DEFAULT)
+
+    @property
+    def text(self):
+        return "".join(
+            [repr(cell) for row in self.cells for cell in row + [Cell("\n")]]
+        )[:-1]
