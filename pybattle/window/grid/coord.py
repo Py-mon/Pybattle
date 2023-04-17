@@ -1,45 +1,22 @@
-from typing import Any, Optional, Self, overload
-
-from pybattle.types_ import CoordReference
+from typing import Self, Iterator
+from collections.abc import Iterable
+from pybattle.debug.errors import InvalidConvertType
 
 
 class Coord:
-    """2D coordinates `(y, x)` `(row, col)`."""
+    """
+    Represents a 2D coordinate with positive values only, in the format of (y, x) or (row, col). It provides methods for setting and retrieving the coordinates, performing arithmetic operations, and lexicographical sorting.
+    """
 
-    @overload
-    def __init__(self, y: int, x: Optional[int], /) -> None: ...
+    def __init__(self, y: int, x: int) -> None:
+        self.y = y
+        self.x = x
 
-    @overload
-    def __init__(self, xy: int, /) -> None: ...
-
-    @overload
-    def __init__(self, coord: Self, /) -> None: ...
-
-    @overload
-    def __init__(self, tup: tuple[int, int], /) -> None: ...
-
-    @overload
-    def __init__(self, other: Any, /) -> None: ...
-
-    def __init__(self, y, x=None, /) -> None:
-        if x is None:
-            if isinstance(y, tuple):
-                self.coords = y
-            elif isinstance(y, int):
-                self.coords = y, y
-            else:
-                raise TypeError(f'Invalid Type: {type(y)}')
-        else:
-            self.coords = y, x
-        
     @property
     def coords(self) -> tuple[int, int]:
+        """Returns the current (y, x) coordinates as a tuple"""
         return self.y, self.x
 
-    @coords.setter
-    def coords(self, to: Self | tuple):
-        self.y, self.x = to
-        
     @property
     def x(self):
         return self.__x
@@ -47,7 +24,7 @@ class Coord:
     @x.setter
     def x(self, to: int):
         self.__x = max(0, to)
-        
+
     @property
     def y(self):
         return self.__y
@@ -55,39 +32,52 @@ class Coord:
     @y.setter
     def y(self, to: int):
         self.__y = max(0, to)
-    
-    @property
-    def center(self) -> Self:
-        return type(self)(self.y // 2, self.x // 2)
 
     @classmethod
-    def _convert(cls, obj: CoordReference) -> Self:
-        if not isinstance(obj, cls):
-            obj = cls(obj)
+    def _convert(cls, obj) -> Self:
+        """Converts an object to a Coord object, either by unpacking a tuple or by creating a Coord object with the same y and x values"""
+        if isinstance(obj, Iterable):
+            obj = cls(*obj)
+        elif isinstance(obj, int):
+            obj = cls(obj, obj)
+        else:
+            raise InvalidConvertType(type(obj), cls)
         return obj
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[int]:
+        """Allows iterating over the Coord object, returning the (y, x) coordinates as a tuple"""
         return iter(self.coords)
 
-    def __add__(self, other: CoordReference) -> Self:
+    def __add__(self, other) -> Self:
+        """
+        Returns a new Coord object resulting from element-wise addition of
+        the current Coord object with another Coord object, iterable, or integer.
+        """
         other = type(self)._convert(other)
         return type(self)(self.y + other.y, self.x + other.x)
 
-    def __sub__(self, other: CoordReference) -> Self:
+    def __sub__(self, other) -> Self:
+        """
+        Returns a new Coord object resulting from element-wise subtraction of
+        the current Coord object with another Coord object, iterable, or integer.
+        """
         other = type(self)._convert(other)
         return type(self)(self.y - other.y, self.x - other.x)
 
-    def __eq__(self, other: CoordReference) -> bool:
+    def __eq__(self, other) -> bool:
+        """Compares the current Coord object with another Coord object, iterable, or integer for equality"""
         other = type(self)._convert(other)
         return self.coords == other.coords
 
-    def __lt__(self, other: CoordReference) -> bool:
-        """Lexicographically sorted."""
+    def __lt__(self, other) -> bool:
+        """Compares the current Coord object with another Coord object, iterable, or integer for lexicographical sorting"""
         other = type(self)._convert(other)
         return self.coords < other.coords
 
     def __repr__(self) -> str:
-        return f'Coord(y={self.y}, x={self.x})'
+        """Returns a string representation of the Coord object"""
+        return f"Coord(y={self.y}, x={self.x})"
 
     def __hash__(self) -> int:
+        """Returns the hash value of the Coord object"""
         return hash(self.coords)

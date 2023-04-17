@@ -6,12 +6,12 @@ from pybattle.creatures.attributes.element import Element
 
 
 class StatusAilment:
-    """A negative status effect on a creature."""
+    """A negative status effect on a creature"""
 
     def __init__(
         self,
         element: ElementReference,
-        function: Callable[[list[Attacker], list[Defender]], None]
+        function: Callable[[list[Attacker], list[Defender]], None],
     ) -> None:
         self.element = Element.convert_element_references([element])
         self.function = function
@@ -20,5 +20,5 @@ class StatusAilment:
         return function.__name__.capitalize()
 
     def affect(self, creature: Creature) -> None:
-        """Cause a negative effect on a Creature."""
+        """Cause a negative effect on a Creature"""
         creature.status_ailments.append(self)

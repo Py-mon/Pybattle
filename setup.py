@@ -7,7 +7,7 @@ from time import sleep
 
 
 def get_commits_count(owner_name: str, repo_name: str) -> int:
-    """Get the number of commits a GitHub repository has."""
+    """Get the number of commits a GitHub repository has"""
     url = f"https://api.github.com/repos/{owner_name}/{repo_name}/commits?per_page=1"
     r = requests.get(url)
     links = r.links
@@ -27,7 +27,7 @@ while commits > 49:
     version_ += 1
     commits -= 49
 
-version = f'0.{version_}.{commits}'
+version = f"0.{version_}.{commits}"
 
 print(version)
 
@@ -35,12 +35,12 @@ print(version)
 setup(
     name="pybattle",
     version=version,
-    url='https://github.com/PythonDominator/Pybattle',
-    author='Jacob Ophoven',
-    description='A python ascii text art pokemon style game in the terminal using ANSI escape codes.',
+    url="https://github.com/PythonDominator/Pybattle",
+    author="Jacob Ophoven",
+    description="A python ascii text art pokemon style game in the terminal using ANSI escape codes.",
     packages=find_packages(),
-    python_requires='>=3.11',
+    python_requires=">=3.11",
     install_requires=[
-                'colorama',
+        "colorama",
     ],
 )

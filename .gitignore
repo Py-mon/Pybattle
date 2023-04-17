@@ -9,3 +9,11 @@ dist.py
 ceil.py
 binary.txt
 ex.py
+.pytest_cache
+chat_gpt.py
+sagrada.py
+squares.py
+kw.py
+lang.py
+model.py
+web

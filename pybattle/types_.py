@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TYPE_CHECKING, TypeAlias, Union
+from typing import TYPE_CHECKING, TypeAlias, Union, Iterable
 
 if TYPE_CHECKING:
     from pybattle.ansi.colors import ColorType
@@ -17,7 +17,7 @@ Defender = Creature
 User: TypeAlias = "Humanoid"
 
 ElementReference = Union[str, "Element"]
-CoordReference = Union["Coord", tuple, int]
+CoordReference = Union["Coord", Iterable, int]
 SizeReference = Union["Size", CoordReference]
 
 ColorRange = tuple["ColorType", Union["RectRange", "SelectionRange"]]

@@ -1,7 +1,7 @@
 from threading import Thread
 from typing import Any, Callable, Self, Iterator
 from pybattle.window.frames.base_frame import _Frame
-from pybattle.debug.log import Logger
+from pybattle.debug.log import logger
 
 
 class Event:

@@ -6,12 +6,12 @@ from pybattle.creatures.attributes.element import Element
 
 
 class Move:
-    """A technique that a creature uses in battle."""
+    """A technique that a creature uses in battle"""
 
     def __init__(
         self,
         element: ElementReference,
-        function: Callable[[list[Attacker], list[Defender]], None]
+        function: Callable[[list[Attacker], list[Defender]], None],
     ) -> None:
         self.element = Element.convert_element_references([element])[0]
         self.function = function
@@ -19,8 +19,10 @@ class Move:
     def __repr__(self) -> str:
         return self.function.__name__.capitalize()
 
-    def use(self, attackers: list[Creature], defenders: list[Creature], width: int = 70) -> None:
-        """Uses a move. Automatically resets damage, does element multipliers, and does damage."""
+    def use(
+        self, attackers: list[Creature], defenders: list[Creature], width: int = 70
+    ) -> None:
+        """Uses a move. Automatically resets damage, does element multipliers, and does damage"""
         for attacker in attackers:
             attacker.damage_to = 0
         for defender in defenders:
@@ -29,7 +31,7 @@ class Move:
         # TextBox is not implemented
         # text_box = TextBox(height=3, width=width)
         text_box = ...
-        
+
         for attacker in attackers:
             self.function(attackers, defenders)
             for target in attacker.targets:
@@ -43,7 +45,7 @@ class Move:
                 elif mult == 0:
                     text_box.text = f"It's doesn't affect {target.name}..."
                 target.damage_to *= mult
-                target.stats['health'].battle_bonus -= target.damage_to
-            attacker.stats['health'].battle_bonus -= attacker.damage_to
+                target.stats["health"].battle_bonus -= target.damage_to
+            attacker.stats["health"].battle_bonus -= attacker.damage_to
 
-        print(text_box.speech())
+        (text_box.speech())

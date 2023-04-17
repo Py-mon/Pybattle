@@ -10,18 +10,3 @@ class Camera:
         
     def camera(self, pos):
         return self.matrix[pos - self.range_: min(self.matrix.size - 1, pos + self.range_)].text
-    
-x = '''
-                   ||||       
-                   ||||       
-                     ─┬─┬─┬─┬─
-                              
-                              
-╭│╮   ╶─╮                     
-│││    ░│                     
-╰│╯   ╶─╯           ╭─────┬─╮ 
-                    │░░░░░│▓│ 
-                    ╰─────┴─╯ 
-'''
-
-print(MapFrame(Camera(Matrix(x), Coord(3, 10)).camera(Coord(5, 0))))

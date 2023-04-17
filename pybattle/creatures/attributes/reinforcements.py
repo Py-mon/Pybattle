@@ -1,15 +1,15 @@
-WEIGHT_TO_SPEED = 1/3  # 30lb -> 10% Speed Decrease
+WEIGHT_TO_SPEED = 1 / 3  # 30lb -> 10% Speed Decrease
 
 
 class Armor:
-    """A covering to protect and increase a `Humanoid's` defense in battle."""
+    """A covering to protect and increase a `Humanoid's` defense in battle"""
 
     def __init__(
         self,
         name: str,
         defense_mult: float,
         weight: int,
-        graphics: str = '',
+        graphics: str = "",
     ) -> None:
         self.name = name
         self.defense_mult = defense_mult
@@ -22,7 +22,7 @@ class Armor:
 
 
 class Weapon:
-    """A tool used for increasing physical or magical damage for `Humanoids`."""
+    """A tool used for increasing physical or magical damage for `Humanoids`"""
 
     def __init__(
         self,
@@ -30,7 +30,7 @@ class Weapon:
         stat: str,
         mult: float,
         weight: int,
-        graphics: str = '',
+        graphics: str = "",
     ):
         self.name = name
         self.stat = stat

@@ -57,11 +57,7 @@ class Map:
 
                 self.matrix[self.pos] = Cell("x")
 
-                self.map_frame._construct_frame()
-
-                # Screen.write(self.map_frame)
-                Cursor.up(self.map_frame.height + 1)
-                print(self.map_frame)
+                self.map_frame.update()
 
                 sleep(0.1)
 
@@ -80,29 +76,96 @@ class Map:
         return True
 
 
-# x = Map(
-#     MapFrame(
-#         """
-#                    ||||       
-#                    ||||       
-#                      ─┬─┬─┬─┬─
-                              
-                              
-# ╭│╮   ╶─╮                     
-# │││    ░│                     
-# ╰│╯   ╶─╯           ╭─────┬─╮ 
-#                     │░░░░░│▓│ 
-#                     ╰─────┴─╯ """
-#     )
-# )
+class Map2(MapFrame):
+    def __init__(self, map_frame: MapFrame):
+        self.map_frame = map_frame
+        self.matrix = self.map_frame.contents
 
-# x(Coord(3, 3))
+        self.pos = Coord(0, 0)
 
-# y = ListMenu(Frame(Size(12, 30)), ["Inventory", "Menu", "Home"])
+    def up(self, times: int = 1):
+        self.pos.y -= times
 
-# y.loop()
+    def down(self, times: int = 1):
+        self.pos.y += times
 
-# Event.play_all()
+    def left(self, times: int = 1):
+        self.pos.x -= times
+
+    def right(self, times: int = 1):
+        self.pos.x += times
+
+    def __call__(self, starting_location: Coord, sleep_time=5) -> Event:
+        self.pos = starting_location
+
+        def loop():
+            while True:
+                self.matrix[self.pos] = Cell(" ")
+
+                previous = copy(self.pos)
+
+                if is_pressed("w"):
+                    self.up()
+                if is_pressed("a"):
+                    self.left()
+                if is_pressed("s"):
+                    self.down()
+                if is_pressed("d"):
+                    self.right()
+
+                if not self.is_valid(self.pos):
+                    self.pos = previous
+
+                self.matrix[self.pos] = Cell("x")
+
+                self.map_frame.update()
+
+                sleep(0.1)
+
+        return Event(loop)
+
+    def is_valid(self, pos: Coord) -> bool:
+        try:
+            if (
+                self.matrix[pos].collision
+                or pos.x >= self.matrix.size.x
+                or pos.y >= self.matrix.size.y + 1
+            ):
+                return False
+        except IndexError:
+            return False
+        return True
+
+
+x = Map(
+    MapFrame(
+        """
+                   ||||
+                   ||||
+                     ─┬─┬─┬─┬─
+
+
+╭│╮   ╶─╮
+│││    ░│
+╰│╯   ╶─╯           ╭─────┬─╮
+                    │░░░░░│▓│
+                    ╰─────┴─╯ """
+    )
+)
+
+z = x(Coord(3, 3))
+
+y = ListMenu(Frame(Size(12, 30)), ["Inventory", "Menu", "Home"])
+
+Event.from_frame(y.frame)
+
+
+Scene(y.frame).show()
+
+
+print(Event._events)
+
+Event.play_all()
 
 
 # class Map:
@@ -112,7 +175,7 @@ class Map:
 #     """
 #     @staticmethod
 #     def __is_empty(char: str) -> bool:
-#         """Checks if `char` is a whitespace."""
+#         """Checks if `char` is a whitespace"""
 #         return char == '─' or char == ' '
 
 #     @staticmethod
@@ -138,7 +201,7 @@ class Map:
 #         self.__weather_channels = []
 
 #     def __call__(self, starting_location: list[int], exits: list[list[int]], music: list[str] | None = None, wait_time: float = 0.125, volume: int = 100) -> None:
-#         """Starts the loop that the player can move around the `map_`. Stops if the user's current `location` is in `exits`."""
+#         """Starts the loop that the player can move around the `map_`. Stops if the user's current `location` is in `exits`"""
 #         self.volume = volume
 
 #         self.play_weather(volume)
@@ -175,7 +238,7 @@ class Map:
 #             sleep(wait_time)
 
 #     def __press(self, key: str, func) -> None:
-#         """If `key` is held down it updates the screen and runs `func`."""
+#         """If `key` is held down it updates the screen and runs `func`"""
 #         if is_pressed(key):
 #             self.update()
 
@@ -212,7 +275,7 @@ class Map:
 #             channel.unpause()
 
 #     def update(self) -> None:
-#         """Updates the screen by drawing the weather particles and the players position. Removes particles after printing the screen."""
+#         """Updates the screen by drawing the weather particles and the players position. Removes particles after printing the screen"""
 #         particles = []
 #         for weather in Weather.active_weather:
 #             if weather.particle is not None or weather.amount is not None:
@@ -242,7 +305,7 @@ class Map:
 #                                           ] = self.map_.base_matrix[particle[0]][particle[1]]
 
 #     def validate_location(self) -> None:
-#         """Check whether the `self.row` and `self.column` are a valid location (False in `collisions`). If not a valid location moves the user back."""
+#         """Check whether the `self.row` and `self.column` are a valid location (False in `collisions`). If not a valid location moves the user back"""
 #         try:
 #             if not self.collisions[self.row][self.column]:  # Hit Object
 #                 if self.map_.matrix[self.row][self.column] == self.key:
@@ -268,22 +331,22 @@ class Map:
 #             self.column = self.__previous_column
 
 #     def move_up(self) -> None:
-#         """Subtracts 1 from `self.row` moving the player up."""
+#         """Subtracts 1 from `self.row` moving the player up"""
 #         self.row -= 1
 
 #     def move_down(self) -> None:
-#         """Adds 1 to `self.row` moving the player down."""
+#         """Adds 1 to `self.row` moving the player down"""
 #         self.row += 1
 
 #     def move_left(self) -> None:
-#         """Subtracts 1 from `self.columns` moving the player left."""
+#         """Subtracts 1 from `self.columns` moving the player left"""
 #         self.column -= 1
 
 #     def move_right(self) -> None:
-#         """Adds 1 to `self.column` moving the player right."""
+#         """Adds 1 to `self.column` moving the player right"""
 #         self.column += 1
 
 #     @property
 #     def collisions(self) -> list[list[bool]]:
-#         """A Matrix (2D array), of `map_` on each element, if it is a whitespace."""
+#         """A Matrix (2D array), of `map_` on each element, if it is a whitespace"""
 #         return [[self.__is_empty(char) for char in row] for row in self.map_.matrix][:-1]

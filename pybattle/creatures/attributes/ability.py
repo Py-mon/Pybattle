@@ -6,7 +6,7 @@ from pybattle.types_ import Attacker, Creature, Defender, User
 
 
 class Ability:
-    """A talent or skill for a `Creature`."""
+    """A talent or skill for a `Creature`"""
 
     def __init__(
         self,
@@ -29,7 +29,7 @@ class Ability:
     ) -> bool | None:
         """Activate the ability if the conditions aren't right or it is out of activations.
 
-        Returns `True` on success and `False` on failure."""
+        Returns `True` on success and `False` on failure"""
         if self.condition and self.activations > 0:
             self.activations -= 1
             self.function(user, attackers, defenders)

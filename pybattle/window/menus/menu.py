@@ -38,16 +38,13 @@ class Selection:
         self.label = label
 
         if size is ...:
-            self.size = Size(label) - 1
+            self.size = Size.from_str(label) - 1
         else:
-            self.size = Size(size)
-
+            self.size = size
+            
     def __repr__(self):
         return self.label
 
-    @property
-    def center(self):
-        return self.size.center
 
 
 class Menu:
@@ -62,13 +59,14 @@ class Menu:
 
         self.selection = selections[0]
 
-        self._frame = frame
+        self.frame = frame
 
-    @property
-    def frame(self):
+        self._event()
+
+    def update(self):
         for selection in self.selections:
             if selection == self.selection:
-                self._frame.add_frame(
+                self.frame.add_frame(
                     CenteredFrame(
                         selection.size,
                         selection.label,
@@ -79,29 +77,28 @@ class Menu:
                     selection.location,
                 )
             else:
-                self._frame.add_frame(
+                self.frame.add_frame(
                     CenteredFrame(selection.size, selection.label), selection.location
                 )
 
-        return self._frame
+        self.frame.update()
 
     def sort(self, dirs):
         # Sort the dirs & self.selections by dirs
         x = list(zip(dirs, self.selections))
         x.sort(key=lambda x: x[0])
-        dirs = [c[0] for c in x]
+
         self.selections = [c[1] for c in x]
+        return [c[0] for c in x]
 
     @property
     def directions(self) -> list[list[Direction]]:
-        dirs = [
-            get_directions(self.selection.location, selection.location)
-            for selection in self.selections
-        ]
-
-        self.sort(dirs)
-
-        return dirs
+        return self.sort(
+            [
+                get_directions(self.selection.location, selection.location)
+                for selection in self.selections
+            ]
+        )
 
     def move(self, direction: Direction) -> None:
         for i, directions in enumerate(self.directions):
@@ -121,10 +118,10 @@ class Menu:
     def down(self) -> None:
         self.move(Direction.DOWN)
 
-    def loop(self) -> Event:
-        def loop():
+    def _event(self) -> None:
+        def loop(_):
             while True:
-                Screen.write(self.frame, move_cursor=False)
+                self.update()
 
                 if is_pressed("right"):
                     self.right()
@@ -139,4 +136,4 @@ class Menu:
 
                 sleep(0.1)
 
-        return Event(loop)
+        self.frame.event = loop

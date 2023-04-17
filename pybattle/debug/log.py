@@ -1,84 +1,93 @@
-from logging import DEBUG, FileHandler, Formatter, getLogger
+from logging import (
+    DEBUG,
+    FileHandler,
+    Formatter,
+    Filter,
+    LogRecord,
+    Logger,
+)
 from pathlib import Path
-from typing import Type
-
-from pybattle.debug.errors import Error
-from pybattle.debug.traceback_ import Traceback, find_file
+from traceback import format_stack
+import datetime
 
 
-class Logger:
-    LEVEL = DEBUG
-    FILTERED = []
-    
-    logger = getLogger('log')
+LEVEL = DEBUG
 
-    logger.setLevel(LEVEL)
+ON = []
+OFF = []
 
-    __handler = FileHandler(Path('log.log'), mode='w', encoding="utf-8")
-    __formatter = Formatter(
-        "%(levelname)s: %(message)s")  # LEVEL: message
+NAME = "log"
+FILE = "log.log"
 
-    __handler.setFormatter(__formatter)
+MICRO_PLACES = 2
 
-    logger.addHandler(__handler)
-    
-    @classmethod
-    def file_check(cls) -> bool:
-        if not cls.FILTERED:
+FORMAT = """Traceback (most recent call last):\n%(traceback)s%(levelname)s at %(time)s: %(message)s"""
+
+
+class TracebackLogger(Logger):
+    def __init__(self, name: str, level=DEBUG) -> None:
+        super().__init__(name, level)
+        self.stack_level = 1
+        self.error = self._with_stack_level(self.error, 4)
+
+    def _with_stack_level(self, func, level: int):
+        def wrapper(*args, **kwargs):
+            self.stack_level = level
+            func(*args, **kwargs)
+            self.stack_level = 1
+
+        return wrapper
+
+    def warning(self, msg, *args, stack_info=True, **kwargs):
+        super().warning(msg, *args, stack_info=stack_info, **kwargs)
+
+    def error(self, msg, *args, stack_level: int = 1, stack_info=True, **kwargs):
+        self.stack_level = stack_level
+        super().error(msg, *args, stack_info=stack_info, **kwargs)
+        self.stack_level = 1
+
+    def critical(self, msg, *args, stack_info=True, **kwargs):
+        super().critical(msg, *args, stack_info=stack_info, **kwargs)
+
+
+logger = TracebackLogger(NAME, LEVEL)
+
+
+class LogFilter(Filter):
+    def __init__(self, on: list[str], off: list[str], micro_places: int = 2):
+        super().__init__()
+
+        self.on = on
+        self.off = off
+        self.micro_places = micro_places
+
+    def filter(self, record: LogRecord):
+        record.traceback = ""
+        if record.stack_info is not None:
+            record.traceback = "\n".join(format_stack()[: -4 - logger.stack_level])
+            record.stack_info = None
+
+        # HH:MM:SS,mm
+        time = datetime.datetime.today()
+        microsecond = format(time.microsecond, "06d")[: self.micro_places]
+        record.time = time.strftime(f"%H:%M:%S,{microsecond}")
+
+        if not self.on and not self.off:
             return True
-        for module in cls.FILTERED:
-            for traceback in Traceback().stack[:-3]:
-                traceback_file = find_file(traceback)
-                print(Path(module).name, Path(traceback_file).name)
-                print(Path(traceback_file).parent)
-                if Path(module).name == Path(traceback_file).name:
-                    return True
-                
-                traceback_dir = Path(traceback_file)
-                while traceback_dir != traceback_dir.parent:
-                    traceback_dir = traceback_dir.parent
-                    print(repr(traceback_dir))
-                    if Path(module).name == traceback_dir.name:
-                        return True
-        else:
-            return False
-    
-    @classmethod
-    def error(cls, msg: str = '', error: Type[Error] = Error, traceback: bool = True) -> None:
-        if traceback:
-            cls.logger.error(f'\n{Traceback().traceback}{error.__name__}: {msg}')
-        else:
-            cls.logger.error(error.__name__ + ': ' + msg)
-        raise error(msg)
 
-    @classmethod
-    def debug(cls, msg: str, traceback: bool = False) -> None:
-        if cls.file_check():
-            if traceback:
-                cls.logger.debug(f"\n{Traceback().traceback}{msg}")
-            else:
-                prefix = "\n" if "\n" in msg else ""
-                cls.logger.debug(f"{prefix}{msg}")
-            
-    @classmethod
-    def trace_debug(cls, msg: str) -> None:
-        cls.debug(msg, traceback=True)
+        for module in self.on:
+            if module in Path(record.pathname).parts:
+                return True
 
-    @classmethod
-    def warning(cls, msg: str, traceback: bool = True) -> None:
-        if cls.file_check():
-            if traceback:
-                cls.logger.warning(f'\n{Traceback().traceback}{msg}')
-            else:
-                prefix = "\n" if "\n" in msg else ""
-                cls.logger.warning(f"{prefix}{msg}")
-            
-    @classmethod
-    def info(cls, msg: str, traceback: bool = False) -> None:
-        if cls.file_check():
-            if traceback:
-                cls.logger.info(f'\n{Traceback().traceback}{msg}')
-            else:
-                prefix = "\n" if "\n" in msg else ""
-                cls.logger.warning(f"{prefix}{msg}")
-            
+        for module in self.off:
+            if module not in Path(record.pathname).parts:
+                return True
+
+        return False
+
+
+__handler = FileHandler(FILE, mode="w", encoding="utf-8")
+__handler.setFormatter(Formatter(FORMAT))
+logger.addHandler(__handler)
+
+logger.addFilter(LogFilter(ON, OFF, MICRO_PLACES))
