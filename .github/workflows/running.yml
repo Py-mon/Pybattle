@@ -6,6 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: execute
+      - name: checkout
+        uses: actions/checkout@v3
+        
+      - name: download python
+        uses: actions/setup-python@v4
+        with:
+          python-verison: '3.11'
+          
+      - name: run
         run: python types_.py
     
