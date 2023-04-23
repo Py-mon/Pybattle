@@ -2,7 +2,7 @@ import pstats
 from os import remove, system
 
 # The file that it will test the speeds on
-run_file = 'pybattle/window/features/input.py'
+run_file = 'pybattle/window/frames/base_frame.py'
 
 # The file it will make temporarily to store binary data.
 binary_data_file = 'binary.txt'

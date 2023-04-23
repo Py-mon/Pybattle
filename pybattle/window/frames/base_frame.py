@@ -1,21 +1,19 @@
 from typing import Any, Callable, Optional, Self
 
 from pybattle.ansi.colors import Colors, ColorType
-from pybattle.debug.log import logger
-from pybattle.debug.errors import InvalidSize
-from pybattle.types_ import Direction
-from pybattle.window.frames.border.border_type import Borders, BorderType, get_junction
+from pybattle.log.errors import SizeTooSmall
+from pybattle.log.log import logger
+from pybattle.types_ import Align, ColorRange, Direction
+from pybattle.window.frames.border.border_type import Borders, BorderType
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.matrix import Cell, Matrix
 from pybattle.window.grid.range import RectRange
 from pybattle.window.grid.size import Size
-from pybattle.types_ import ColorRange, Align
+from pybattle.window.frames.border.junction_table import get_junction
 
 
-class _Frame:
-    """The base class for creating boxes to store information and events.
-
-    Use this class rather than Frame for inheriting."""
+class Frame:
+    """Boxes to store information and events."""
 
     def __init__(
         self,
@@ -37,8 +35,10 @@ class _Frame:
         self.size = self.contents.size + 2
 
         self.frames: list[tuple[Self, Coord]] = []
+        self.changes: list[tuple] = []
 
         self.contents.add_colors(*colors)
+
         self.update()
 
     @property
@@ -59,7 +59,7 @@ class _Frame:
         # Top Row
         if self.title:
             if self.size.inner.width - len(self.title) - 3 <= 0:
-                raise InvalidSize(f"Title: '{self.title}'", f"Frame of {self.size}")
+                raise SizeTooSmall(f"Frame of {self.size}", f"Title: '{self.title}'")
 
             title = (Cell(char) for char in self.title)
 
@@ -156,14 +156,17 @@ class _Frame:
         self._reconstruct()
         self._color()
 
-        # for frame, coord in self.frames:
-        #     self.add_frame(frame, coord)
+        for frame, coord in self.frames.copy():
+            self.add_frame(frame, coord)
 
-    def __getitem__(self, item) -> None:
+        for item, to in self.changes.copy():
+            self.matrix[item] = to
+
+    def __getitem__(self, item) -> Cell:
         return self.matrix[item]
 
     def __setitem__(self, item, to) -> None:
-        self.matrix[item] = to
+        self.changes.append((item, to))
 
     @property
     def top_edges(self) -> RectRange:
@@ -276,7 +279,7 @@ class _Frame:
     def __str__(self) -> str:
         return str(self.matrix)
 
-    def add_frame(self, frame: "_Frame", pos: Coord = Coord(0, 0)) -> None:
+    def add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
         """Add a Frame inside the Frame
 
         Automatically joins conjunctions"""
@@ -287,9 +290,9 @@ class _Frame:
         for coord in frame.border_coords:
             coord_pos = coord + pos
 
-            self_junction = self.matrix[coord_pos].junction
-            frame_junction = frame.matrix[coord].junction
-            if self_junction is not None and frame_junction is not None:
+            self_junction = self.matrix[coord_pos]._value
+            frame_junction = frame.matrix[coord]._value
+            if isinstance(self_junction, dict) and isinstance(frame_junction, dict):
                 junctions.append((self_junction | frame_junction, coord_pos))
 
         top_left = pos
@@ -302,7 +305,7 @@ class _Frame:
 
         logger.debug(repr(self.matrix))
 
-        for junction, coord in junctions.copy():
+        for junction, coord in junctions:
             logger.debug(str((junction, coord)))
 
             for direction in junction.copy():
@@ -317,15 +320,14 @@ class _Frame:
                     case Direction.RIGHT:
                         ahead = Coord(coord.y, coord.x + 1)
                 try:
-                    if not self.matrix[ahead].junction:
+                    if not isinstance(self.matrix[ahead]._value, dict):
                         junction.pop(direction)
-                except IndexError:
+                except IndexError:  # out of bounds
                     pass
 
-            for thickness in junction.values():
-                if thickness != None:
-                    self.matrix[coord].value = get_junction(junction)
-                    break
+            # for thickness in junction.values():
+            #     if thickness != None:
+            self.matrix[coord]._value = junction
 
         if self.title is not None:
             for i, char in enumerate(" " + self.title + " "):
@@ -336,21 +338,18 @@ class _Frame:
 
         logger.debug(repr(self.matrix))
 
-
-class Frame:
-    """Frame Constructors."""
-
-    @staticmethod
+    @classmethod
     def map(
+        cls,
         contents: str,
         title: Optional[str] = None,
-        event: Optional[Callable[[_Frame], Any]] = None,
+        event: Optional[Callable[[Self], Any]] = None,
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
         colors: list[ColorRange] = [],
-    ) -> _Frame:
-        return _Frame(
+    ) -> Self:
+        return cls(
             Matrix.from_str(contents),
             title,
             event,
@@ -360,20 +359,21 @@ class Frame:
             colors,
         )
 
-    @staticmethod
+    @classmethod
     def box(
+        cls,
         size: Size,
         title: Optional[str] = None,
-        event: Optional[Callable[[_Frame], Any]] = None,
+        event: Optional[Callable[[Self], Any]] = None,
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
         colors: list[ColorRange] = [],
-    ) -> _Frame:
+    ) -> Self:
         if size.inner == Size(0, 0):
-            raise ValueError(f"{size} is too small.")
+            raise SizeTooSmall(size, "a Frame")
 
-        return _Frame(
+        return cls(
             Matrix.from_size(size.inner),
             title,
             event,
@@ -383,25 +383,26 @@ class Frame:
             colors,
         )
 
-    @staticmethod
+    @classmethod
     def centered(
+        cls,
         text: str,
         size: Size,
         title: Optional[str] = None,
-        event: Optional[Callable[[_Frame], Any]] = None,
+        event: Optional[Callable[[Self], Any]] = None,
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
         alignment: Align = Align.CENTER,
         colors: list[ColorRange] = [],
-    ) -> _Frame:
+    ) -> Self:
         aligned_text = Matrix.from_str(text, alignment=alignment)
         center_range = RectRange.center_range(size.inner, aligned_text.size.i)
 
         contents = Matrix.from_size(size.inner)
         contents[center_range] = aligned_text
 
-        return _Frame(
+        return cls(
             contents, title, event, border_color, title_color, border_type, colors
         )
 
@@ -415,7 +416,7 @@ class Frame:
         border_type: BorderType = Borders.THIN,
         alignment: Align = Align.CENTER,
         colors: list[ColorRange] = [],
-    ) -> _Frame:
+    ) -> Self:
         return cls.centered(
             label,
             size,
@@ -427,3 +428,13 @@ class Frame:
             alignment,
             colors,
         )
+
+
+f = Frame.box(Size(4, 9))
+f.add_frame(Frame.box(Size(3, 4)), Coord(0, 2))
+
+f[Coord(1, 3)] = Cell("X")
+
+f.update()
+
+print(f)

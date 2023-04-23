@@ -4,11 +4,12 @@
 from typing import Any, Generator, Optional, Self, overload, Iterable, Literal
 
 from pybattle.ansi.colors import Colors, ColorType
-from pybattle.types_ import Align, ColorRange, Junction
+from pybattle.types_ import Align, ColorRange, JunctionDict
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.range import RectRange, SelectionRange
 from pybattle.window.grid.size import Size, is_nested
-from pybattle.debug.errors import OutOfBounds
+from pybattle.log.errors import OutOfBounds
+from pybattle.window.frames.border.junction_table import get_junction
 
 
 class Cell:
@@ -21,15 +22,14 @@ class Cell:
 
     def __init__(
         self,
-        value: Any,
+        value: Any | JunctionDict,
         color: ColorType = Colors.DEFAULT,
-        junction: Optional[Junction] = None,
         collision: bool = ...,
     ) -> None:
         if value is self:
             return
 
-        self.value = value
+        self._value = value
 
         self.collision = collision
         if self.collision == ...:
@@ -39,17 +39,28 @@ class Cell:
 
         self.color = color
 
-        self.junction = junction
-        if self.junction is None:
-            self.junction = {}
+    @property
+    def value(self):
+        if isinstance(self._value, dict):
+            return get_junction(self._value)
+        else:
+            return self._value
+
+    @value.setter
+    def value(self, value: Any | JunctionDict):
+        self._value = value
 
     def __repr__(self) -> str:
         """Return a string representation of the cell"""
         return str(self.value)
 
+    def __str__(self) -> str:
+        """Return a string representation of the cell"""
+        return str(self.color) + str(self.value)
+
     def __mul__(self, times: int) -> list[Self]:
         """Multiply the cell by a certain number of times to create a list of cells"""
-        return [Cell(self.value, self.color, self.junction) for _ in range(times)]
+        return [Cell(self._value, self.color) for _ in range(times)]
 
     def __len__(self) -> Literal[0]:
         """Return the length of the cell. (Always 0)"""
@@ -342,12 +353,10 @@ class Matrix:
         back = 0
         for item in self.cells:
             if isinstance(item, Cell):
-                res += str(item.color) + str(item) + str(Colors.DEFAULT) + ","
+                res += str(item) + str(Colors.DEFAULT) + ","
                 back = 1
             else:
-                sublist = ",".join(
-                    str(cell.color) + cell.value + str(Colors.DEFAULT) for cell in item
-                )
+                sublist = ",".join(str(cell) + str(Colors.DEFAULT) for cell in item)
                 res += f"[{sublist}],\n "
                 back = 3
 
@@ -356,13 +365,9 @@ class Matrix:
 
     def __str__(self) -> str:
         """The colors and values of each cell joined together"""
-        return "".join(
-            [
-                str(cell.color) + cell.value
-                for row in self.rows
-                for cell in row + [Cell("\n")]
-            ]
-        )[:-1] + str(Colors.DEFAULT)
+        return "".join([str(cell) for row in self.rows for cell in row + [Cell("\n")]])[
+            :-1
+        ] + str(Colors.DEFAULT)
 
     @property
     def uncolored_str(self):

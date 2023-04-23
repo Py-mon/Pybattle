@@ -17,7 +17,7 @@ ON = []
 OFF = []
 
 NAME = "log"
-FILE = "log.log"
+FILE = "logs/log.log"
 
 MICRO_PLACES = 2
 

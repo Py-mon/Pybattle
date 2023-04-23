@@ -2,8 +2,7 @@ from urllib.parse import parse_qs, urlparse
 
 import requests
 from setuptools import find_packages, setup
-from shutil import rmtree
-from time import sleep
+from os import system
 
 
 def get_commits_count(owner_name: str, repo_name: str) -> int:
@@ -26,6 +25,7 @@ commits = get_commits_count(name, repo)
 while commits > 49:
     version_ += 1
     commits -= 49
+# commits = 23
 
 version = f"0.{version_}.{commits}"
 
@@ -40,7 +40,5 @@ setup(
     description="A python ascii text art pokemon style game in the terminal using ANSI escape codes.",
     packages=find_packages(),
     python_requires=">=3.11",
-    install_requires=[
-        "colorama",
-    ],
+    install_requires=["colorama", "requests"],
 )

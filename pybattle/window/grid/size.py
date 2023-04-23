@@ -2,8 +2,8 @@ from typing import Self, Iterable
 
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.range import RectRange
-from pybattle.debug.errors import InvalidConvertType
-from pybattle.window.grid.list_methods import is_nested, nested_len
+from pybattle.log.errors import InvalidConvertType
+from pybattle.types_ import is_nested, nested_len
 
 
 class Size(Coord, RectRange):

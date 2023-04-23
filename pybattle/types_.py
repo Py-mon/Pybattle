@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TYPE_CHECKING, TypeAlias, Union, Iterable
+from typing import TYPE_CHECKING, TypeAlias, Union, Iterable, Self, Any
 
 if TYPE_CHECKING:
     from pybattle.ansi.colors import ColorType
@@ -32,6 +32,17 @@ class Direction(Enum):
     def __lt__(self, other):
         return self.value < other.value
 
+    def reverse(self) -> Self:
+        if self == Direction.UP:
+            return Direction.DOWN
+        elif self == Direction.DOWN:
+            return Direction.UP
+        elif self == Direction.LEFT:
+            return Direction.RIGHT
+        elif self == Direction.RIGHT:
+            return Direction.LEFT
+        return self
+
 
 class Align(Enum):
     LEFT = 0
@@ -46,4 +57,21 @@ class Thickness(Enum):
     DOUBLE = 2
 
 
-Junction = dict[Direction, Thickness]
+JunctionDict = dict[Direction, Thickness]
+
+
+def is_junction(conjunction: Any) -> bool:
+    """Check if x is a junction (dict)"""
+    return isinstance(conjunction, dict)
+
+
+def is_nested(lst: list | list[list]) -> bool:
+    """Check if a list is nested"""
+    return len(lst) > 0 and isinstance(lst[0], list)
+
+
+def nested_len(lst: list | list[list]) -> int:
+    """Get the max nested length of a list. If not nested returns the length."""
+    if is_nested(lst):
+        return max([len(row) for row in lst] + [0])
+    return len(lst)

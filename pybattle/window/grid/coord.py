@@ -1,6 +1,6 @@
 from typing import Self, Iterator
 from collections.abc import Iterable
-from pybattle.debug.errors import InvalidConvertType
+from pybattle.log.errors import InvalidConvertType
 
 
 class Coord:

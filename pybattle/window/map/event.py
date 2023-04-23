@@ -1,6 +1,6 @@
 from threading import Thread
 from typing import Any, Callable, Self, Iterator
-from pybattle.window.frames.base_frame import _Frame
+from pybattle.window.frames.base_frame import Frame
 from pybattle.debug.log import Logger
 
 
@@ -8,7 +8,7 @@ class Event:
     _events = []
 
     @classmethod
-    def from_frame(cls, frame: _Frame):
+    def from_frame(cls, frame: Frame):
         for frame_ in frame.event_frames:
             Event(frame_.event, frame_)
 

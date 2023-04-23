@@ -1,4 +1,4 @@
-from pybattle.debug.log import logger
+from pybattle.log.log import logger
 from typing import Type, Callable, Optional
 
 
@@ -28,11 +28,11 @@ class MethodDoesNotExist(Error, NotImplementedError):
         super().__init__(msg, 2)
 
 
-class InvalidSize(Error, ValueError):
-    """x is too big for y"""
+class SizeTooSmall(Error, ValueError):
+    """x is too small for y"""
 
-    def __init__(self, too_big: str, for_: str) -> None:
-        super().__init__(f"{too_big} is too big for {for_}", 2)
+    def __init__(self, too_small: object, for_: str) -> None:
+        super().__init__(f"{too_small} is too small for {for_}", 2)
 
 
 class InvalidConvertType(Error, ValueError):

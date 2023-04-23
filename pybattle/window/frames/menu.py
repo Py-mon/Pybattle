@@ -1,17 +1,16 @@
+from time import sleep
+from typing import Optional, Self
+
+from keyboard import is_pressed
+
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.ansi.screen import Screen
-from pybattle.window.frames.border.border_type import Direction
-from pybattle.window.frames.base_frame import _Frame, Frame
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.size import Size
-from pybattle.window.grid.range import RectRange
-from pybattle.window.map.event import Event
-from time import sleep
-from typing import Optional
 from pybattle.types_ import ColorRange
-from pybattle.window.frames.border.border_type import Borders, BorderType
-from pybattle.window.grid.matrix import Matrix
-from keyboard import is_pressed
+from pybattle.window.frames.base_frame import Frame
+from pybattle.window.frames.border.border_type import Borders, BorderType, Direction
+from pybattle.window.grid.coord import Coord
+from pybattle.window.grid.range import RectRange
+from pybattle.window.grid.size import Size
 from pybattle.window.map.event import Event
 
 
@@ -34,11 +33,11 @@ def get_directions(from_: Coord, to: Coord) -> list[Direction]:
     return directions
 
 
-class Menu(_Frame):
+class Menu:
     def __init__(
         self,
         size: Size,
-        selections: list[tuple[_Frame, Coord]],
+        selections: list[tuple[Frame, Coord]],
         title: Optional[str] = None,
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
@@ -47,7 +46,7 @@ class Menu(_Frame):
         selected_label_color: ColorType = Colors.BLUE,
         colors: list[ColorRange] = [],
     ) -> None:
-        def loop(_):
+        def loop(self: Self):
             while True:
                 self._update1()
 
@@ -65,8 +64,8 @@ class Menu(_Frame):
 
                 sleep(0.1)
 
-        super().__init__(
-            Matrix.from_size(size.inner),
+        self.frame = Frame.box(
+            size.inner,
             title,
             loop,
             border_color,
@@ -99,7 +98,7 @@ class Menu(_Frame):
 
             frame.update()
 
-            self.add_frame(frame, location)
+            self.frame.add_frame(frame, location)
 
     def sort(self, dirs):
         # Sort the dirs & self.selections by dirs
@@ -138,8 +137,6 @@ class Menu(_Frame):
         self.move(Direction.DOWN)
 
 
-x = Frame.centered("play", Size(7, 20))
-print(x)
 # x.add_frame(Frame.centered("play", Size(4, 6)), Coord(1, 1))
 # print(x)
 m = Menu(
@@ -150,12 +147,12 @@ m = Menu(
     ],
 )
 
-Event.from_frame(m)
+Event.from_frame(m.frame)
 
 
 def loop():
     while True:
-        Screen.write(m)
+        Screen.write(m.frame)
 
 
 Event(loop)
