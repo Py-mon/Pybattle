@@ -1,0 +1,11 @@
+name: Running
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: execute
+        run: python pybattle\types_.py
+    
