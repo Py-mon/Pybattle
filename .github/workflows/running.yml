@@ -7,5 +7,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: execute
-        run: python pybattle\types_.py
+        run: python pybattle/types_.py
     
