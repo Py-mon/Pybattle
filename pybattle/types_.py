@@ -47,4 +47,3 @@ class Thickness(Enum):
 
 
 Junction = dict[Direction, Thickness]
-f
