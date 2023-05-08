@@ -1,1 +1,1 @@
-import pybattle.debug.speed
+import pybattle.log.speed

@@ -1,5 +1,6 @@
+from collections.abc import Iterable, Sequence, Sized
 from enum import Enum
-from typing import TYPE_CHECKING, TypeAlias, Union, Iterable, Self, Any
+from typing import TYPE_CHECKING, Any, Self, TypeAlias, Union
 
 if TYPE_CHECKING:
     from pybattle.ansi.colors import ColorType
@@ -7,8 +8,8 @@ if TYPE_CHECKING:
     from pybattle.creatures.humanoid import Humanoid
     from pybattle.creatures.pymon import Pymon
     from pybattle.window.grid.coord import Coord
-    from pybattle.window.grid.size import Size
     from pybattle.window.grid.range import RectRange, SelectionRange
+    from pybattle.window.grid.size import Size
 
 
 Creature = Union["Pymon", "Humanoid"]
@@ -50,6 +51,15 @@ class Align(Enum):
     CENTER = 2
     MIDDLE = 2
 
+    def align(self, string: str, width: int) -> str:
+        if self == Align.LEFT:
+            return string.ljust(width)
+        elif self == Align.RIGHT:
+            return string.rjust(width)
+        elif self == Align.CENTER or self == Align.MIDDLE:
+            return string.center(width)
+        return str()
+
 
 class Thickness(Enum):
     THIN = 0
@@ -65,13 +75,20 @@ def is_junction(conjunction: Any) -> bool:
     return isinstance(conjunction, dict)
 
 
-def is_nested(lst: list | list[list]) -> bool:
-    """Check if a list is nested"""
-    return len(lst) > 0 and isinstance(lst[0], list)
+def is_nested(seq: Sequence | Sequence[Sequence]) -> bool:
+    """Check if a sequence is nested"""
+    return len(seq) > 0 and isinstance(seq[0], Iterable)
 
 
-def nested_len(lst: list | list[list]) -> int:
+def nested_len(seq: Sequence | Sequence[Sequence]) -> int:
     """Get the max nested length of a list. If not nested returns the length."""
-    if is_nested(lst):
-        return max([len(row) for row in lst] + [0])
-    return len(lst)
+    if is_nested(seq):
+        return max([len(row) for row in seq] + [0])
+    return len(seq)
+
+
+def nest(seq) -> list[list]:
+    """If a sequence is not nested, it returns it nested"""
+    if is_nested(seq):
+        return seq
+    return [seq]

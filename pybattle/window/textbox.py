@@ -3,12 +3,13 @@ from time import sleep
 from typing import Optional
 
 from keyboard import is_pressed, wait
+from window.frames.frame import Frame
 
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.ansi.screen import Screen
 from pybattle.types_ import Align
+from pybattle.window.event import Event
 from pybattle.window.frames.border.border_type import Borders, BorderType
-from pybattle.window.frames.base_frame import Frame
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.range import RectRange
 from pybattle.window.grid.size import Size
@@ -19,7 +20,7 @@ class TextBox:
 
     def __init__(
         self,
-        text: str = "",
+        text: str,
         author: Optional[str] = None,
         size: Size = Size(4, 70),
         author_color: ColorType = Colors.DEFAULT,
@@ -28,6 +29,13 @@ class TextBox:
         text_alignment: Align = Align.LEFT,
         block_char: str = "⏷",
         border_type: BorderType = Borders.THIN,
+        default_delay: float = 0.03,
+        default_sped_up_delay: float = 0.01,
+        delays: dict[str, float] = ...,
+        sped_up_delays: dict[str, float] = ...,
+        speed_key: str = " ",
+        block_key: str = " ",
+        block: bool = True,
     ) -> None:
         self.text = text
         self.size = size
@@ -42,11 +50,76 @@ class TextBox:
         self.wrap_width = self.size.inner.width - 6  # | x ⏷ |
         self.text_width = self.size.inner.width - 3  # | x |
 
-        self.block = False
         self.block_char = block_char
+        self.speed_key = speed_key
+        self.block = False
+        self.default_delay = default_delay
+        self.default_sped_up_delay = default_sped_up_delay
+
+        self.delays = delays
+        if self.delays is ...:
+            self.delays = {
+                ".": 1.00,
+                "?": 1.00,
+                ";": 0.75,
+                ",": 0.50,
+                ":": 0.50,
+            }
+
+        self.sped_up_delays = sped_up_delays
+        if self.sped_up_delays is ...:
+            self.sped_up_delays = {
+                ".": 0.50,
+                "?": 0.50,
+                ";": 0.35,
+                ",": 0.25,
+                ":": 0.25,
+            }
+        self.block_key = block_key
+
+        def speech():
+            self.clear()
+            lines = wrap(text, self.wrap_width)
+            lines = [line.split() for line in lines]
+
+            for index, line in enumerate(lines):
+                for word in line:
+                    if self.block:
+                        self.refresh()
+
+                        wait(block_key)
+                        self.block = False
+
+                    for char in word:
+                        self.add(char)
+
+                        self.refresh()
+
+                        if is_pressed(self.speed_key):
+                            sleep(
+                                self.sped_up_delays.get(
+                                    char, self.default_sped_up_delay
+                                )
+                            )
+                        else:
+                            sleep(self.delays.get(char, self.default_delay))
+
+                    self.add(" ")
+
+                #      If theres fully new display             OR    the last iteration   AND block is True then...
+                if (
+                    (index - 1) % self.size.inner.height == 0 or index == len(lines) - 1
+                ) and block:
+                    self.block = True
+
+            return True
+
+        self.event = speech
 
     def __str__(self) -> str:
-        lines = wrap(self.text, self.wrap_width)[-self.size.inner.height :]  # Last lines
+        lines = wrap(self.text, self.wrap_width)[
+            -self.size.inner.height :
+        ]  # Last lines
 
         string = ""
         for i in range(self.size.inner.height):
@@ -74,15 +147,7 @@ class TextBox:
             border_color=self.border_color,
             title_color=self.author_color,
             border_type=self.border_type,
-            colors=[
-                (
-                    self.text_color,
-                    RectRange(
-                        Coord(self.size.inner.height - 1, self.size.inner.width - 2),
-                        Coord(self.size.inner.height - 1, 1),
-                    ),
-                )
-            ],
+            base_color=self.text_color,
         )
 
         return str(self.textbox)
@@ -97,79 +162,3 @@ class TextBox:
 
     def refresh(self) -> None:
         Screen.write(str(self))
-
-        # print(str(self))
-
-    def speech(
-        self,
-        text: str = ...,
-        default_delay: float = 0.02,
-        default_sped_up_delay: float = 0.01,
-        delays: dict[str, float] = ...,
-        sped_up_delays: dict[str, float] = ...,
-        speed_key: str = " ",
-        block: bool = True,
-        block_char: str = ...,
-        block_key: str = " ",
-        add: bool = False,
-        start_clear: bool = False,
-        end_clear: bool = False,
-    ) -> None:
-        """Slowly types out text in the TextBox"""
-        if delays is ...:
-            delays = {
-                ".": 1.00,
-                "?": 1.00,
-                ";": 0.75,
-                ",": 0.50,
-                ":": 0.50,
-            }
-        if sped_up_delays is ...:
-            sped_up_delays = {
-                ".": 0.50,
-                "?": 0.50,
-                ";": 0.35,
-                ",": 0.25,
-                ":": 0.25,
-            }
-        if text is ...:
-            text = self.text
-        if block_char is not ...:
-            self.block_char = block_char
-
-        if start_clear:
-            Screen.clear()
-        if not add:
-            self.clear()
-
-        lines = wrap(text, self.wrap_width)
-        lines = [line.split() for line in lines]
-
-        for index, line in enumerate(lines):
-            for word in line:
-                if self.block:
-                    self.refresh()
-
-                    wait(block_key)
-                    self.block = False
-
-                for char in word:
-                    self.add(char)
-
-                    self.refresh()
-
-                    if is_pressed(speed_key):
-                        sleep(sped_up_delays.get(char, default_sped_up_delay))
-                    else:
-                        sleep(delays.get(char, default_delay))
-
-                self.add(" ")
-
-            #      If theres fully new display             OR    the last iteration   AND block is True then...
-            if (
-                (index - 1) % self.size.inner.height == 0 or index == len(lines) - 1
-            ) and block:
-                self.block = True
-
-        if end_clear:
-            Screen.clear()

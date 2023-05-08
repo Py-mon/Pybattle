@@ -1,19 +1,23 @@
-from typing import Self, Iterable
+from collections.abc import Iterable
+from typing import Iterable, Self
 
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.range import RectRange
 from pybattle.log.errors import InvalidConvertType
 from pybattle.types_ import is_nested, nested_len
+from pybattle.window.grid.coord import Coord
+from pybattle.window.grid.range import RectRange
 
 
 class Size(Coord, RectRange):
+    @property
+    def center(self) -> Self:
+        return type(self)(self.height // 2, self.width // 2)
+
     @classmethod
     def from_str(cls, string: str) -> Self:
         """Create a Size from a str."""
-        while string.startswith("\n"):
-            string = string[1:]
-
-        return Size(string.count("\n"), nested_len(string.splitlines()))
+        return Size(
+            string.removeprefix("\n").count("\n"), nested_len(string.splitlines())
+        )
 
     @classmethod
     def from_list(cls, lst: list) -> Self:
@@ -35,7 +39,7 @@ class Size(Coord, RectRange):
     def _convert(cls, obj) -> Self:
         if isinstance(obj, list):
             obj = cls.from_list(obj)
-        if hasattr(obj, "__iter__"):
+        if isinstance(obj, Iterable):
             obj = cls.from_iter(obj)
         elif isinstance(obj, str):
             obj = cls.from_str(obj)

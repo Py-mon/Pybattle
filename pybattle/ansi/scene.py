@@ -1,8 +1,8 @@
 from typing import Any, Self
 
 from pybattle.ansi.screen import Screen
-from pybattle.window.frames.frame import Frame
-from pybattle.window.map.event import Event
+from window.frames.frame import Frame
+from window.event import Event
 from time import sleep
 
 

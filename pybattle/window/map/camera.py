@@ -1,6 +1,4 @@
 from pybattle.window.grid.matrix import Matrix
-from pybattle.window.grid.coord import Coord
-from pybattle.window.frames.map_frame import MapFrame
 
 
 class Camera:

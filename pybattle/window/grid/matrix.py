@@ -1,15 +1,13 @@
-"""Takes a string and converts it to a matrix or array to create a grid that can be easily edited"""
-
-
-from typing import Any, Generator, Optional, Self, overload, Iterable, Literal
+from collections.abc import Iterable
+from typing import Any, Generator, Iterable, Literal, Optional, Self, overload
 
 from pybattle.ansi.colors import Colors, ColorType
-from pybattle.types_ import Align, ColorRange, JunctionDict
+from pybattle.log.errors import OutOfBounds
+from pybattle.types_ import Align, ColorRange, JunctionDict, is_nested, nest
+from pybattle.window.frames.border.junction_table import get_junction
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.range import RectRange, SelectionRange
 from pybattle.window.grid.size import Size, is_nested
-from pybattle.log.errors import OutOfBounds
-from pybattle.window.frames.border.junction_table import get_junction
 
 
 class Cell:
@@ -84,8 +82,7 @@ class Matrix:
     ) -> Self:
         """Create a matrix from a string"""
 
-        while string.startswith("\n"):
-            string = string[1:]
+        string = string.removeprefix("\n")
 
         if string.count("\n") == 0:
             cells = Cell.from_iter(string)
@@ -99,17 +96,16 @@ class Matrix:
         )
 
     @classmethod
-    def from_list(
-        cls, lst: list | list[list], *colors: ColorRange, alignment: Align = Align.LEFT
+    def from_iter(
+        cls,
+        lst: Iterable | Iterable[Iterable],
+        *colors: ColorRange,
+        alignment: Align = Align.LEFT,
     ) -> Self:
-        """Create a matrix from a list or nested list"""
-
-        if ...:
-            ...
-
+        """Create a matrix from a iterable or nested iterable"""
         return cls(
             [
-                Cell.from_iter(row) if hasattr(row, "__iter__") else [Cell(row)]
+                Cell.from_iter(row) if isinstance(row, Iterable) else [Cell(row)]
                 for row in lst
             ],
             *colors,
@@ -144,7 +140,6 @@ class Matrix:
     def __init__(
         self,
         cells: list[list[Cell]] | list[Cell],
-        *colors: ColorRange,
         alignment: Align = Align.LEFT,
     ):
         self.cells = cells
@@ -153,7 +148,6 @@ class Matrix:
         self.level_out()
 
         self.colors: list[ColorRange] = []
-        self.add_colors(*colors)
 
     def level_out(self) -> None:
         """
@@ -188,19 +182,24 @@ class Matrix:
                             for row in self.rows
                         ]
 
-    def add_color(self, color: ColorType, range_: RectRange | SelectionRange) -> None:
-        """Add color to a range of cells in the matrix"""
-        self.colors.append((color, range_))
+    def color(self, color: ColorType, range_: RectRange | SelectionRange) -> None:
+        """Color a range of cells in the matrix"""
         for coord in range_:
             try:
                 self[coord].color = color
             except IndexError:
                 raise OutOfBounds(coord, self.size)
 
-    def add_colors(self, *colors: ColorRange) -> None:
-        """Add multiple colors ranges to the matrix"""
-        for color, coord in colors:
-            self.add_color(color, coord)
+    def color_all(self, color: ColorType) -> None:
+        """Color the contents a certain color"""
+        self.color(color, RectRange(self.size.i))
+
+    def color_ranges(
+        self, color: ColorType, *ranges: RectRange | SelectionRange
+    ) -> None:
+        """Color ranges to the matrix"""
+        for range_ in ranges:
+            self.color(color, range_)
 
     @property
     def coords(self) -> list[Coord]:
@@ -264,9 +263,12 @@ class Matrix:
             )
 
         elif isinstance(item, int):
-            if is_nested(self.cells):
-                return Matrix(self.cells[item])
-            return Matrix([self.cells[item]])
+            return Matrix(nest(self.cells[item])[0])
+        
+            #! If errors try this instead
+            # if is_nested(self.cells):
+            #     return Matrix(self.cells[item])
+            # return Matrix([self.cells[item]])
 
     @overload
     def __setitem__(self, rect_range: RectRange, matrix: Self, /) -> None:
@@ -300,10 +302,7 @@ class Matrix:
 
     @property
     def rows(self) -> list[list[Cell]]:
-        if len(self.cells) > 1 and isinstance(self.cells[0], list):
-            return self.cells
-        else:
-            return [self.cells]
+        return nest(self.cells)
 
     @property
     def cols(self) -> list[list[Cell]]:

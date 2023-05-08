@@ -6,7 +6,7 @@
 
 Don't know what ANSI escape codes are? Visit: https://en.wikipedia.org/wiki/ANSI_escape_code
 
-# Ascii Text Art Examples:
+## Ascii Text Art Examples:
 ```
 ╭─ BEDROOM ─┬──────────────────╮
 │   ╰───────╯       ||||       │
@@ -50,7 +50,7 @@ __\_ __\___/
     \________/         
         __|_     
 ```
-# Installation:
+## Installation:
 
 **Clone the repository:**
 
@@ -69,9 +69,9 @@ __\_ __\___/
 
 ```pip uninstall pybattle```
 
-# Run:
+## Run:
 
-**Naviagate to the tests folder:**
+**Navigate to the tests folder:**
 
 ```cd tests```
 

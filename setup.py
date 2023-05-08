@@ -1,44 +1,67 @@
-from urllib.parse import parse_qs, urlparse
+from math import floor
 
-import requests
+import requests_cache
+import toml
+from github import Github
 from setuptools import find_packages, setup
-from os import system
+
+with open("metadata.toml") as f:
+    data = toml.load(f)
 
 
-def get_commits_count(owner_name: str, repo_name: str) -> int:
-    """Get the number of commits a GitHub repository has"""
-    url = f"https://api.github.com/repos/{owner_name}/{repo_name}/commits?per_page=1"
-    r = requests.get(url)
-    links = r.links
-    rel_last_link_url = urlparse(links["last"]["url"])
-    rel_last_link_url_args = parse_qs(rel_last_link_url.query)
-    rel_last_link_url_page_arg = rel_last_link_url_args["page"][0]
-    commits_count = int(rel_last_link_url_page_arg)
-    return commits_count
+def get_total_changes():
+    requests_cache.install_cache("github_cache", expire_after=100000)
+
+    g = Github(data["api-key"])
+
+    repo = g.get_repo(f"{data['author']['user']['github']}/{data['repo']['name']}")
+
+    try:
+        commits = repo.get_commits()
+    except requests_cache.NotFoundError:
+        # If the cache doesn't have the commits, retrieve them from the API and store them in the cache
+        commits = repo.get_commits()
+        requests_cache.cache_response(commits)
+
+    total = 0
+
+    for commit in commits:
+        print(total)
+        total += commit.stats.total
+
+    return total
 
 
-name = "PythonDominator"
-repo = "Pybattle"
-version_ = 1
+main = 0
+if data["version"]["main"]["other"]:
+    main = data["version"]["main"]["other"]
+elif data["version"]["main"]["alpha"]:
+    main = 1
+elif data["version"]["main"]["beta"]:
+    main = 0
 
-commits = get_commits_count(name, repo)
-while commits > 49:
-    version_ += 1
-    commits -= 49
-# commits = 23
 
-version = f"0.{version_}.{commits}"
+changes = get_total_changes() / 10000
+version = floor(changes) // 10 + 1 + data["version"]["update"]["add"]
+
+
+if data["version"]["update"]["other"]:
+    version = data["version"]["update"]["other"]
+
+
+version = f"0.{version}.{round(changes)}"
 
 print(version)
 
 
 setup(
-    name="pybattle",
+    name=data["name"],
     version=version,
-    url="https://github.com/PythonDominator/Pybattle",
-    author="Jacob Ophoven",
-    description="A python ascii text art pokemon style game in the terminal using ANSI escape codes.",
+    url=data["repo"]["url"],
+    author=data["author"]["name"],
+    description=data["repo"]["desc"],
     packages=find_packages(),
-    python_requires=">=3.11",
+    python_requires=data["requirements"]["python-version"],
     install_requires=["colorama", "requests"],
+    license="GNU",
 )

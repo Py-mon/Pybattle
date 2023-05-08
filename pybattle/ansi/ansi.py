@@ -1,6 +1,7 @@
 from enum import Enum
 
 
+
 class CursorCode(Enum):
     """Codes for moving the cursor"""
 

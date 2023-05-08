@@ -28,7 +28,7 @@ class ColorType:
 
 class Colors:
     """Stores all 4-bit ANSI escape code colors"""
-
+    
     DEFAULT = ColorType(AnsiEscSeq(Fore.RESET), "DEFAULT")  #  VSCODE
     BLACK = ColorType(AnsiEscSeq(Fore.BLACK), "BLACK")  # 0x000000
     GRAY = ColorType(AnsiEscSeq(Fore.LIGHTBLACK_EX), "GRAY")  # 0x666666

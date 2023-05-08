@@ -1,171 +1,170 @@
-from copy import copy
-from time import sleep
+# from copy import copy
+# from time import sleep
 
-from keyboard import is_pressed
+# from keyboard import is_pressed
 
-from pybattle.ansi.scene import Scene
-from pybattle.ansi.screen import Cursor, Screen
-from pybattle.debug.log import Logger
-from pybattle.window.frames.frame import Frame
-from pybattle.window.frames.map_frame import MapFrame
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Cell, Matrix
-from pybattle.window.grid.size import Size
-from pybattle.window.map.event import Event
-from pybattle.window.menus.list_menu import ListMenu
-
-
-class Map:
-    def __init__(self, map_frame: MapFrame):
-        self.map_frame = map_frame
-        self.matrix = self.map_frame.contents
-
-        self.pos = Coord(0, 0)
-
-    def up(self, times: int = 1):
-        self.pos.y -= times
-
-    def down(self, times: int = 1):
-        self.pos.y += times
-
-    def left(self, times: int = 1):
-        self.pos.x -= times
-
-    def right(self, times: int = 1):
-        self.pos.x += times
-
-    def __call__(self, starting_location: Coord, sleep_time=5) -> Event:
-        self.pos = starting_location
-
-        def loop():
-            while True:
-                self.matrix[self.pos] = Cell(" ")
-
-                previous = copy(self.pos)
-
-                if is_pressed("w"):
-                    self.up()
-                if is_pressed("a"):
-                    self.left()
-                if is_pressed("s"):
-                    self.down()
-                if is_pressed("d"):
-                    self.right()
-
-                if not self.is_valid(self.pos):
-                    self.pos = previous
-
-                self.matrix[self.pos] = Cell("x")
-
-                self.map_frame.update()
-
-                sleep(0.1)
-
-        return Event(loop)
-
-    def is_valid(self, pos: Coord) -> bool:
-        try:
-            if (
-                self.matrix[pos].collision
-                or pos.x >= self.matrix.size.x
-                or pos.y >= self.matrix.size.y + 1
-            ):
-                return False
-        except IndexError:
-            return False
-        return True
+# from pybattle.ansi.scene import Scene
+# from pybattle.ansi.screen import Cursor, Screen
+# from pybattle.log.log import Logger
+# from pybattle.window.frames.frame import Frame
+# from pybattle.window.grid.coord import Coord
+# from pybattle.window.grid.matrix import Cell, Matrix
+# from pybattle.window.grid.size import Size
+# from pybattle.window.map.event import Event
+# from pybattle.window.menus.list_menu import ListMenu
 
 
-class Map2(MapFrame):
-    def __init__(self, map_frame: MapFrame):
-        self.map_frame = map_frame
-        self.matrix = self.map_frame.contents
+# class Map:
+#     def __init__(self, map_frame: Frame):
+#         self.map_frame = map_frame
+#         self.matrix = self.map_frame.contents
 
-        self.pos = Coord(0, 0)
+#         self.pos = Coord(0, 0)
 
-    def up(self, times: int = 1):
-        self.pos.y -= times
+#     def up(self, times: int = 1):
+#         self.pos.y -= times
 
-    def down(self, times: int = 1):
-        self.pos.y += times
+#     def down(self, times: int = 1):
+#         self.pos.y += times
 
-    def left(self, times: int = 1):
-        self.pos.x -= times
+#     def left(self, times: int = 1):
+#         self.pos.x -= times
 
-    def right(self, times: int = 1):
-        self.pos.x += times
+#     def right(self, times: int = 1):
+#         self.pos.x += times
 
-    def __call__(self, starting_location: Coord, sleep_time=5) -> Event:
-        self.pos = starting_location
+#     def __call__(self, starting_location: Coord, sleep_time=5) -> Event:
+#         self.pos = starting_location
 
-        def loop():
-            while True:
-                self.matrix[self.pos] = Cell(" ")
+#         def loop():
+#             while True:
+#                 self.matrix[self.pos] = Cell(" ")
 
-                previous = copy(self.pos)
+#                 previous = copy(self.pos)
 
-                if is_pressed("w"):
-                    self.up()
-                if is_pressed("a"):
-                    self.left()
-                if is_pressed("s"):
-                    self.down()
-                if is_pressed("d"):
-                    self.right()
+#                 if is_pressed("w"):
+#                     self.up()
+#                 if is_pressed("a"):
+#                     self.left()
+#                 if is_pressed("s"):
+#                     self.down()
+#                 if is_pressed("d"):
+#                     self.right()
 
-                if not self.is_valid(self.pos):
-                    self.pos = previous
+#                 if not self.is_valid(self.pos):
+#                     self.pos = previous
 
-                self.matrix[self.pos] = Cell("x")
+#                 self.matrix[self.pos] = Cell("x")
 
-                self.map_frame.update()
+#                 self.map_frame.update()
 
-                sleep(0.1)
+#                 sleep(0.1)
 
-        return Event(loop)
+#         return Event(loop)
 
-    def is_valid(self, pos: Coord) -> bool:
-        try:
-            if (
-                self.matrix[pos].collision
-                or pos.x >= self.matrix.size.x
-                or pos.y >= self.matrix.size.y + 1
-            ):
-                return False
-        except IndexError:
-            return False
-        return True
-
-
-x = Map(
-    MapFrame(
-        """
-                   ||||
-                   ||||
-                     ─┬─┬─┬─┬─
+#     def is_valid(self, pos: Coord) -> bool:
+#         try:
+#             if (
+#                 self.matrix[pos].collision
+#                 or pos.x >= self.matrix.size.x
+#                 or pos.y >= self.matrix.size.y + 1
+#             ):
+#                 return False
+#         except IndexError:
+#             return False
+#         return True
 
 
-╭│╮   ╶─╮
-│││    ░│
-╰│╯   ╶─╯           ╭─────┬─╮
-                    │░░░░░│▓│
-                    ╰─────┴─╯ """
-    )
-)
+# class Map2(Frame):
+#     def __init__(self, map_frame: Frame):
+#         self.map_frame = map_frame
+#         self.matrix = self.map_frame.contents
 
-z = x(Coord(3, 3))
+#         self.pos = Coord(0, 0)
 
-y = ListMenu(Frame(Size(12, 30)), ["Inventory", "Menu", "Home"])
+#     def up(self, times: int = 1):
+#         self.pos.y -= times
 
-Event.from_frame(y.frame)
+#     def down(self, times: int = 1):
+#         self.pos.y += times
+
+#     def left(self, times: int = 1):
+#         self.pos.x -= times
+
+#     def right(self, times: int = 1):
+#         self.pos.x += times
+
+#     def __call__(self, starting_location: Coord, sleep_time=5) -> Event:
+#         self.pos = starting_location
+
+#         def loop():
+#             while True:
+#                 self.matrix[self.pos] = Cell(" ")
+
+#                 previous = copy(self.pos)
+
+#                 if is_pressed("w"):
+#                     self.up()
+#                 if is_pressed("a"):
+#                     self.left()
+#                 if is_pressed("s"):
+#                     self.down()
+#                 if is_pressed("d"):
+#                     self.right()
+
+#                 if not self.is_valid(self.pos):
+#                     self.pos = previous
+
+#                 self.matrix[self.pos] = Cell("x")
+
+#                 self.map_frame.update()
+
+#                 sleep(0.1)
+
+#         return Event(loop)
+
+#     def is_valid(self, pos: Coord) -> bool:
+#         try:
+#             if (
+#                 self.matrix[pos].collision
+#                 or pos.x >= self.matrix.size.x
+#                 or pos.y >= self.matrix.size.y + 1
+#             ):
+#                 return False
+#         except IndexError:
+#             return False
+#         return True
 
 
-Scene(y.frame).show()
+# x = Map(
+#     Frame.map(
+#         """
+#                    ||||
+#                    ||||
+#                      ─┬─┬─┬─┬─
 
 
-print(Event._events)
+# ╭│╮   ╶─╮
+# │││    ░│
+# ╰│╯   ╶─╯           ╭─────┬─╮
+#                     │░░░░░│▓│
+#                     ╰─────┴─╯ """
+#     )
+# )
 
-Event.play_all()
+# z = x(Coord(3, 3))
+
+# y = ListMenu(Frame.box(Size(12, 30)), ["Inventory", "Menu", "Home"])
+
+# Event.from_frame(y.frame)
+
+
+# Scene(y.frame).show()
+
+
+# print(Event._events)
+
+# Event.play_all()
 
 
 # class Map:

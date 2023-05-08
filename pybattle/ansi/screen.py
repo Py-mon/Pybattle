@@ -3,22 +3,28 @@ from os import system
 from shutil import get_terminal_size
 from typing import Optional
 
-from pybattle.ansi.cursor import Cursor
+from window.frames.frame import Frame
+
 from pybattle.ansi.colors import ColorType
-from pybattle.window.frames.base_frame import Frame
+from pybattle.ansi.cursor import Cursor
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.size import Size
 
 
 class Screen:
-    @staticmethod
+    next_move = 0
+
+    @classmethod
     def write(
+        cls,
         txt: object,
         pos: Coord = ...,
         color: Optional[ColorType] = None,
         move_cursor: bool = True,
     ) -> None:
         """Print text to the screen"""
+        Cursor.up(cls.next_move)
+
         txt = str(txt)
 
         if pos is not ...:
@@ -34,7 +40,8 @@ class Screen:
         Cursor.pos.y += len(max(txt.split("\n")))
 
         if move_cursor:
-            Cursor.up(txt.count("\n") + 2)
+            cls.next_move = txt.count("\n") + 2
+            # Cursor.up(txt.count("\n") + 2)
 
     @staticmethod
     def clear() -> None:
@@ -43,4 +50,4 @@ class Screen:
 
     @staticmethod
     def terminal_size() -> Size:
-        return Size(get_terminal_size())
+        return Size(*get_terminal_size())
