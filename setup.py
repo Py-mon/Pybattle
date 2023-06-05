@@ -1,44 +1,61 @@
-from urllib.parse import parse_qs, urlparse
+from math import floor
+from os import environ
 
-import requests
+import toml
+from dotenv import find_dotenv, load_dotenv
+from github import Github
 from setuptools import find_packages, setup
-from os import system
+
+with open("metadata.toml") as f:
+    data = toml.load(f)
 
 
-def get_commits_count(owner_name: str, repo_name: str) -> int:
-    """Get the number of commits a GitHub repository has"""
-    url = f"https://api.github.com/repos/{owner_name}/{repo_name}/commits?per_page=1"
-    r = requests.get(url)
-    links = r.links
-    rel_last_link_url = urlparse(links["last"]["url"])
-    rel_last_link_url_args = parse_qs(rel_last_link_url.query)
-    rel_last_link_url_page_arg = rel_last_link_url_args["page"][0]
-    commits_count = int(rel_last_link_url_page_arg)
-    return commits_count
+path = find_dotenv()
+load_dotenv(path)
 
 
-name = "PythonDominator"
-repo = "Pybattle"
-version_ = 1
+def get_total_changes() -> int:
+    g = Github(environ['GITHUB_API_KEY'], environ['PASSWORD'])
 
-commits = get_commits_count(name, repo)
-while commits > 49:
-    version_ += 1
-    commits -= 49
-# commits = 23
+    repo = g.get_repo(f"{data['author']['user']['github']}/{data['repo']['name']}")
 
-version = f"0.{version_}.{commits}"
+    total_changes = 0
+    for contributor in repo.get_stats_contributors():
+        for week in contributor.weeks:
+            total_changes += week.a + week.d
+    return total_changes
+
+
+main = 0
+if data["version"]["main"]["other"]:
+    main = data["version"]["main"]["other"]
+elif data["version"]["main"]["alpha"]:
+    main = 1
+elif data["version"]["main"]["beta"]:
+    main = 0
+
+
+changes = get_total_changes() / 10000
+version = floor(changes) // 10 + 1 + data["version"]["update"]["add"]
+
+
+if data["version"]["update"]["other"]:
+    version = data["version"]["update"]["other"]
+
+
+version = f"0.{version}.{round(changes)}"
 
 print(version)
 
 
 setup(
-    name="pybattle",
+    name=data["name"],
     version=version,
-    url="https://github.com/PythonDominator/Pybattle",
-    author="Jacob Ophoven",
-    description="A python ascii text art pokemon style game in the terminal using ANSI escape codes.",
+    url=data["repo"]["url"],
+    author=data["author"]["name"],
+    description=data["repo"]["desc"],
     packages=find_packages(),
-    python_requires=">=3.11",
+    python_requires=data["requirements"]["python-version"],
     install_requires=["colorama", "requests"],
+    license="GNU",
 )

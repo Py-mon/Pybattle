@@ -1,18 +1,44 @@
 from pathlib import Path
+from typing import Optional, Self
 
-from pybattle.window.map.sound import Sound
+from pybattle.types_ import CardinalDirection
+from pybattle.window.sound import Sound
 
 
-class Weather:
-    active = []
-    
-    def __init__(self, particle: str, sound: Path, heaviness: int = 10):
-        self.particle = particle
-        self.sound = Sound(sound)
+class Weather: # ☁☂☀
+    active: list[Self] = []
+
+    def __init__(
+        self,
+        sound: Optional[Sound] = None,
+        particles: Optional[list[str]] = None,
+        heaviness: int = 5,
+        frequency: float = 0.12,
+    ):
+        self.particles = particles
+        self.sound = sound
         self.heaviness = heaviness
-        
-        type(self).active.append(self)
-        
-weather = Weather('|', Path('light_rain.mp3'))
+        self.frequency = frequency
 
-print(weather.sound.fade_in(3).play())
+        self.power = self.heaviness + 1 / self.frequency
+
+        type(self).active.append(self)
+
+
+class Rain(Weather): # rain icon: ⛆ ☁☂☀
+    def __init__(
+        self, wind: CardinalDirection, heaviness: int = 5, frequency: float = 0.12
+    ):
+        if wind == CardinalDirection.WEST:
+            particles = ["/"]
+        elif wind == CardinalDirection.EAST:
+            particles = ["\\"]
+        else:
+            particles = ["|"]
+
+        super().__init__(
+            Sound("sounds/light_rain.mp3"), particles, heaviness, frequency
+        )
+        
+        if self.power < 10:
+            particles.append(".")

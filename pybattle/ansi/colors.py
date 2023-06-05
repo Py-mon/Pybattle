@@ -1,5 +1,6 @@
-from copy import copy
-from typing import Iterator, Optional
+"""Includes all the 4-bit colors."""
+
+from typing import Optional
 
 from colorama import Fore
 
@@ -9,27 +10,22 @@ from pybattle.ansi.ansi import AnsiEscSeq
 class ColorType:
     """A 4-bit color ANSI escape code"""
 
-    def __init__(self, color_code: AnsiEscSeq, name: Optional[str] = None) -> None:
-        self.__color_code = color_code
-        if name is None:
-            self.name = "N/A"
-        else:
-            self.name = name
+    def __init__(self, seq: AnsiEscSeq, color_name: Optional[str] = None) -> None:
+        self.seq = seq
+        self.color_name = color_name
 
-    def __iter__(self) -> Iterator[str]:
-        return iter(self.__color_code.code)
+    def __repr__(self) -> str:
+        return str(self.color_name)
 
-    def __str__(self) -> str:
-        return self.__color_code.code
-
-    def use(self) -> None:
-        self.__color_code.exec()
+    def apply(self) -> None:
+        """Apply the color to the terminal"""
+        self.seq.exec()
 
 
 class Colors:
-    """Stores all 4-bit ANSI escape code colors"""
+    """Provides all the 4-bit ANSI escape sequence colors"""
 
-    DEFAULT = ColorType(AnsiEscSeq(Fore.RESET), "DEFAULT")  #  VSCODE
+    DEFAULT = ColorType(AnsiEscSeq(Fore.RESET), "DEFAULT")  # HEX CODE
     BLACK = ColorType(AnsiEscSeq(Fore.BLACK), "BLACK")  # 0x000000
     GRAY = ColorType(AnsiEscSeq(Fore.LIGHTBLACK_EX), "GRAY")  # 0x666666
     BRIGHT_WHITE = ColorType(AnsiEscSeq(Fore.LIGHTWHITE_EX), "BRIGHT_WHITE")  # 0xE5E5E5
@@ -49,27 +45,3 @@ class Colors:
     BRIGHT_MAGENTA = ColorType(
         AnsiEscSeq(Fore.LIGHTMAGENTA_EX), "BRIGHT_MAGENTA"
     )  # 0xD670D6
-
-
-def next_color(self, coord, coords):
-    """Lexicographically find the next coord where a color is. Returns None if there are none beyond it.
-
-    Now unused but still here because it is beautiful"""
-    # If there are no colors then there are no more colors beyond it
-    if len(coords) == 0:
-        return None
-
-    if coord not in coords:
-        coords.append(coord)
-
-    coords.sort()
-
-    if coord == coords[-1]:
-        return None
-
-    index = coords.index(coord) + 1
-
-    coord = copy(coords[index])
-    coord.x -= 1
-
-    return coord

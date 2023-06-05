@@ -1,7 +1,8 @@
-from typing import Optional, Generator, Self
+from collections.abc import Iterator
+from math import ceil
+from typing import Optional, Self
 
 from pybattle.window.grid.coord import Coord
-from math import ceil
 
 
 class RectRange:
@@ -13,9 +14,8 @@ class RectRange:
 
         self.stop = stop
 
-    def __iter__(self) -> Generator[Coord, None, None]:
-        lst = [coord for row in self.array_coords for coord in row]
-        yield from lst
+    def __iter__(self) -> Iterator[Coord]:
+        yield from [coord for row in self.array_coords for coord in row]
 
     def __contains__(self, coord: Coord) -> bool:
         return coord in iter(self)
@@ -35,6 +35,7 @@ class RectRange:
 
     @classmethod
     def center_range(cls, outer_size: Coord, inner_size: Coord) -> Self:
+        """Get a RectRange that is the size of inner_size in the center of the outer_size"""
         return cls(
             Coord(
                 ceil((outer_size.y + inner_size.y) / 2 - 1),
@@ -45,7 +46,6 @@ class RectRange:
                 ceil((outer_size.x - inner_size.x) / 2 - 1),
             ),
         )
-
 
 
 class SelectionRange(RectRange):

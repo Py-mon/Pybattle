@@ -9,7 +9,6 @@ from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.matrix import Cell, Matrix
 from pybattle.window.grid.range import RectRange
 from pybattle.window.grid.size import Size
-from pybattle.window.frames.border.junction_table import get_junction
 
 
 class Frame:
@@ -19,11 +18,11 @@ class Frame:
         self,
         contents: Matrix,
         title: Optional[str] = None,
-        event: Optional[Callable[[Self], Any]] = None,
+        event: Optional[Callable[(...), Any]] = None,
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
-        colors: list[ColorRange] = [],
+        base_color: ColorType = Colors.DEFAULT,
     ) -> None:
         self.event = event
         self.title = title
@@ -37,24 +36,20 @@ class Frame:
         self.frames: list[tuple[Self, Coord]] = []
         self.changes: list[tuple] = []
 
-        self.contents.add_colors(*colors)
+        self.base_color: ColorType = base_color
 
         self.update()
 
     @property
-    def event_frames(self) -> list[Self]:
-        """All of the non-static Frames (Frames with events)"""
-        return [
-            frame
-            for frame, _ in self.frames + [(self, Coord(0, 0))]
-            if frame.event is not None
-        ]
+    def all_frames(self) -> list[Self]:
+        """All of the Frames including this one"""
+        return [frame for frame, _ in self.frames] + [self]
 
     def _reconstruct(self) -> None:
         """Reconstruct the border and contents for the Frame"""
         frame = []
 
-        space = Cell(" ")
+        space = Cell(" ", collision=True)
 
         # Top Row
         if self.title:
@@ -107,9 +102,14 @@ class Frame:
         ]
 
         self.matrix = Matrix(frame)
+        
+        self.matrix[Coord(0, 2)].collision = True
 
     def _color(
-        self, border_color: ColorType = ..., title_color: ColorType = ...
+        self,
+        border_color: ColorType = ...,
+        title_color: ColorType = ...,
+        base_color: ColorType = ...,
     ) -> None:
         """Add border, title, and content colors"""
         self.matrix.colors = []
@@ -120,44 +120,47 @@ class Frame:
         if title_color is ...:
             title_color = self.title_color
 
-        self.matrix.add_colors(
-            *((color, range_) for color, range_ in self.contents.colors)
-        )
+        if base_color is ...:
+            base_color = self.base_color  # Clean ^ vv
 
-        self.matrix.add_colors(
-            (border_color, RectRange(Coord(self.size.i.height, 0), Coord(0, 0))),
-            (
-                border_color,
-                RectRange(
-                    Coord(self.size.i.height, self.size.i.width),
-                    Coord(self.size.i.height, 0),
-                ),
+        if base_color is not Colors.DEFAULT:
+            self.matrix.color_all(base_color)
+
+        self.matrix.color_ranges(
+            border_color,
+            RectRange(Coord(self.size.i.height, 0), Coord(0, 0)),
+            RectRange(
+                Coord(self.size.i.height, self.size.i.width),
+                Coord(self.size.i.height, 0),
             ),
-            (
-                border_color,
-                RectRange(
-                    Coord(self.size.i.height, self.size.i.width),
-                    Coord(0, self.size.i.width),
-                ),
+            RectRange(
+                Coord(self.size.i.height, self.size.i.width),
+                Coord(0, self.size.i.width),
             ),
-            (border_color, RectRange(Coord(0, self.size.i.width), Coord(0, 0))),
+            RectRange(Coord(0, self.size.i.width), Coord(0, 0)),
         )
 
         if self.title:
-            self.matrix.add_colors(
-                (
-                    title_color,
-                    RectRange(Coord(0, len(self.title) + 3), Coord(0, 3)),
-                )
+            self.matrix.color(
+                title_color, RectRange(Coord(0, len(self.title) + 3), Coord(0, 3))
             )
 
-    def update(self) -> None:
+    def update(
+        self,
+        border_color: ColorType = ...,
+        title_color: ColorType = ...,
+        base_color: ColorType = ...,
+        frames: list[tuple[Self, Coord]] = ...
+    ) -> None:
         """Update the the Frame"""
         self._reconstruct()
-        self._color()
+        self._color(border_color, title_color, base_color)
 
-        for frame, coord in self.frames.copy():
-            self.add_frame(frame, coord)
+        if frames is ...:
+            frames = self.frames
+        
+        for frame, coord in frames.copy():
+            self._add_frame(frame, coord)
 
         for item, to in self.changes.copy():
             self.matrix[item] = to
@@ -279,13 +282,7 @@ class Frame:
     def __str__(self) -> str:
         return str(self.matrix)
 
-    def add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
-        """Add a Frame inside the Frame
-
-        Automatically joins conjunctions"""
-
-        self.frames.append((frame, pos))
-
+    def _add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
         junctions = []
         for coord in frame.border_coords:
             coord_pos = coord + pos
@@ -298,16 +295,9 @@ class Frame:
         top_left = pos
         bottom_right = pos + frame.bottom_right_corner
 
-        logger.debug(repr(self.matrix[top_left:bottom_right]))
-        logger.debug(repr(frame.matrix))
-
         self.matrix[top_left:bottom_right] = frame.matrix
 
-        logger.debug(repr(self.matrix))
-
         for junction, coord in junctions:
-            logger.debug(str((junction, coord)))
-
             for direction in junction.copy():
                 ahead = Coord(0, 0)
                 match direction:
@@ -325,8 +315,6 @@ class Frame:
                 except IndexError:  # out of bounds
                     pass
 
-            # for thickness in junction.values():
-            #     if thickness != None:
             self.matrix[coord]._value = junction
 
         if self.title is not None:
@@ -336,7 +324,15 @@ class Frame:
             for i in range(len(self.title) + 4, self.size.inner.width):
                 self.matrix[Coord(0, i)].color = self.border_color
 
-        logger.debug(repr(self.matrix))
+    def add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
+        """Add a Frame inside the Frame
+
+        Automatically joins conjunctions"""
+        self.frames.append((frame, pos))
+
+    def remove_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
+        """Remove a Frame"""
+        self.frames.remove((frame, pos))
 
     @classmethod
     def map(
@@ -347,8 +343,19 @@ class Frame:
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
-        colors: list[ColorRange] = [],
+        base_color: ColorType = Colors.DEFAULT,
     ) -> Self:
+        """
+        Creates:
+        ```
+        ╭────────╮
+        │abcdefgh│
+        │ijklmnop│
+        ╰────────╯
+        """
+        if not contents.endswith("\n"):
+            contents += "\n"
+
         return cls(
             Matrix.from_str(contents),
             title,
@@ -356,7 +363,7 @@ class Frame:
             border_color,
             title_color,
             border_type,
-            colors,
+            base_color,
         )
 
     @classmethod
@@ -368,8 +375,16 @@ class Frame:
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
-        colors: list[ColorRange] = [],
+        base_color: ColorType = Colors.DEFAULT,
     ) -> Self:
+        """
+        Creates:
+        ```
+        ╭──────╮
+        │      │
+        │      │
+        ╰──────╯
+        """
         if size.inner == Size(0, 0):
             raise SizeTooSmall(size, "a Frame")
 
@@ -380,7 +395,7 @@ class Frame:
             border_color,
             title_color,
             border_type,
-            colors,
+            base_color,
         )
 
     @classmethod
@@ -393,9 +408,18 @@ class Frame:
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
+        base_color: ColorType = Colors.DEFAULT,
         alignment: Align = Align.CENTER,
-        colors: list[ColorRange] = [],
     ) -> Self:
+        """
+        Creates:
+        ```
+        ╭──────────╮
+        │          │
+        │  abcdef  │
+        │   ghi    │
+        │          │
+        ╰──────────╯"""
         aligned_text = Matrix.from_str(text, alignment=alignment)
         center_range = RectRange.center_range(size.inner, aligned_text.size.i)
 
@@ -403,38 +427,5 @@ class Frame:
         contents[center_range] = aligned_text
 
         return cls(
-            contents, title, event, border_color, title_color, border_type, colors
+            contents, title, event, border_color, title_color, border_type, base_color
         )
-
-    @classmethod
-    def selection(
-        cls,
-        label: str,
-        size: Size,
-        border_color: ColorType = Colors.DEFAULT,
-        title_color: ColorType = Colors.DEFAULT,
-        border_type: BorderType = Borders.THIN,
-        alignment: Align = Align.CENTER,
-        colors: list[ColorRange] = [],
-    ) -> Self:
-        return cls.centered(
-            label,
-            size,
-            None,
-            None,
-            border_color,
-            title_color,
-            border_type,
-            alignment,
-            colors,
-        )
-
-
-f = Frame.box(Size(4, 9))
-f.add_frame(Frame.box(Size(3, 4)), Coord(0, 2))
-
-f[Coord(1, 3)] = Cell("X")
-
-f.update()
-
-print(f)

@@ -1,5 +1,4 @@
-from pybattle.types_ import Thickness, Direction, JunctionDict
-
+from pybattle.types_ import Direction, JunctionDict, Thickness
 
 # [UP][DOWN][LEFT][RIGHT]
 table = {
@@ -166,7 +165,13 @@ table = {
 }
 
 
-def get_junction(dct: JunctionDict):
+def get_junction(dct: JunctionDict) -> str:
+    """Get a str junction from a dict of Directions and Thicknesses"""
     return table[dct.get(Direction.UP)][dct.get(Direction.DOWN)][
         dct.get(Direction.LEFT)
     ][dct.get(Direction.RIGHT)]
+
+
+print(get_junction({Direction.UP: Thickness.THIN, Direction.RIGHT: Thickness.THIN}))
+print(get_junction({Direction.LEFT: Thickness.THIN, Direction.RIGHT: Thickness.THIN}))
+print(get_junction({Direction.DOWN: Thickness.THIN, Direction.RIGHT: Thickness.THIN}))

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Sequence
 
-from pybattle.debug.log import Logger
+from pybattle.log.log import Logger
 from pybattle.types_ import ElementReference
 
 

@@ -5,7 +5,7 @@ from random import choice, choices, randint
 from string import ascii_letters, digits
 from typing import Any, Self
 
-from pybattle.ansi.colors import ColorType
+from pybattle.ansi.colors import Colors, ColorType
 from pybattle.creatures.attributes.ability import Ability
 from pybattle.creatures.attributes.element import Element
 from pybattle.creatures.attributes.item import Item
@@ -13,7 +13,7 @@ from pybattle.creatures.attributes.move import Move
 from pybattle.creatures.attributes.stats import Stats
 from pybattle.creatures.attributes.status_ailment import StatusAilment
 from pybattle.creatures.attributes.trait import Trait
-from pybattle.debug.log import Logger
+from pybattle.log.log import Logger
 from pybattle.types_ import Creature, ElementReference
 
 
@@ -42,7 +42,7 @@ def roll(chance: Fraction) -> bool:
 
 
 class Pymon:
-    """A wild animal. (AKA: A Pokémon)"""
+    """A wild animal. (aka, a Pokémon)"""
 
     TRAIT_AMOUNT = 2
 
@@ -156,9 +156,9 @@ class Pymon:
         self,
         stat: str,
         bar_amount: int = 20,
-        high_color=ColorType.GREEN,
-        medium_color=ColorType.YELLOW,
-        low_color=ColorType.RED,
+        high_color=Colors.GREEN,
+        medium_color=Colors.YELLOW,
+        low_color=Colors.RED,
     ) -> str:
         """Get a percentage bar.
 

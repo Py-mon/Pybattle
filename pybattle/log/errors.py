@@ -1,5 +1,6 @@
+from typing import Callable, Optional, Type
+
 from pybattle.log.log import logger
-from typing import Type, Callable, Optional
 
 
 class Error(Exception):
@@ -15,7 +16,7 @@ class OutOfBounds(Error, IndexError):
     """x out of bounds of y by z"""
 
     def __init__(self, out, bounds) -> None:
-        super().__init__(f"{out} is out of bounds of {bounds} by {out - bounds}", 2)
+        super().__init__(f"{out} is out of bounds of {bounds} by {out + 1 - bounds}", 2)
 
 
 class MethodDoesNotExist(Error, NotImplementedError):

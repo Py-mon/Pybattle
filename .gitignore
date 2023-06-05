@@ -1,6 +1,9 @@
+# Cache
 *.pyc
 __pycache__
-.vscode
-settings.json
-pybattle.egg-info
-.pytest_cache
+
+# Install Files
+*.egg-info
+
+# Env Vars
+.env

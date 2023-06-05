@@ -1,0 +1,38 @@
+"""Takes about 45 seconds."""
+
+import json
+
+import requests
+from bs4 import BeautifulSoup
+from rich.progress import track
+
+URL: str = "https://www.charset.org/utf-8"
+
+chars = {}
+pages = 100
+
+for page in track(range(pages)):
+    response = requests.get(URL + f"/{page}")
+    html_content = response.content
+    soup = BeautifulSoup(html_content, "html.parser")
+
+    table = soup.find("table", {"class": "table infotable chars"})
+
+    table = table.find("tbody")
+
+    rows = table.find_all("tr")
+
+    for row in rows:
+        cols = row.find_all("td")
+
+        num = cols[0].text.strip()
+        hex = cols[1].text.strip()
+        #utf8_hex = cols[2].text.strip()
+        char = cols[3].text.strip()
+        desc = cols[4].text.strip()
+
+        if desc:
+            chars[f"{desc} (no. {num} {hex})"] = char
+
+with open("chars/chars.json", "w", encoding="utf-8") as f:
+    json.dump(chars, f, ensure_ascii=False, indent=4)

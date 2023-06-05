@@ -1,0 +1,12 @@
+[filter]
+on = []
+off = []
+
+[logger]
+level = "DEBUG"
+name = "logger"
+file = "logs/log.log"
+format = "%(traceback)s%(time)s - %(levelname)s: %(message)s"
+
+[time]
+micro_places = 2
