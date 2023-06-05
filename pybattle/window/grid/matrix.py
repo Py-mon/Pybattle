@@ -261,7 +261,6 @@ class Matrix:
 
         elif isinstance(item, int):
             return Matrix(nest(self.cells[item])[0])
-
             #! If errors try this instead
             # if is_nested(self.cells):
             #     return Matrix(self.cells[item])

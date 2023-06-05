@@ -1,3 +1,4 @@
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import Enum
 from time import sleep
@@ -98,3 +99,4 @@ class EventGroup:
             self.stop()
 
             return result #?
+

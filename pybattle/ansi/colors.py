@@ -23,9 +23,9 @@ class ColorType:
 
 
 class Colors:
-    """Provides all the 4-bit ANSI escape sequence colors"""
-
-    DEFAULT = ColorType(AnsiEscSeq(Fore.RESET), "DEFAULT")  # HEX CODE
+    """Stores all 4-bit ANSI escape code colors"""
+    
+    DEFAULT = ColorType(AnsiEscSeq(Fore.RESET), "DEFAULT")  #  VSCODE
     BLACK = ColorType(AnsiEscSeq(Fore.BLACK), "BLACK")  # 0x000000
     GRAY = ColorType(AnsiEscSeq(Fore.LIGHTBLACK_EX), "GRAY")  # 0x666666
     BRIGHT_WHITE = ColorType(AnsiEscSeq(Fore.LIGHTWHITE_EX), "BRIGHT_WHITE")  # 0xE5E5E5

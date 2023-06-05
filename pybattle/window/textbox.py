@@ -6,9 +6,11 @@ from keyboard import is_pressed, wait
 from window.frames.frame import Frame
 
 from pybattle.ansi.colors import Colors, ColorType
-from window.screen.scene import Screen
+from pybattle.window.screen import Screen
 from pybattle.types_ import Align
+from pybattle.window.event import Event
 from pybattle.window.frames.border.border_type import Borders, BorderType
+
 from pybattle.window.grid.size import Size
 
 
@@ -159,9 +161,12 @@ class TextBox:
 
     def refresh(self) -> None:
         Screen.write(str(self))
+<<<<<<< HEAD
 
 
 
 
 
 TextBox('jf jfjfj fj fjf j ff jf jjfj fjfj fj fj fj fj fj fj fj fjfjfjfjf j fjf jf jf j fjf j jfj fj fj fj fjf j')
+=======
+>>>>>>> 4776fb8e362041f4d23ed22e3e756965bbd293e1

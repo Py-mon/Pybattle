@@ -1,3 +1,16 @@
+from enum import Enum
+
+
+class CursorCode(Enum):
+    """Codes for moving the cursor"""
+
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
+    MOVE = 4
+
+
 class AnsiEscSeq:
     """ANSI escape sequence"""
 

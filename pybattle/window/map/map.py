@@ -171,17 +171,17 @@ class Map:
 
         return self.events
 
-    def up(self, times: int = 1):
-        self.pos.y -= times
+#     def up(self, times: int = 1):
+#         self.pos.y -= times
 
-    def down(self, times: int = 1):
-        self.pos.y += times
+#     def down(self, times: int = 1):
+#         self.pos.y += times
 
-    def left(self, times: int = 1):
-        self.pos.x -= times
+#     def left(self, times: int = 1):
+#         self.pos.x -= times
 
-    def right(self, times: int = 1):
-        self.pos.x += times
+#     def right(self, times: int = 1):
+#         self.pos.x += times
 
     def is_valid(self, pos: Coord) -> bool:
         try:

@@ -1,7 +1,8 @@
 from time import sleep
 
 from pybattle.ansi.colors import Colors
-from window.screen.scene import Screen
+from pybattle.ansi.screen import Screen
+
 from pybattle.window.event import Event
 from pybattle.window.frames.frame import Frame
 from pybattle.window.frames.menu import (
@@ -51,6 +52,7 @@ m = Menu(
 # )
 
 
+
 # def write():
 #     sleep(0.1)
 #     Screen.write(m.frame)
@@ -79,3 +81,17 @@ def x():
 
 
 print(timeit(x, number=1))
+
+def write():
+    sleep(0.1)
+    Screen.write(m.frame)
+
+
+Event(m.event, stop_all=True)
+Event(write)
+
+
+Event.start_all()
+
+
+print(Event.get_next_result())
