@@ -1,24 +1,46 @@
-import pstats
-from os import remove, system
+from argparse import ArgumentParser
+from cProfile import run, Profile
+from pstats import SortKey, Stats
 
-# The file that it will test the speeds on
-run_file = "pybattle/log/log.py"
+parser = ArgumentParser()
 
-# The file it will make temporarily to store binary data.
-binary_data_file = "binary.txt"
+parser.add_argument("file", type=str)
+code_file = parser.parse_args().file
 
-try:
-    open(binary_data_file, "x")
-except FileExistsError:
-    pass
 
-system(f"python -m cProfile -o {binary_data_file} {run_file}")
+with open(code_file) as file:
+    code = file.read()
+    
 
-# Takes binary_data_file and translates it into text in time.log
+
+run(code, "logs/time.log")
+
+
+
+# Takes the binary file and translates it into text in time.log
+with open("logs/time.log", "a") as file:
+    stats = Stats("logs/time.log", stream=file)
+
+    file.truncate(0)
+
+    stats.sort_stats(SortKey.TIME)
+
+    stats.print_callers()
+
+
+new = ""
+with open("logs/time.log") as file:
+    last_start = 0
+    last_end = 0
+    for i, line in enumerate(file.readlines()[4:-3]):
+        start = line.index("  ")
+        if start == 0:
+            new += "    - " + line[132:]
+            continue
+
+        replacement = line[start : line.index("<") - 1]
+        if len(replacement) != 0:
+            new += "\n" + line.replace(replacement, "\n ")
+
 with open("logs/time.log", "w") as file:
-    stats = pstats.Stats("binary.txt", stream=file)
-    stats.sort_stats("tottime")
-    stats.print_stats()
-
-# Removes the now useless binary file
-remove("binary.txt")
+    file.write(new)

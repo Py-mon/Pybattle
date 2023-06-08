@@ -29,7 +29,7 @@ class Map:
         map_: Frame,
         starting_pos: Coord,
         exits: list[Coord] = [],
-        player_char: str = "𓀞",  # 'º ⏺ ○ ● ◯ ☃ ☹ ☻ ☺ ♀ ♂ ⚬ ⚲ ⚴ ⛑ ⛹ ⫯ x X' 𓀞
+        player_char: str = "♀",  # 'º ⏺ ○ ● ◯ ☃ ☹ ☻ ☺ ♀ ♂ ⚬ ⚲ ⚴ ⛑ ⛹ ⫯ x X' 𓀞
     ):
         self.frame = map_
         self.matrix = self.frame.contents
@@ -117,7 +117,7 @@ class Map:
 
                     map_event = map_(pos)
 
-                    map_event.play() # add on this one's update a break on exit
+                    map_event.play()  # add on this one's update a break on exit
                     print("EXIT")
 
                     # self.events.events[1].stopped = False
@@ -171,17 +171,17 @@ class Map:
 
         return self.events
 
-#     def up(self, times: int = 1):
-#         self.pos.y -= times
+    def up(self, times: int = 1):
+        self.pos.y -= times
 
-#     def down(self, times: int = 1):
-#         self.pos.y += times
+    def down(self, times: int = 1):
+        self.pos.y += times
 
-#     def left(self, times: int = 1):
-#         self.pos.x -= times
+    def left(self, times: int = 1):
+        self.pos.x -= times
 
-#     def right(self, times: int = 1):
-#         self.pos.x += times
+    def right(self, times: int = 1):
+        self.pos.x += times
 
     def is_valid(self, pos: Coord) -> bool:
         try:

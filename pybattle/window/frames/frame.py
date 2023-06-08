@@ -102,7 +102,7 @@ class Frame:
         ]
 
         self.matrix = Matrix(frame)
-        
+
         self.matrix[Coord(0, 2)].collision = True
 
     def _color(
@@ -150,7 +150,7 @@ class Frame:
         border_color: ColorType = ...,
         title_color: ColorType = ...,
         base_color: ColorType = ...,
-        frames: list[tuple[Self, Coord]] = ...
+        frames: list[tuple[Self, Coord]] = ...,
     ) -> None:
         """Update the the Frame"""
         self._reconstruct()
@@ -158,7 +158,7 @@ class Frame:
 
         if frames is ...:
             frames = self.frames
-        
+
         for frame, coord in frames.copy():
             self._add_frame(frame, coord)
 
@@ -429,3 +429,10 @@ class Frame:
         return cls(
             contents, title, event, border_color, title_color, border_type, base_color
         )
+
+
+for _ in range(100):
+    f = Frame.box(Size(10, 15))
+    f.add_frame(Frame.box(Size(2, 10)), Coord(0, 4))
+    f.add_frame(Frame.box(Size(4, 3)), Coord(1, 4))
+    f.update()

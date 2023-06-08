@@ -17,6 +17,9 @@ class ColorType:
     def __repr__(self) -> str:
         return str(self.color_name)
 
+    def __str__(self) -> str:
+        return self.seq.seq
+
     def apply(self) -> None:
         """Apply the color to the terminal"""
         self.seq.exec()
@@ -24,7 +27,7 @@ class ColorType:
 
 class Colors:
     """Stores all 4-bit ANSI escape code colors"""
-    
+
     DEFAULT = ColorType(AnsiEscSeq(Fore.RESET), "DEFAULT")  #  VSCODE
     BLACK = ColorType(AnsiEscSeq(Fore.BLACK), "BLACK")  # 0x000000
     GRAY = ColorType(AnsiEscSeq(Fore.LIGHTBLACK_EX), "GRAY")  # 0x666666

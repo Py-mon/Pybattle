@@ -1,47 +1,32 @@
-import datetime
+from datetime import datetime
 from logging import (
-    CRITICAL,
     DEBUG,
-    ERROR,
-    FATAL,
-    INFO,
-    WARNING,
     FileHandler,
     Filter,
     Formatter,
     Logger,
     LogRecord,
+    getLevelName,
 )
 from pathlib import Path
 from traceback import format_stack
 
 from toml import load
 
-with open("logs/logging.toml") as t:
-    conf = load(t)
+with open("logs/logging.toml") as file:
+    config = load(file)
 
+LEVEL = getLevelName(config["logger"]["level"])
 
-LEVEL = eval(
-    conf["logger"]["level"],
-    {
-        "DEBUG": DEBUG,
-        "ERROR": ERROR,
-        "FATAL": FATAL,
-        "INFO": INFO,
-        "CRITICAL": CRITICAL,
-        "WARNING": WARNING,
-    },
-)
+ON = set(config["filter"]["on"])
+OFF = set(config["filter"]["off"])
 
-ON = set(conf["filter"]["on"])
-OFF = set(conf["filter"]["off"])
+NAME = config["logger"]["name"]
+FILE = config["logger"]["file"]
 
-NAME = conf["logger"]["name"]
-FILE = conf["logger"]["file"]
+MICRO_PLACES = config["time"]["micro_places"]
 
-MICRO_PLACES = conf["time"]["micro_places"]
-
-FORMAT = conf["logger"]["format"]
+FORMAT = config["logger"]["format"]
 
 
 class _TracebackLogger(Logger):
@@ -62,11 +47,11 @@ class _TracebackLogger(Logger):
         traceback_info = ""
         if traceback:
             traceback_info = "\nTraceback (most recent call last):\n" + "\n".join(
-                format_stack()[: -logger.stack_level]  # -4 -3
+                format_stack()[: -logger.stack_level]
             )
 
         # HH:MM:SS,mm
-        time = datetime.datetime.today()
+        time = datetime.today()
         microsecond = format(time.microsecond, "06d")[: self.micro_places]
         time = time.strftime(f"%H:%M:%S,{microsecond}")
 

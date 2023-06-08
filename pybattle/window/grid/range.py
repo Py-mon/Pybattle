@@ -6,26 +6,26 @@ from pybattle.window.grid.coord import Coord
 
 
 class RectRange:
-    def __init__(self, stop: Coord, start: Optional[Coord] = None) -> None:
-        if start:
-            self.start = start
-        else:
-            self.start = Coord(0, 0)
+    def __init__(self, stop: Coord, start: Coord = Coord(0, 0)) -> None:
+        self.start = start
 
         self.stop = stop
 
     def __iter__(self) -> Iterator[Coord]:
-        yield from [coord for row in self.array_coords for coord in row]
+        for y in range(self.start.y, self.stop.y + 1):
+            for x in range(self.start.x, self.stop.x + 1):
+                yield Coord(y, x)
+        #yield from [coord for row in self.array_coords for coord in row]
 
     def __contains__(self, coord: Coord) -> bool:
         return coord in iter(self)
 
-    @property
-    def array_coords(self) -> list[list[Coord]]:
-        return [
-            [Coord(y, x) for x in range(self.start.x, self.stop.x + 1)]
-            for y in range(self.start.y, self.stop.y + 1)
-        ]
+    # @property
+    # def array_coords(self) -> list[list[Coord]]:
+    #     return [
+    #         [Coord(y, x) for x in range(self.start.x, self.stop.x + 1)]
+    #         for y in range(self.start.y, self.stop.y + 1)
+    #     ]
 
     def __repr__(self) -> str:
         return f"{self.start}: {self.stop}"

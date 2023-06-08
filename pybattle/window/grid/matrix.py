@@ -147,9 +147,11 @@ class Matrix:
         self.alignment = alignment
         self.level_out()
 
-        self.coords = list(RectRange(self.size.i))
-
         self.colors: list[ColorRange] = []
+        
+    @property
+    def coords(self):
+        return list(RectRange(self.size.i))
 
     def level_out(self) -> None:
         """
