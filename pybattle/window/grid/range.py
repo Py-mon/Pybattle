@@ -15,17 +15,17 @@ class RectRange:
         for y in range(self.start.y, self.stop.y + 1):
             for x in range(self.start.x, self.stop.x + 1):
                 yield Coord(y, x)
-        #yield from [coord for row in self.array_coords for coord in row]
+        # yield from [coord for row in self.array_coords for coord in row]
 
     def __contains__(self, coord: Coord) -> bool:
         return coord in iter(self)
 
-    # @property
-    # def array_coords(self) -> list[list[Coord]]:
-    #     return [
-    #         [Coord(y, x) for x in range(self.start.x, self.stop.x + 1)]
-    #         for y in range(self.start.y, self.stop.y + 1)
-    #     ]
+    @property
+    def array_coords(self) -> list[list[Coord]]:
+        return [
+            [Coord(y, x) for x in range(self.start.x, self.stop.x + 1)]
+            for y in range(self.start.y, self.stop.y + 1)
+        ]
 
     def __repr__(self) -> str:
         return f"{self.start}: {self.stop}"

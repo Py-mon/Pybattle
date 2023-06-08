@@ -9,7 +9,6 @@ class EventExit(Enum):
     Silent = 0
 
 
-lock = Lock()
 
 
 class Event:
@@ -38,14 +37,12 @@ class Event:
             event.play()
 
     def _loop(self):
-        lock.acquire()
         while not self.stopped:
             self._result = self.event()
 
             if self._result is not None:
                 self.stopped = True
                 return self._result
-        lock.release()
 
     def finish(self) -> Any:
         """Wait for the Event to finish and return the result"""
@@ -106,23 +103,23 @@ class EventGroup:
             return result  # ?
 
 
-def print_x_every_5_seconds():
-    while True:
-        print("x")
-        sleep(5)
+# def print_x_every_5_seconds():
+#     while True:
+#         print("x")
+#         sleep(5)
 
 
-def print_y_every_1_second():
-    while True:
-        pass
+# def print_y_every_1_second():
+#     while True:
+#         pass
 
 
-def main():
-    task1 = Event(print_x_every_5_seconds())
-    task2 = Event(print_y_every_1_second())
-    task2.start()
-    task1.start()
+# def main():
+#     task1 = Event(print_x_every_5_seconds())
+#     task2 = Event(print_y_every_1_second())
+#     task2.start()
+#     task1.start()
     
 
 
-main()
+# main()

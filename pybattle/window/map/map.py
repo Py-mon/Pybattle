@@ -130,6 +130,8 @@ class Map:
                     self().play()
 
                     # Event(self.scene.add).start()
+                else:
+                    return 5
 
     def _update_weather(self):
         if Weather.active:

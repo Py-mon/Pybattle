@@ -1,0 +1,2 @@
+15:23:52,12 - DEBUG: (Coord(y=4, x=26), {Coord(y=4, x=26): (<__main__.Map object at 0x0000022D39423150>, Coord(y=2, x=19))})
+15:23:54,04 - DEBUG: (Coord(y=2, x=19), {Coord(y=2, x=19): (<__main__.Map object at 0x0000022D39603550>, Coord(y=4, x=26))})
