@@ -8,7 +8,7 @@ from window.frames.frame import Frame
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.window.screen import Screen
 from pybattle.types_ import Align
-from pybattle.window.event import Event
+from window.event_ import Event
 from pybattle.window.frames.border.border_type import Borders, BorderType
 
 from pybattle.window.grid.size import Size

@@ -1,6 +1,7 @@
 from collections.abc import Iterable
+from copy import copy
 from math import sqrt
-from typing import Iterator, Self
+from typing import Iterator, Optional, Self
 
 from pybattle.log.errors import InvalidConvertType
 
@@ -8,9 +9,32 @@ from pybattle.log.errors import InvalidConvertType
 class Coord:
     """Represents a 2D coordinate with positive values only, in the format of (y, x) or (row, col)"""
 
-    def __init__(self, y: int = 0, x: int = 0) -> None:
+    # __instances = {}
+
+    # def __new__(cls, *args):
+    #     # Dont create another instance if its already been created
+    #     key = (cls, args)
+    #     if key not in cls.__instances:
+    #         instance = super().__new__(cls)
+    #         instance.__init = True
+    #         return instance
+
+    #     instance = cls.__instances[key]
+    #     instance.__init = False
+    #     return cls.__instances[key]
+
+    def __init__(self, y: int, x: int) -> None:
+        # if not self.__init:
+        #     return
+
         self.y = y
         self.x = x
+
+        # # Stores a copy in the instances so it does have to recreate it
+        # self._copy = copy(self)
+
+        # key = (self.__class__, (y, x))
+        # self.__class__.__instances[key] = self._copy
 
     @property
     def coords(self) -> tuple[int, int]:
@@ -34,18 +58,15 @@ class Coord:
         self.__y = max(0, to)
 
     @classmethod
-    def _convert(cls, obj: Self | int | Iterable) -> Self:
+    def _convert(cls, obj: Self | int) -> Self:
         """Tries to convert the object to a Coord object
 
         Raises InvalidConvertType error on invalid object type"""
-        obj_ = None
-        if isinstance(obj, Iterable):
-            obj_ = cls(*obj)
+        if isinstance(obj, cls):
+            return obj
         elif isinstance(obj, int):
-            obj_ = cls(obj, obj)
-        else:
-            raise InvalidConvertType(type(obj), cls)
-        return obj_ or obj
+            return cls(obj, obj)
+        raise InvalidConvertType(type(obj), cls)
 
     def __iter__(self) -> Iterator[int]:
         return iter(self.coords)

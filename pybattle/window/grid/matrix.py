@@ -3,30 +3,24 @@ from typing import Any, Generator, Iterable, Literal, Self, overload
 
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import OutOfBounds
-from pybattle.types_ import Align, ColorRange, JunctionDict, is_nested, nest
+from pybattle.types_ import Align, JunctionDict, is_nested, nest
 from pybattle.window.frames.border.junction_table import get_junction
 from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.range import RectRange, SelectionRange
-from pybattle.window.grid.size import Size, is_nested
+
+
+from pybattle.window.grid.range import selection_range, rect_range, array_rect_range
+from pybattle.window.grid.size import Size
 
 
 class Cell:
-    """Represents a cell in a matrix"""
-
-    def __new__(cls, value, *_, **__):
-        if isinstance(value, Cell):
-            return value
-        return super().__new__(cls)
+    """A Cell in a matrix"""
 
     def __init__(
         self,
-        value: Any | JunctionDict,
+        value: Any,
         color: ColorType = Colors.DEFAULT,
         collision: bool = ...,
     ) -> None:
-        if value is self:
-            return
-
         self._value = value
 
         self.collision = collision
@@ -39,29 +33,19 @@ class Cell:
 
     @property
     def value(self):
-        if isinstance(self._value, dict):
-            return get_junction(self._value)
-        else:
-            return self._value
+        return self._value
 
     @value.setter
-    def value(self, value: Any | JunctionDict):
-        self._value = value
+    def value(self, new):
+        self._value = new
 
     def __repr__(self) -> str:
-        """Return a string representation of the cell"""
         return str(self.value)
 
     def __str__(self) -> str:
-        """Return a string representation of the cell"""
         return str(self.color) + str(self.value)
 
-    def __mul__(self, times: int) -> list[Self]:
-        """Multiply the cell by a certain number of times to create a list of cells"""
-        return [Cell(self._value, self.color) for _ in range(times)]
-
     def __len__(self) -> Literal[0]:
-        """Return the length of the cell. (Always 0)"""
         return 0
 
     @classmethod
@@ -69,89 +53,122 @@ class Cell:
         """Create a list of cells from an iterable"""
         return [Cell(cell) for cell in itr]
 
+    def __mul__(self, times: int) -> list[Self]:
+        return [Cell(self.value, self.color) for _ in range(times)]
+
+    def __eq__(self, to):
+        return self._value == to._value
+
+
+class Junction(Cell):
+    """
+    A Cell that is the borders of frames.
+    """
+
+    def __init__(self, dct: JunctionDict, color: ColorType = Colors.DEFAULT):
+        super().__init__(dct, color, True)
+
+    @property
+    def value(self):
+        return get_junction(self._value)
+
+    @property
+    def dct(self):
+        return self._value
+
+    @dct.setter
+    def dct(self, new):
+        self._value = new
+
+    def __add__(self, junction: Self) -> Self:
+        return Junction(self.dct | junction.dct, junction.color)
+
+    def __mul__(self, times: int) -> list[Self]:
+        return [Junction(self.dct, self.color) for _ in range(times)]
+
+
+def format_list(lst):
+    def format(lst, join_):
+        if not isinstance(lst, list):
+            return str(lst)
+
+        elements = []
+        for item in lst:
+            elements.append(format(item, ","))
+
+        return (
+            str(Colors.DEFAULT)
+            + "["
+            + (str(Colors.DEFAULT) + join_).join(elements)
+            + str(Colors.DEFAULT)
+            + "]"
+        )
+
+    if is_nested(lst):
+        return format(lst, ",\n ")
+    return format(lst, ",")
+
 
 class Matrix:
-    """Represents a matrix of cells.
+    """
+    A matrix of cells. (The main game grid)
 
-    Takes an input and converts it to a matrix or array to create a grid that can be easily edited.
+    Used for converting data into a matrix format that is easily editable and easy to retrieve values with coordinates.
     """
 
     @classmethod
     def from_str(
-        cls, string: str, *colors: ColorRange, alignment: Align = Align.LEFT
-    ) -> Self:
-        """Create a matrix from a string"""
-
-        string = string.removeprefix("\n")
-
-        if string.count("\n") == 0:
-            cells = Cell.from_iter(string)
-        else:
-            cells = [Cell.from_iter(row) for row in string.splitlines()]
-
-        return cls(
-            cells,
-            *colors,
-            alignment=alignment,
-        )
-
-    @classmethod
-    def from_iter(
         cls,
-        lst: Iterable | Iterable[Iterable],
-        *colors: ColorRange,
-        alignment: Align = Align.LEFT,
+        string: str,
+        align: Align = Align.LEFT,
     ) -> Self:
-        """Create a matrix from a iterable or nested iterable"""
+        """
+        Create a matrix from a string
+        >>> Matrix.from_str('123\\n456\\n')
+        ... [[1,2,3],
+        ...  [4,5,6]]
+        """
+
         return cls(
-            [
-                Cell.from_iter(row) if isinstance(row, Iterable) else [Cell(row)]
-                for row in lst
-            ],
-            *colors,
-            alignment=alignment,
+            [Cell.from_iter(row) for row in string.removeprefix("\n").splitlines()],
+            align=align,
         )
 
     @classmethod
-    def from_size(
-        cls, size: Size, *colors: ColorRange, alignment: Align = Align.LEFT
-    ) -> Self:
-        """Create an empty matrix from size"""
-
-        # 0 Edge Cases
-        # x, x -> [[' ', ...], ...]
-        # x, 0 -> [[], ...]
-        # 0, x -> [' ', ...]
-        # 0, 0 -> []
+    def from_size(cls, size: Size, fill_with: Any = " ") -> Self:
+        """
+        Create a filled matrix of a value that is a certain size
+        >>> Matrix.from_size(Size(2, 3), 5)
+        ... [[5,5,5],
+        ...  [5,5,5]]
+        """
 
         height, width = size
         array = []
         for _ in range(height):
             row = []
             for _ in range(width):
-                row.append(Cell(" "))
+                row.append(Cell(fill_with))
             array.append(row)
 
-        if height == 0:
-            array = Cell(" ") * width
-
-        return cls(array, *colors, alignment=alignment)
+        return cls(array)
 
     def __init__(
         self,
-        cells: list[list[Cell]] | list[Cell],
-        alignment: Align = Align.LEFT,
-    ):
+        cells: list[list[Cell]],
+        align: Align = Align.LEFT,
+    ) -> None:
         self.cells = cells
 
-        self.alignment = alignment
+        self.alignment = align
         self.level_out()
 
         self.colors: list[ColorRange] = []
-        
+
     @property
-    def coords(self):
-        return list(RectRange(self.size.i))
+    def coords(self) -> list[Coord]:
+        """All of the valid coordinates in the Matrix"""
+        return rect_range(self.size.i)
 
     def level_out(self) -> None:
         """
@@ -186,36 +203,28 @@ class Matrix:
                             for row in self.rows
                         ]
 
-    def color(self, color: ColorType, range_: RectRange | SelectionRange) -> None:
-        """Color a range of cells in the matrix"""
-        for coord in range_:
+    def color(self, color: ColorType, coords: list[Coord]) -> None:
+        """Color cells in the matrix"""
+        for coord in coords:
             try:
                 self[coord].color = color
             except IndexError:
                 raise OutOfBounds(coord, self.size)
 
     def color_all(self, color: ColorType) -> None:
-        """Color the contents a certain color"""
-        self.color(color, RectRange(self.size.i))
-
-    def color_ranges(
-        self, color: ColorType, *ranges: RectRange | SelectionRange
-    ) -> None:
-        """Color ranges to the matrix"""
-        for range_ in ranges:
-            self.color(color, range_)
+        """Color the whole matrix a certain color"""
+        self.color(color, rect_range(self.size.i))
 
     @property
-    def array_coords(self) -> list[list[Coord]]:
+    def coords(self) -> list[Coord]:
         """Get a nested list of all the coordinates in the matrix"""
-        return RectRange(self.size).array_coords
+        return rect_range(self.size)
 
     def __contains__(self, item: Coord | Any) -> bool:
         """Check if a coord or cell is in the Matrix"""
         if isinstance(item, Coord):
             return item in self.coords
-        else:
-            return Cell(item) in self
+        return Cell(item) in self
 
     def __iter__(self) -> Generator[Cell, None, None]:
         """Iterate through every cell"""
@@ -235,10 +244,6 @@ class Matrix:
     def __getitem__(self, coord: Coord, /) -> Cell:
         ...
 
-    @overload
-    def __getitem__(self, rect_range: RectRange, /) -> None:
-        ...
-
     def __getitem__(self, item, /):
         if isinstance(item, Coord):
             try:
@@ -246,18 +251,15 @@ class Matrix:
             except IndexError:
                 raise OutOfBounds(item, self.size)
 
-        elif isinstance(item, RectRange):
-            return self[item.start : item.stop]
-
         elif isinstance(item, slice):
-            stop = Size.from_iter(item.stop)
+            stop = Size(*item.stop)
             if stop is None:
                 stop = Size(self.size.width, self.size.height) - item.start
 
             return Matrix(
                 [
                     [self[coord] for coord in row]
-                    for row in RectRange(stop, item.start).array_coords
+                    for row in array_rect_range(stop, item.start)
                 ]
             )
 
@@ -267,10 +269,6 @@ class Matrix:
             # if is_nested(self.cells):
             #     return Matrix(self.cells[item])
             # return Matrix([self.cells[item]])
-
-    @overload
-    def __setitem__(self, rect_range: RectRange, matrix: Self, /) -> None:
-        ...
 
     @overload
     def __setitem__(self, coord: Coord, cell: Cell, /) -> None:
@@ -287,78 +285,38 @@ class Matrix:
             except IndexError:
                 raise OutOfBounds(item, self.size)
 
-        elif isinstance(item, RectRange):
-            self[item.start : item.stop] = new_cells
-
         elif isinstance(item, slice):
-            stop = Size.from_iter(item.stop)
+            stop = item.stop
             if stop is None:
-                stop = Size(self.size.width, self.size.height) - item.start
+                stop = Size(self.size.width, self.size.height) - item.start  # ?
+            stop = Size(*stop)
 
-            for coord in RectRange(stop, item.start):
+            for coord in rect_range(stop, item.start):
                 self[coord] = new_cells[coord - item.start]
 
     @property
     def rows(self) -> list[list[Cell]]:
-        return nest(self.cells)
+        return self.cells
 
     @property
     def cols(self) -> list[list[Cell]]:
+        """Transposed rows"""
         return [list(col) for col in list(zip(*self.rows))]
 
     @property
     def size(self) -> Size:
         return Size.from_list(self.cells)
 
-    def insert(self, pos: Coord, cell: Cell) -> None:
-        """Insert a cell at the given pos"""
-        self.rows[pos.y].insert(pos.x, cell)
-        self.level_out()
-
-    def pop(self, pos: Coord) -> None:
-        """Remove the cell at the given pos"""
-        self.rows[pos.y].pop(pos.x)
-        self.level_out()
-
-    def remove(self, cell: Cell) -> None:
-        """Remove the first occurrence of a cell"""
-        for i, row in enumerate(self.rows):
-            if cell in row:
-                self.rows[i].remove(cell)
-        self.level_out()
-
-    def remove_colors(self) -> None:
-        self.colors = []
-
     def __repr__(self) -> str:
         """A formatted representation of the matrix"""
-        # Takes the cells and adds a \n every row
-        res = "["
-        for pre_char, char in zip(str(self.cells), str(self.cells)[1:]):
-            # Removes dupe spaces
-            if char != " " or pre_char == " ":
-                res += char
-                if char == "," and pre_char == "]":
-                    res += "\n "
-
-        return res
+        return format_list(self.cells)
 
     @property
     def colored_repr(self) -> str:
-        """A colored and formatted representation of the matrix"""
-        res = "["
-        back = 0
-        for item in self.cells:
-            if isinstance(item, Cell):
-                res += str(item) + str(Colors.DEFAULT) + ","
-                back = 1
-            else:
-                sublist = ",".join(str(cell) + str(Colors.DEFAULT) for cell in item)
-                res += f"[{sublist}],\n "
-                back = 3
-
-        res = res[:-back] + "]"
-        return res
+        """A colored representation of the matrix"""
+        return format_list(
+            [[str(cell.color) + str(cell) for cell in row] for row in self.rows]
+        )
 
     def __str__(self) -> str:
         """The colors and values of each cell joined together"""
@@ -369,6 +327,6 @@ class Matrix:
     @property
     def uncolored_str(self):
         """The values of each cell joined together"""
-        return "".join(
-            [repr(cell) for row in self.rows for cell in row + [Cell("\n")]]
-        )[:-1]
+        return "".join([str(cell) for row in self.rows for cell in row + [Cell("\n")]])[
+            :-1
+        ]

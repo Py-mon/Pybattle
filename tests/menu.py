@@ -1,4 +1,4 @@
-from pybattle.window.menus.list_menu import ListMenu
+# mfrom pybattle.window.menus.list_menu import ListMenu
 from pybattle.window.grid.size import Size
 from pybattle.window.grid.coord import Coord
 from window.frames.frame import Frame

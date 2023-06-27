@@ -4,12 +4,11 @@ from time import sleep, time
 from typing import Annotated, Any, Callable, Optional, Self
 
 from keyboard import is_pressed
-from window.screen.scene import Scene
 
 from pybattle.ansi.cursor import Cursor
 from pybattle.log.log import Logger, logger
 from pybattle.types_ import CardinalDirection
-from pybattle.window.event import Event, EventExit, EventGroup
+from window.event_ import Event, EventExit, EventGroup
 from pybattle.window.frames.border.border_type import Borders
 from pybattle.window.frames.frame import Frame
 from pybattle.window.frames.menu import Menu
@@ -17,6 +16,7 @@ from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.matrix import Cell, Matrix
 from pybattle.window.grid.size import Size
 from pybattle.window.map.weather import Rain, Weather
+from window.screen.screen import Scene
 
 # u = Rain(CardinalDirection.WEST)
 # print(u.particles)
@@ -84,6 +84,7 @@ class Map:
         map_.exits[entrance] = (self, exit)
 
     def _update_player(self):
+        sleep(1)
         # m.exits[Coord(2, 19)] = (m, Coord(4, 26))
 
         self.matrix[self.pos].value = self.player_char

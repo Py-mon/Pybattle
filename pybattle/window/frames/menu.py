@@ -2,34 +2,34 @@ from time import sleep
 from typing import Callable, Self
 
 from keyboard import is_pressed
-from window.event import Event
-from window.frames.frame import Frame
 
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import Error
 from pybattle.types_ import Align
+from pybattle.window.event import Event, Scene, rect_print
 from pybattle.window.frames.border.border_type import Direction
+from pybattle.window.frames.frame import Frame
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.matrix import Matrix
-from pybattle.window.grid.range import RectRange
+from pybattle.window.grid.range import center_range, rect_range
 from pybattle.window.grid.size import Size
 
 
-def get_directions(from_: Coord, to: Coord) -> set[Direction]:
-    directions = set()
+def get_directions(from_: Coord, to: Coord) -> list[Direction]:
+    directions = list()
 
     y1, x1 = from_
     y2, x2 = to
 
     if y1 < y2:
-        directions.add(Direction.DOWN)
+        directions.append(Direction.DOWN)
     if y1 > y2:
-        directions.add(Direction.UP)
+        directions.append(Direction.UP)
 
     if x1 < x2:
-        directions.add(Direction.RIGHT)
+        directions.append(Direction.RIGHT)
     if x1 > x2:
-        directions.add(Direction.LEFT)
+        directions.append(Direction.LEFT)
 
     return directions
 
@@ -45,7 +45,7 @@ class VoidSelection:
         self.label = label
         self.color = color
 
-        self.pos = Coord()
+        self.pos = Coord(0, 0)
 
     @property
     def size(self):
@@ -97,7 +97,7 @@ class SwitchSelection:
         self.off = off
         self.selected = selected
 
-        self.directions: dict[Self, set[Direction]] = {}
+        self.directions: dict[Self, list[Direction]] = {}
 
     def __class_getitem__(cls, x):
         pass
@@ -161,7 +161,7 @@ class Menu:
             elif is_pressed("enter"):
                 return self.selection.label
 
-            sleep(0.1)
+            return Scene(str(self.frame), Coord(5, 5))
 
         self.event = event
 
@@ -182,15 +182,17 @@ class Menu:
                 )
 
             elif isinstance(selection, VoidSelection):
+                # print(selection.pos, selection.pos + selection.size)
                 self.frame.contents[
                     selection.pos : selection.pos + selection.size
                 ] = Matrix.from_str(selection.label)
 
+                # print(rect_range(selection.pos + selection.size))
                 self.frame.contents.color(
                     selection.color,
-                    RectRange(selection.pos + selection.size),
+                    rect_range(selection.pos + selection.size, Coord(0, 0)),
                 )
-        
+
         self.frame.update(frames=frames + self.frame.frames)
 
     def move(self, direction: Direction) -> None:
@@ -227,13 +229,78 @@ class Menu:
             print(repr(selection.label))
             selection.label = align.align(selection.label, max_)
             print(repr(selection.label))
-            rect_range = RectRange.center_range(frame.size.inner, size)
-            selection.pos = Coord(rect_range.start.y + i, rect_range.start.x)
+            slice_ = center_range(frame.size.inner, size)
+            selection.pos = Coord(slice_.start.y + i, slice_.start.x)
 
         menu = cls(frame, selections)
 
         # Link the first and the last item together
-        selections[-1].directions[selections[0]].add(Direction.UP)
-        selections[0].directions[selections[-1]].add(Direction.DOWN)
+        selections[-1].directions[selections[0]].append(Direction.UP)
+        selections[0].directions[selections[-1]].append(Direction.DOWN)
 
         return menu
+
+
+# print(
+#     Menu(
+#         Frame.box(Size(10, 25)),
+#         [
+#             SwitchSelection(
+#                 Selection("Play", Coord(2, 2)),
+#                 Selection("Play", Coord(2, 2), Colors.RED),
+#             ),
+#             SwitchSelection(
+#                 Selection("Settings", Coord(4, 4)),
+#                 Selection("Settings", Coord(4, 4), Colors.BLUE),
+#             ),
+#             SwitchSelection(
+#                 Selection("Quit", Coord(6, 6)),
+#                 Selection("Quit", Coord(6, 6), Colors.RED),
+#             ),
+#         ],
+#     ).frame
+# )
+
+# Event(
+#     Menu(
+#         Frame.box(Size(10, 25)),
+#         [
+#             SwitchSelection(
+#                 Selection("Play", Coord(2, 2)),
+#                 Selection("Play", Coord(2, 2), Colors.RED),
+#             ),
+#             SwitchSelection(
+#                 Selection("Settings", Coord(4, 4)),
+#                 Selection("Settings", Coord(4, 4), Colors.BLUE),
+#             ),
+#             SwitchSelection(
+#                 Selection("Quit", Coord(6, 6)),
+#                 Selection("Quit", Coord(6, 6), Colors.RED),
+#             ),
+#         ],
+#     ).event,
+#     0.1,
+# )
+
+Event(
+    Menu.centered_list(
+        Frame.box(Size(10, 25)),
+        [
+            SwitchSelection(
+                VoidSelection("Play"),
+                VoidSelection("Play", Colors.RED),
+            ),
+            SwitchSelection(
+                VoidSelection("Settings"),
+                VoidSelection("Settings", Colors.BLUE),
+            ),
+            SwitchSelection(
+                VoidSelection("Quit"),
+                VoidSelection("Quit", Colors.RED),
+            ),
+        ],
+    ).event,
+    0.1,
+)
+
+Event.play()

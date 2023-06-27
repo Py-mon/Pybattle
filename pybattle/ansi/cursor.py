@@ -44,8 +44,8 @@ class Cursor:
     @classmethod
     def move(cls, pos: Coord) -> None:
         """Move the cursor to the given pos"""
-        cls.pos = pos
-        AnsiEscSeq(CursorCode.MOVE, *pos).exec()
+        cls.pos = pos + 1
+        AnsiEscSeq(CursorCode.MOVE, *cls.pos).exec()
 
     @classmethod
     def hide(cls) -> None:

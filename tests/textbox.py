@@ -1,6 +1,6 @@
 from pybattle.window.textbox import TextBox
 from pybattle.ansi.colors import Colors
-from window.screen.scene import Cursor
+from window.screen.screen import Cursor
 
 
 Cursor.hide()

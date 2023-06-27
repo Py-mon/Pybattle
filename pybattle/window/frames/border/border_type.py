@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pybattle.types_ import Direction, JunctionDict, Thickness
-from pybattle.window.grid.matrix import Cell
+from pybattle.window.grid.matrix import Cell, Junction
 
 
 class BorderType:
@@ -21,35 +21,18 @@ class BorderType:
         self.horizontal = horizontal
         self.vertical = vertical
 
-    @property
-    def top_right_cell(self):
-        return Cell(self.top_right)
-
-    @property
-    def top_left_cell(self):
-        return Cell(self.top_left)
-
-    @property
-    def bottom_right_cell(self):
-        return Cell(self.bottom_right)
-
-    @property
-    def bottom_left_cell(self):
-        return Cell(self.bottom_left)
-
-    @property
-    def horizontal_cell(self):
-        return Cell(self.horizontal)
-
-    @property
-    def vertical_cell(self):
-        return Cell(self.vertical)
+        self.top_right_junction = Junction(self.top_right)
+        self.top_left_junction = Junction(self.top_left)
+        self.bottom_right_junction = Junction(self.bottom_right)
+        self.bottom_left_junction = Junction(self.bottom_left)
+        self.horizontal_junction = Junction(self.horizontal)
+        self.vertical_junction = Junction(self.vertical)
 
     def __repr__(self) -> str:
         return (
-            f"{self.top_right_cell}{self.horizontal_cell * 4}{self.top_left_cell}\n"
-            f"{self.vertical_cell}    {self.vertical_cell}\n"
-            f"{self.bottom_right_cell}{self.horizontal_cell * 4}{self.bottom_left_cell}\n"
+            f"{self.top_right_junction}{self.horizontal_junction * 4}{self.top_left_junction}\n"
+            f"{self.vertical_junction}    {self.vertical_junction}\n"
+            f"{self.bottom_right_junction}{self.horizontal_junction * 4}{self.bottom_left_junction}\n"
         )
 
 

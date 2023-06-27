@@ -170,8 +170,3 @@ def get_junction(dct: JunctionDict) -> str:
     return table[dct.get(Direction.UP)][dct.get(Direction.DOWN)][
         dct.get(Direction.LEFT)
     ][dct.get(Direction.RIGHT)]
-
-
-print(get_junction({Direction.UP: Thickness.THIN, Direction.RIGHT: Thickness.THIN}))
-print(get_junction({Direction.LEFT: Thickness.THIN, Direction.RIGHT: Thickness.THIN}))
-print(get_junction({Direction.DOWN: Thickness.THIN, Direction.RIGHT: Thickness.THIN}))

@@ -1,6 +1,4 @@
 """
-Summary of ANSI escape sequences:
-
 ANSI escape sequences are a standard terminals to control cursor location, color, font styling, and other options.
 
 All ANSI escape sequences have a prefix escape (ESC). (Not case sensitive)

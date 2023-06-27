@@ -7,3 +7,9 @@ __pycache__
 
 # Env Vars
 .env
+
+update_version.py
+
+
+texting.py
+scrab.py

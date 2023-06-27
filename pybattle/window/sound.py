@@ -5,7 +5,7 @@ from typing import Any, TypeAlias, TypeVar
 from pygame import mixer
 
 from pybattle.types_ import BackgroundTask
-from pybattle.window.event import Event
+from window.event_ import Event
 
 mixer.init()
 

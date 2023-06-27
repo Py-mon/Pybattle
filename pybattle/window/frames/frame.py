@@ -1,13 +1,14 @@
+from copy import copy
 from typing import Any, Callable, Optional, Self
 
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import SizeTooSmall
-from pybattle.log.log import logger
-from pybattle.types_ import Align, ColorRange, Direction
+from pybattle.types_ import Align, Direction
 from pybattle.window.frames.border.border_type import Borders, BorderType
+from pybattle.window.frames.border.junction_table import get_junction
 from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Cell, Matrix
-from pybattle.window.grid.range import RectRange
+from pybattle.window.grid.matrix import Cell, Junction, Matrix
+from pybattle.window.grid.range import center_range, rect_range, selection_range
 from pybattle.window.grid.size import Size
 
 
@@ -38,7 +39,7 @@ class Frame:
 
         self.base_color: ColorType = base_color
 
-        self.update()
+        # self.update()
 
     @property
     def all_frames(self) -> list[Self]:
@@ -56,28 +57,28 @@ class Frame:
             if self.size.inner.width - len(self.title) - 3 <= 0:
                 raise SizeTooSmall(f"Frame of {self.size}", f"Title: '{self.title}'")
 
-            title = (Cell(char) for char in self.title)
+            title = [Cell(char) for char in self.title]  # was ()
 
             length_after_title = self.size.inner.width - len(self.title) - 3
-            cells_after_title = self.border.horizontal_cell * length_after_title
+            cells_after_title = self.border.horizontal_junction * length_after_title
 
             frame += [
                 [
-                    self.border.top_right_cell,
-                    self.border.horizontal_cell,
+                    copy(self.border.top_right_junction),
+                    copy(self.border.horizontal_junction),
                     space,
                     *title,
                     space,
                     *cells_after_title,
-                    self.border.top_left_cell,
+                    copy(self.border.top_left_junction),
                 ]
             ]
         else:
             frame += [
                 [
-                    self.border.top_right_cell,
-                    *self.border.horizontal_cell * self.size.inner.width,
-                    self.border.top_left_cell,
+                    copy(self.border.top_right_junction),
+                    *self.border.horizontal_junction * self.size.inner.width,
+                    copy(self.border.top_left_junction),
                 ]
             ]
 
@@ -86,24 +87,25 @@ class Frame:
             cells = self.contents[i].cells
             frame += [
                 [
-                    self.border.vertical_cell,
+                    copy(self.border.vertical_junction),
                     *cells,
-                    self.border.vertical_cell,
+                    copy(self.border.vertical_junction),
                 ]
             ]
 
         # Bottom Row
         frame += [
             [
-                self.border.bottom_right_cell,
-                *self.border.horizontal_cell * self.size.inner.width,
-                self.border.bottom_left_cell,
+                copy(self.border.bottom_right_junction),
+                *self.border.horizontal_junction * self.size.inner.width,
+                copy(self.border.bottom_left_junction),
             ]
         ]
 
         self.matrix = Matrix(frame)
 
-        self.matrix[Coord(0, 2)].collision = True
+        if self.title:
+            self.matrix[Coord(0, 2)].collision = True
 
     def _color(
         self,
@@ -126,23 +128,23 @@ class Frame:
         if base_color is not Colors.DEFAULT:
             self.matrix.color_all(base_color)
 
-        self.matrix.color_ranges(
+        self.matrix.color(
             border_color,
-            RectRange(Coord(self.size.i.height, 0), Coord(0, 0)),
-            RectRange(
+            rect_range(Coord(self.size.i.height, 0))
+            + rect_range(
                 Coord(self.size.i.height, self.size.i.width),
                 Coord(self.size.i.height, 0),
-            ),
-            RectRange(
+            )
+            + rect_range(
                 Coord(self.size.i.height, self.size.i.width),
                 Coord(0, self.size.i.width),
-            ),
-            RectRange(Coord(0, self.size.i.width), Coord(0, 0)),
+            )
+            + rect_range(Coord(0, self.size.i.width)),
         )
 
         if self.title:
             self.matrix.color(
-                title_color, RectRange(Coord(0, len(self.title) + 3), Coord(0, 3))
+                title_color, rect_range(Coord(0, len(self.title) + 3), Coord(0, 3))
             )
 
     def update(
@@ -172,7 +174,7 @@ class Frame:
         self.changes.append((item, to))
 
     @property
-    def top_edges(self) -> RectRange:
+    def top_edges(self) -> list[Coord]:
         """```
          vvv
         ╭───╮
@@ -180,10 +182,10 @@ class Frame:
         ╰───╯
         ```
         """
-        return RectRange(Coord(0, self.size.inner.width), Coord(0, 1))
+        return rect_range(Coord(0, self.size.inner.width), Coord(0, 1))
 
     @property
-    def bottom_edges(self) -> RectRange:
+    def bottom_edges(self) -> list[Coord]:
         """```
         ╭───╮
         │   │
@@ -191,30 +193,34 @@ class Frame:
          ^^^
         ```
         """
-        return RectRange(
+        return rect_range(
             Coord(self.size.i.height, self.size.inner.width),
             Coord(self.size.i.height, 1),
         )
 
     @property
-    def left_edges(self) -> RectRange:
+    def left_edges(self) -> list[Coord]:
         """```
          ╭───╮
         >│<  │
          ╰───╯
         ```
         """
-        return RectRange(Coord(self.size.inner.height, 0), Coord(1, 0))
+        return rect_range(Coord(self.size.inner.height, 0), Coord(1, 0))
 
     @property
-    def right_edges(self) -> RectRange:
+    def top_right_corner(self):
+        return Coord(0, self.size.i.width)
+
+    @property
+    def right_edges(self) -> list[Coord]:
         """```
         ╭───╮
         │  >│<
         ╰───╯
         ```
         """
-        return RectRange(
+        return rect_range(
             Coord(self.size.inner.height, self.size.i.width),
             Coord(1, self.size.i.width),
         )
@@ -242,18 +248,6 @@ class Frame:
         return Coord(self.size.i.height, 0)
 
     @property
-    def top_right_corner(self) -> Coord:
-        """
-        ```
-            v
-        ╭───╮ <
-        │   │
-        ╰───╯
-        ```
-        """
-        return Coord(0, self.size.i.width)
-
-    @property
     def bottom_right_corner(self) -> Coord:
         """
         ```
@@ -265,40 +259,29 @@ class Frame:
         """
         return Coord(self.size.i.height, self.size.i.width)
 
-    @property
-    def border_coords(self) -> list[Coord]:
-        """All of the coordinates on the border"""
-        return [
-            *self.top_edges,
-            *self.bottom_edges,
-            *self.right_edges,
-            *self.left_edges,
-            self.bottom_left_corner,
-            self.bottom_right_corner,
-            self.top_right_corner,
-            self.top_left_corner,
-        ]
-
     def __str__(self) -> str:
         return str(self.matrix)
 
     def _add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
-        junctions = []
+        junctions: list[tuple[Junction, Coord]] = []
         for coord in frame.border_coords:
             coord_pos = coord + pos
 
-            self_junction = self.matrix[coord_pos]._value
-            frame_junction = frame.matrix[coord]._value
-            if isinstance(self_junction, dict) and isinstance(frame_junction, dict):
-                junctions.append((self_junction | frame_junction, coord_pos))
+            self_junction = self.matrix[coord_pos]
+            frame_junction = frame.matrix[coord]
 
-        top_left = pos
+            if isinstance(self_junction, Junction) and isinstance(
+                frame_junction, Junction
+            ):
+                junctions.append((self_junction + frame_junction, coord_pos))
+
+        top_left = pos + frame.top_left_corner
         bottom_right = pos + frame.bottom_right_corner
 
         self.matrix[top_left:bottom_right] = frame.matrix
 
         for junction, coord in junctions:
-            for direction in junction.copy():
+            for direction in junction.dct.copy():
                 ahead = Coord(0, 0)
                 match direction:
                     case Direction.UP:
@@ -310,12 +293,12 @@ class Frame:
                     case Direction.RIGHT:
                         ahead = Coord(coord.y, coord.x + 1)
                 try:
-                    if not isinstance(self.matrix[ahead]._value, dict):
-                        junction.pop(direction)
+                    if not isinstance(self.matrix[ahead], Junction):
+                        junction.dct.pop(direction)
                 except IndexError:  # out of bounds
                     pass
 
-            self.matrix[coord]._value = junction
+            self.matrix[coord].dct = junction.dct
 
         if self.title is not None:
             for i, char in enumerate(" " + self.title + " "):
@@ -327,7 +310,7 @@ class Frame:
     def add_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
         """Add a Frame inside the Frame
 
-        Automatically joins conjunctions"""
+        Automatically joins junctions"""
         self.frames.append((frame, pos))
 
     def remove_frame(self, frame: "Frame", pos: Coord = Coord(0, 0)) -> None:
@@ -385,10 +368,7 @@ class Frame:
         │      │
         ╰──────╯
         """
-        if size.inner == Size(0, 0):
-            raise SizeTooSmall(size, "a Frame")
-
-        return cls(
+        matrix = cls(
             Matrix.from_size(size.inner),
             title,
             event,
@@ -397,6 +377,24 @@ class Frame:
             border_type,
             base_color,
         )
+        # og_size = copy(matrix.size)
+        matrix.size = size
+        matrix.update()
+
+        return matrix
+
+    @property
+    def border_coords(self):
+        return [
+            *self.top_edges,
+            *self.bottom_edges,
+            *self.right_edges,
+            *self.left_edges,
+            self.bottom_left_corner,
+            self.bottom_right_corner,
+            self.top_right_corner,
+            self.top_left_corner,
+        ]
 
     @classmethod
     def centered(
@@ -417,22 +415,24 @@ class Frame:
         ╭──────────╮
         │          │
         │  abcdef  │
-        │   ghi    │
+        │   ghij   │
         │          │
         ╰──────────╯"""
-        aligned_text = Matrix.from_str(text, alignment=alignment)
-        center_range = RectRange.center_range(size.inner, aligned_text.size.i)
+        aligned_text = Matrix.from_str(text, align=alignment)
+        slice_ = center_range(size.inner, aligned_text.size.i)
 
         contents = Matrix.from_size(size.inner)
-        contents[center_range] = aligned_text
+        contents[slice_] = aligned_text
 
         return cls(
             contents, title, event, border_color, title_color, border_type, base_color
         )
 
 
-for _ in range(100):
-    f = Frame.box(Size(10, 15))
-    f.add_frame(Frame.box(Size(2, 10)), Coord(0, 4))
-    f.add_frame(Frame.box(Size(4, 3)), Coord(1, 4))
-    f.update()
+# for _ in range(100):
+#     f = Frame.box(Size(10, 25))
+#     f.add_frame(Frame.box(Size(6, 7)))
+#     f.add_frame(Frame.box(Size(5, 5)), Coord(4, 4))
+    
+#     f.update()
+# print(f)

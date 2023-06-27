@@ -7,21 +7,12 @@ if TYPE_CHECKING:
     from pybattle.creatures.attributes.element import Element
     from pybattle.creatures.humanoid import Humanoid
     from pybattle.creatures.pymon import Pymon
-    from pybattle.window.grid.coord import Coord
-    from pybattle.window.grid.range import RectRange, SelectionRange
-    from pybattle.window.grid.size import Size
 
 
 Creature = Union["Pymon", "Humanoid"]
-Attacker = Creature
-Defender = Creature
 User: TypeAlias = "Humanoid"
 
 ElementReference = Union[str, "Element"]
-CoordReference = Union["Coord", Iterable, int]
-SizeReference = Union["Size", CoordReference]
-
-ColorRange = tuple["ColorType", Union["RectRange", "SelectionRange"]]
 
 BackgroundTask = TypeVar("BackgroundTask") | None
 
@@ -79,24 +70,19 @@ class Thickness(Enum):
 JunctionDict = dict[Direction, Thickness]
 
 
-def is_junction(conjunction: Any) -> bool:
-    """Check if x is a junction (dict)"""
-    return isinstance(conjunction, dict)
-
-
-def is_nested(seq: Sequence | Sequence[Sequence]) -> bool:
+def is_nested(seq: list | list[list]) -> bool:
     """Check if a sequence is nested"""
-    return len(seq) > 0 and isinstance(seq[0], Iterable)
+    return len(seq) > 0 and isinstance(seq[0], (list, str))
 
 
-def nested_len(seq: Sequence | Sequence[Sequence]) -> int:
+def nested_len(seq: list | list[list]) -> int:
     """Get the max nested length of a list. If not nested returns the length."""
     if is_nested(seq):
         return max([len(row) for row in seq] + [0])
     return len(seq)
 
 
-def nest(seq) -> list[list]:
+def nest(seq: list) -> list[list]:
     """If a sequence is not nested, it returns it nested"""
     if is_nested(seq):
         return seq

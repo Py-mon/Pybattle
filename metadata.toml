@@ -1,6 +1,6 @@
 
 name = 'pybattle'
-licence = "GNU"
+license = "GNU"
 
 [author]
 name = "Jacob Ophoven"
@@ -15,15 +15,7 @@ desc = "A python ascii text art pokemon style game in the terminal using ANSI es
 python-version = ">=3.11"
 
 [version]
-
-[version.main]
-beta = true
-alpha = false
-other = false
-
-[version.update]
-add = 0
-other = false
-
-[version.end]
-other = false
+changes = 69262
+overhauls = 0
+changes_per_version = 10000
+changes_per_update = 1000
