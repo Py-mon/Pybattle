@@ -1,28 +1,24 @@
 from copy import copy
-from random import choice, choices, randint
-from time import sleep, time
-from typing import Annotated, Any, Callable, Optional, Self
+from random import choices
+from typing import Optional, Self
 
-from keyboard import is_pressed
-
-from pybattle.ansi.cursor import Cursor
-from pybattle.log.log import Logger, logger
+from pybattle.log.log import logger
 from pybattle.types_ import CardinalDirection
-from window.event_ import Event, EventExit, EventGroup
+from pybattle.window.event import Event, EventGroup, Scene
 from pybattle.window.frames.border.border_type import Borders
 from pybattle.window.frames.frame import Frame
-from pybattle.window.frames.menu import Menu
 from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Cell, Matrix
+from pybattle.window.grid.matrix import Cell, Junction, Matrix
 from pybattle.window.grid.size import Size
+from pybattle.window.input import Keyboard, key_listener
 from pybattle.window.map.weather import Rain, Weather
-from window.screen.screen import Scene
+from pybattle.window.screen.screen import Screen
 
-# u = Rain(CardinalDirection.WEST)
-# print(u.particles)
-Weather(particles=["*", "."], heaviness=2, frequency=0.08)
+Rain(CardinalDirection.WEST)
 
 
+# TODO add maps to frames
+# TODO maybe add characters to the map
 class Map:
     def __init__(
         self,
@@ -32,6 +28,8 @@ class Map:
         player_char: str = "♀",  # 'º ⏺ ○ ● ◯ ☃ ☹ ☻ ☺ ♀ ♂ ⚬ ⚲ ⚴ ⛑ ⛹ ⫯ x X' 𓀞
     ):
         self.frame = map_
+        self.frame.update()
+
         self.matrix = self.frame.contents
 
         self.exits: dict[Coord, tuple[Optional[Self], ellipsis | Coord]] = {}
@@ -45,11 +43,14 @@ class Map:
         self.closed: bool = True
 
         self.open_cells = []
-        for coord in self.frame.matrix.coords:
-            if not self.frame[coord].collision:
+        for coord in self.frame.contents.coords:
+            cell = self.frame[coord]
+            if not cell.collision and not isinstance(cell, Junction):
                 self.open_cells.append(coord)
 
-        self.scene = Scene(self.camera)
+        self.scene = Scene(self.camera, Coord(5, 5))
+        
+        self.previous = copy(self.pos)
 
     def camera(self):
         end = self.pos + self.range_
@@ -62,7 +63,9 @@ class Map:
             end.y += self.range_.y - self.pos.y
 
         if end.x > self.matrix.size.i.x:
-            start.x -= end.x - self.frame.size.i.x + 2  # works???
+            start.x -= (
+                end.x - self.frame.size.i.x + 2
+            )  # ? Adds a row of spaces on the top and bottom
             end.x = self.matrix.size.i.x
 
         if end.y > self.matrix.size.i.y:
@@ -76,103 +79,95 @@ class Map:
             row.insert(0, Cell(" "))
             row.append(Cell(" "))
 
-        return Frame(Matrix.from_iter(rows))
+        f = Frame(Matrix(rows))
+        f.update()
+        return f
 
     def link(self, map_: Self, exit: Coord, entrance: Coord):
         """Link a map to another map through a exit and entrance."""
         self.exits[exit] = (map_, entrance)
         map_.exits[entrance] = (self, exit)
 
-    def _update_player(self):
-        sleep(1)
+    def _update_player(self, og):
         # m.exits[Coord(2, 19)] = (m, Coord(4, 26))
-
-        self.matrix[self.pos].value = self.player_char
+        
+        self.frame[self.previous].value = " "  # (use base map in future)
 
         self.frame.update()
+        
+        
 
-        sleep(0.1)
+        # self.scene.draw()
 
         self.previous = copy(self.pos)
+       
+        
+        self.frame[self.pos].value = self.player_char
+        #self.frame[self.pos].value = " "  # (use base map in future)
 
-        self.matrix[self.pos].value = " "  # (use base map in future)
-
-        if is_pressed("w"):
-            self.up()
-        if is_pressed("a"):
-            self.left()
-        if is_pressed("s"):
-            self.down()
-        if is_pressed("d"):
-            self.right()
+        for key in Keyboard.pressed_keys.copy():
+            if key == "w":
+                self.up()
+            elif key == "a":
+                self.left()
+            elif key == "s":
+                self.down()
+            elif key == "d":
+                self.right()
 
         if not self.is_valid(self.pos):
             self.pos = self.previous
-            # print(self.pos, self.exits)
-            logger.debug((self.pos, self.exits))
             if self.pos in self.exits:
                 map_, pos = self.exits[self.pos]
+
+                if not og:
+                    return True
+
                 if map_ is not None:
-                    self.events.events[1].stop()
-                    # Event.stop_all()  # stops the _update_thread so, doesnt finish :( (maybe pause the thread)
+                    # logger.debug(f"running {map_} on {pos}")
+                    map_(pos)
+                    self.exits[self.pos] = map_, Coord(
+                        2, 19
+                    )  # got to reset the exits cause it changes with your pos for some reason
 
-                    map_event = map_(pos)
+    last_coords = []
 
-                    map_event.play()  # add on this one's update a break on exit
-                    print("EXIT")
+    def _update_weather(self, weather):  # TODO fix glitching
+        for coord in Map.last_coords:
+            self.frame[coord].value = " "  # (use base map in future)
 
-                    # self.events.events[1].stopped = False
-                    # self.events.events[1].start()
-                    def update():
-                        sleep(0.01)
-                        Scene.refresh(1)
+        particles = choices(weather.particles, k=weather.heaviness)
 
-                    Event(update).start()
-                    self().play()
+        # self.open_cells.remove(self.pos)
+        coords = choices(self.open_cells, k=weather.heaviness)
+        # self.open_cells.append(self.pos)
 
-                    # Event(self.scene.add).start()
-                else:
-                    return 5
+        for coord, particle in list(zip(coords, particles)):
+            self.frame[coord].value = particle
 
-    def _update_weather(self):
-        if Weather.active:
-            for weather in Weather.active:
-                if weather.particles is not None:
-                    particles = choices(weather.particles, k=weather.heaviness)
+        Map.last_coords = coords
 
-                    # self.open_cells.remove(self.pos)
-                    coords = choices(self.open_cells, k=weather.heaviness)
-                    # self.open_cells.append(self.pos)
-
-                    # matrix = copy(self.frame.matrix)
-
-                    for coord, particle in list(zip(coords, particles)):
-                        self.frame[coord].value = particle
-
-                    sleep(weather.frequency)
-
-                    for coord in coords:
-                        self.frame[coord].value = " "  # (use base map in future)
-        else:
-            return EventExit.Silent
-
-    def _init(self):
+    def _play_weather(self):
         for weather in Weather.active:
             if weather.sound is not None:
-                weather.sound.fade_in(3)
+                weather.sound.fade_in()
 
-    def __call__(self, entrance: Coord = ...) -> EventGroup:
+    def __call__(self, entrance: Coord = ..., og=False):
         if entrance is not ...:
             self.pos = entrance
 
-        self.events = EventGroup(
-            self._update_player,
-            # self._update_weather,
-            self.scene.add,
-            # init=self._init,
-        )
+        self._play_weather()
 
-        return self.events
+        EventGroup(
+            [
+                Event(self._update_player, 0.1, og),
+                *[
+                    Event(self._update_weather, weather.frequency, weather)
+                    for weather in Weather.active
+                    if weather.particles is not None
+                ],
+            ]
+        ).play()
 
     def up(self, times: int = 1):
         self.pos.y -= times
@@ -215,7 +210,7 @@ m = Map(
 │                    ╰─────┴─╯ │
 ╰──────────────────────────────╯
 """,
-        border_type=Borders.THICK,
+        border_type=Borders.THIN,
     ),
     Coord(5, 5),
 )
@@ -243,20 +238,42 @@ HOME____________________________
 
 # m2.link(m, Coord(4, 26), Coord(2, 19))
 
-m.exits[Coord(2, 19)] = (m2, Coord(4, 26))
-m2.exits[Coord(4, 26)] = (m, Coord(2, 19))
+# m.exits[Coord(1, 19)] = (m2, Coord(5, 31))
+# m2.exits[Coord(5, 28)] = (m, Coord(2, 19))
 
 
-def update():
-    sleep(0.01)
-    Scene.refresh(1)
+Screen.clear()
+f = Frame.box(Size(20, 50))
+f2 = Frame.box(Size(10, 25))
+# f2.events = [Event(m._update_player, 0.1, False)]
+m.frame.events = [Event(m._update_player, 0.1, False)]
+f.add_frame(m.frame)
+
+# all_events = []
+# for frame in f.all_frames:
+#     if frame.events:
+#         all_events += frame.events
+with key_listener:
+    EventGroup(
+        [frame.events[0] for frame in f.all_frames]
+        + [
+            Event(m._update_weather, weather.frequency, weather)
+            for weather in Weather.active
+            if weather.particles is not None
+        ]
+    ).play()
 
 
-Event(update).start()
+# EventGroup(
+#     [
+#         Event(self._update_player, 0.1, og),
+#         *[
+#             Event(self._update_weather, weather.frequency, weather)
+#             for weather in Weather.active
+#             if weather.particles is not None
+#         ],
+#     ]
+# ).play()
 
-Scene.clear()
-
-
-print(m.exits, m2.exits)
-
-m2().play()
+# with key_listener:
+#     m2(og=True)

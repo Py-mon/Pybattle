@@ -1,18 +1,19 @@
 from time import sleep
 from typing import Callable, Self
 
-from keyboard import is_pressed
+from pynput.keyboard import Key
 
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import Error
 from pybattle.types_ import Align
-from pybattle.window.event import Event, Scene, rect_print
+from pybattle.window.event import Event, EventGroup, Scene
 from pybattle.window.frames.border.border_type import Direction
 from pybattle.window.frames.frame import Frame
 from pybattle.window.grid.coord import Coord
 from pybattle.window.grid.matrix import Matrix
 from pybattle.window.grid.range import center_range, rect_range
 from pybattle.window.grid.size import Size
+from pybattle.window.input import Keyboard, key_listener
 
 
 def get_directions(from_: Coord, to: Coord) -> list[Direction]:
@@ -99,9 +100,6 @@ class SwitchSelection:
 
         self.directions: dict[Self, list[Direction]] = {}
 
-    def __class_getitem__(cls, x):
-        pass
-
     @property
     def label(self):
         return self.off.label
@@ -147,21 +145,24 @@ class Menu:
 
         self.update()
 
+        s = Scene(lambda: self.frame, Coord(5, 5))
+
         def event():
             self.update()
 
-            if is_pressed("right"):
-                self.right()
-            elif is_pressed("left"):
-                self.left()
-            elif is_pressed("up"):
-                self.up()
-            elif is_pressed("down"):
-                self.down()
-            elif is_pressed("enter"):
-                return self.selection.label
+            for key in Keyboard.pressed_keys:
+                if key == Key.right:
+                    self.right()
+                elif key == Key.left:
+                    self.left()
+                elif key == Key.up:
+                    self.up()
+                elif key == Key.down:
+                    self.down()
+                elif key == Key.enter:
+                    return self.selection.label
 
-            return Scene(str(self.frame), Coord(5, 5))
+            s.draw()
 
         self.event = event
 
@@ -182,12 +183,10 @@ class Menu:
                 )
 
             elif isinstance(selection, VoidSelection):
-                # print(selection.pos, selection.pos + selection.size)
                 self.frame.contents[
                     selection.pos : selection.pos + selection.size
                 ] = Matrix.from_str(selection.label)
 
-                # print(rect_range(selection.pos + selection.size))
                 self.frame.contents.color(
                     selection.color,
                     rect_range(selection.pos + selection.size, Coord(0, 0)),
@@ -217,7 +216,7 @@ class Menu:
     def centered_list(
         cls,
         frame: Frame,
-        selections: list[SwitchSelection[VoidSelection]],
+        selections: list[SwitchSelection],
         align: Align = Align.MIDDLE,
     ) -> Self:
         labels = [selection.off.label for selection in selections]
@@ -282,7 +281,7 @@ class Menu:
 #     0.1,
 # )
 
-Event(
+e = Event(
     Menu.centered_list(
         Frame.box(Size(10, 25)),
         [
@@ -303,4 +302,5 @@ Event(
     0.1,
 )
 
-Event.play()
+with key_listener:
+    EventGroup([e]).play()

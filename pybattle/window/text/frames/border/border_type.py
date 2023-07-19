@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pybattle.types_ import Direction, JunctionDict, Thickness
-from pybattle.window.grid.matrix import Cell, Junction
+from pybattle.window.text.grid.matrix import Cell, Junction
 
 
 class BorderType:

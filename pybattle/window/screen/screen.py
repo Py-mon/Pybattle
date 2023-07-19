@@ -7,9 +7,9 @@ from typing import Any, Callable, Optional
 
 from pybattle.ansi.colors import ColorType
 from pybattle.ansi.cursor import Cursor
-from pybattle.window.frames.frame import Frame
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.size import Size
+from window.text.grid.point import Coord
+from pybattle.window.text.grid.matrix import Matrix
+from pybattle.window.text.grid.size import Size
 
 
 class Screen:
@@ -45,3 +45,4 @@ class Screen:
             Cursor.move(pos)
             print(line)
             pos.y += 1
+

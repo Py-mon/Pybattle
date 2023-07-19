@@ -1,5 +1,5 @@
 from pybattle.ansi.ansi import AnsiEscSeq
-from pybattle.window.grid.coord import Coord
+from window.text.grid.point import Coord
 
 
 class CursorCode:

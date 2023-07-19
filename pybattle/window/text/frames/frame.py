@@ -4,12 +4,13 @@ from typing import Any, Callable, Optional, Self
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import SizeTooSmall
 from pybattle.types_ import Align, Direction
-from pybattle.window.frames.border.border_type import Borders, BorderType
-from pybattle.window.frames.border.junction_table import get_junction
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Cell, Junction, Matrix
-from pybattle.window.grid.range import center_range, rect_range, selection_range
-from pybattle.window.grid.size import Size
+from pybattle.window.event import Event, EventGroup, Scene
+from pybattle.window.text.frames.border.border_type import Borders, BorderType
+from pybattle.window.text.frames.border.junction_table import get_junction
+from window.text.grid.point import Coord
+from pybattle.window.text.grid.matrix import Cell, Junction, Matrix
+from pybattle.window.text.grid.range import center_range, rect_range, selection_range
+from pybattle.window.text.grid.size import Size
 
 
 class Frame:
@@ -19,13 +20,18 @@ class Frame:
         self,
         contents: Matrix,
         title: Optional[str] = None,
-        event: Optional[Callable[(...), Any]] = None,
+        events: Optional[list[Event]] = None,
         border_color: ColorType = Colors.DEFAULT,
         title_color: ColorType = Colors.DEFAULT,
         border_type: BorderType = Borders.THIN,
         base_color: ColorType = Colors.DEFAULT,
     ) -> None:
-        self.event = event
+        self.events = events
+        if self.events is None:
+            self.events = []
+
+        self.events.append(Event(self._event, 0.1))
+
         self.title = title
         self.border = border_type
         self.border_color = border_color
@@ -40,6 +46,12 @@ class Frame:
         self.base_color: ColorType = base_color
 
         # self.update()
+
+        self.scene = Scene(lambda: str(self), pos=Coord(0, 0))
+
+    def _event(self):
+        self.update()
+        self.scene.draw()
 
     @property
     def all_frames(self) -> list[Self]:
@@ -162,6 +174,7 @@ class Frame:
             frames = self.frames
 
         for frame, coord in frames.copy():
+            frame.update()
             self._add_frame(frame, coord)
 
         for item, to in self.changes.copy():
@@ -429,10 +442,229 @@ class Frame:
         )
 
 
-# for _ in range(100):
-#     f = Frame.box(Size(10, 25))
-#     f.add_frame(Frame.box(Size(6, 7)))
-#     f.add_frame(Frame.box(Size(5, 5)), Coord(4, 4))
-    
-#     f.update()
-# print(f)
+# x = Matrix.from_str(
+#     """HOME____________________________
+# |  _____  | []             |    |
+# |  |   |  | []             |____|
+# |  |   |__| []             |====|
+# |__|                       |====|
+# |      X                        |
+# |                               |
+#                       () ____   |
+# |                        [==]   |
+# |     __              [|      | |
+# | [= |__| =]          [|  ()  | |
+# |                     [|      | |
+# |_______________________________|"""
+# )
+# x.color(Colors.RED, rect_range(Coord(5, 20), Coord(2, 5)))
+
+# import tkinter as tk
+# from tkinter import font
+
+
+# class Text:
+#     def update(self, key):
+#         self.x[self.pos].value = " "
+
+#         print(key.keysym)
+#         if key.keysym == "a":
+#             self.pos.x -= 1
+#         elif key.keysym == "s":
+#             self.pos.y += 1
+#         elif key.keysym == "w":
+#             self.pos.y -= 1
+#         elif key.keysym == "d":
+#             self.pos.x += 1
+
+#         self.x[self.pos].value = "x"
+
+#         self.text.configure(state="normal")
+
+#         self.text.delete("1.0", "end")
+
+#         last_coord = Coord(0, 0)
+#         for coord in self.x.coords:
+#             cell = self.x[coord]
+
+#             if coord.y != last_coord.y:
+#                 self.text.insert(f"{coord.y + 1}.{last_coord.x}", "\n")
+
+#             self.text.insert(f"{coord.y + 1}.{coord.x}", cell.value)
+#             self.text.tag_add("center", "1.0", "end")
+#             if cell.color == Colors.RED:
+#                 self.text.tag_add("red", f"{coord.y + 1}.{coord.x}")
+
+#             last_coord = coord
+#         # last_coord = Coord(5, 5)
+#         # for coord in [coord for coord in self.x.coords]:
+#         #     cell = self.x[coord]
+
+#         #     if coord.y != last_coord.y:
+#         #         self.text.insert(f"{coord.y + 6}.{last_coord.x + 5}", "\n")
+
+#         #     self.text.insert(f"{coord.y + 6}.{coord.x + 5}", cell.value)
+#         #     self.text.tag_add("center", "1.0", "end")
+#         #     if cell.color == Colors.RED:
+#         #         self.text.tag_add("red", f"{coord.y + 6}.{coord.x + 5}")
+
+#         #     last_coord = coord
+
+#         self.text.configure(state="disabled")
+
+#     def __init__(self, x: Matrix):
+#         self.x = x
+#         self.pos = Coord(5, 10)
+
+#         def disable_text_select(event):
+#             text.tag_remove("sel", "1.0", "end")
+#             return "break"
+
+#         def center(event=None):
+#             y, x_ = root.winfo_height(), root.winfo_width()
+#             new_font_size = round(
+#                 min(x_, y) / 25
+#             )  # Adjust the scaling factor as per your preference
+
+#             #font1 = font.Font(root, family="Consolas", size=new_font_size)
+#             text.config(font=("Consolas", new_font_size))
+
+#             s = Size(y, x_)
+#             # 1.71 height to width (width to height 0.583)
+#             size = x.size
+#             size.y *= round(new_font_size * 1.65)
+#             size.x *= round(new_font_size * 0.737)
+
+#             s -= size
+#             s = s.center
+
+#             text.place(x=s.x, y=s.y)
+
+#         text = tk.Text(
+#             root,
+#             font=("Consolas", 20),
+#             background="#2A3439",
+#             foreground="white",
+#             # highlightbackground=root["background"],
+#             # highlightcolor=root["background"],
+#             # highlightthickness=0,
+#             bd=0,  # remove border without changing size
+#             # pady=300
+#         )
+#         text.bind("<Button-1>", disable_text_select)
+
+#         center()
+
+#         text.tag_config("red", foreground="red", justify="center")
+#         text.tag_config("center")
+
+#         last_coord = Coord(0, 0)
+#         for coord in self.x.coords:
+#             cell = self.x[coord]
+
+#             if last_coord == Coord(0, 0):
+#                 print(coord)
+#             if coord.y != last_coord.y:
+#                 text.insert(f"{coord.y + 1}.{last_coord.x}", "\n")
+
+#             text.insert(f"{coord.y + 1}.{coord.x}", cell.value)
+#             text.tag_add("center", "1.0", "end")
+#             if cell.color == Colors.RED:
+#                 text.tag_add("red", f"{coord.y + 1}.{coord.x}")
+
+#             last_coord = coord
+
+#         text.configure(state="disabled")
+
+#         self.text = text
+
+#         root.bind("<Configure>", center)
+#         root.bind("<KeyPress>", self.update)
+
+
+# root = tk.Tk()
+
+# root.geometry("700x520")
+# root.minsize(300, 250)
+# root.title("Pybattle")
+# root.configure(bg="#2A3439")
+
+# Text(x)
+
+
+# root.mainloop()
+
+
+
+
+
+# import tkinter as tk
+# from tkinter.font import Font
+
+
+# def resize_font(event):
+#     new_font_size = round(
+#         int(min(event.width, event.height) / 20) * 0.75
+#     )  # Adjust the scaling factor as per your preference
+#     label.config(font=("Consolas", new_font_size))
+
+
+# def key_press(event):
+#     print("Key pressed:", event.keysym)
+
+
+# root = tk.Tk()
+# root.geometry("500x600")
+
+# label = tk.Label(
+#     root,
+#     text="""
+# HOME____________________________
+# |  _____  | []             |    |
+# |  |   |  | []             |____|
+# |  |   |__| []             |====|
+# |__|                       |====|
+# |      X                        |
+# |                               |
+#                       () ____   |
+# |                        [==]   |
+# |     __              [|      | |
+# | [= |__| =]          [|  ()  | |
+# |                     [|      | |
+# |_______________________________|
+# """,
+#     font=("Consolas", 10),
+# )
+# label.pack(fill=tk.BOTH, expand=True)
+
+
+# root.bind("<Configure>", resize_font)
+# root.bind("<KeyRelease>", key_press)
+
+# root.minsize(250, 250)
+# root.title("Pybattle")
+# root.mainloop()
+
+# root = tk.Tk()
+
+# # 'Consolas, 'Courier New', monospace'
+
+# font = Font(family='Consolas')
+
+# label = tk.Label(root, text="""
+# HOME____________________________
+# |  _____  | []             |    |
+# |  |   |  | []             |____|
+# |  |   |__| []             |====|
+# |__|                       |====|
+# |      X                        |
+# |                               |
+#                       () ____   |
+# |                        [==]   |
+# |     __              [|      | |
+# | [= |__| =]          [|  ()  | |
+# |                     [|      | |
+# |_______________________________|""", font=font).pack()
+
+
+# root.mainloop()

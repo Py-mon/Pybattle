@@ -2,16 +2,16 @@ from collections.abc import Iterator
 from math import ceil
 from typing import Optional, Self
 
-from pybattle.window.grid.coord import Coord
+from pybattle.window.text.grid.point import Coord, Size, _Point
 
 
-def rect_range(stop: Coord, start=None) -> list[Coord]:
-    start = start or Coord(0, 0)
-    return [
-        Coord(y, x)
-        for y in range(start.y, stop.y + 1)
-        for x in range(start.x, stop.x + 1)
-    ]
+# def rect_range(stop: _Point, start=None) -> list[Coord]:
+#     start = start or Coord(0, 0)
+#     return [
+#         Coord(y, x)
+#         for y in range(start.y, stop.y + 1)
+#         for x in range(start.x, stop.x + 1)
+#     ]
 
 
 # Coord(5, 6).y += 10

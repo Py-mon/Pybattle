@@ -1,19 +1,27 @@
+from collections.abc import Callable
+from inspect import isfunction, ismethod
 from math import ceil
 from time import sleep
 from typing import Any, Optional
 
 from pybattle.ansi.cursor import Cursor
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Matrix
-from pybattle.window.grid.size import Size
+from window.text.grid.point import Coord
+from pybattle.window.text.grid.matrix import Matrix
+from pybattle.window.text.grid.size import Size
 from pybattle.window.screen.screen import Screen
 
 
 class Scene:
-    def __init__(self, scene: Any, pos: Coord = ..., max_size: Optional[Size] = None):
+    def __init__(
+        self,
+        scene: Callable[[], Any],
+        pos: Coord = ...,
+        max_size: Optional[Size] = None,
+    ):
         self.max_size = max_size
 
-        self.scene = str(scene)
+        self.scene = scene
+
         self.pos = pos
 
         if self.pos is ...:
@@ -23,54 +31,43 @@ class Scene:
         if self.max_size is not None:
             Screen.rect_print(Matrix.from_size(self.max_size), self.pos)
 
-        Screen.rect_print(self.scene, self.pos)
+        Screen.rect_print(str(self.scene()), self.pos)
+
+
+class Speed:
+    TIME = 1
 
 
 class Event:
     fps = 30
-    events = []
 
-    def __init__(self, func, sleep):
-        """Minimum sleep 0.03"""
-        self.every_frames = ceil(type(self).fps * sleep)
+    def __init__(self, func, every, *args, time_affected: bool = True):
+        """Minimum sleep 0.03 with 30 fps"""
+        if time_affected:
+            every /= Speed.TIME
+
+        self.every_frames = ceil(type(self).fps * every)
         self.func = func
+        self.args = args
 
-        type(self).events.append(self)
 
-    @classmethod
-    def play(cls):
+class EventGroup:
+    def __init__(self, events: list[Event]):
+        self.events = events
+
+    def play(self):
         frame_count = 0
 
-        while True:
-            sleep(1 / cls.fps)
+        event2 = False
+        while not event2:
+            sleep(1 / Event.fps)
             frame_count += 1
 
-            for event in cls.events:
-                if frame_count % event.every_frames == 0:
-                    event.func()
+            if not self.events:
+                break
 
+            for event in self.events:
+                if frame_count % event.every_frames != 0:
+                    continue
 
-# S.clear()
-# Cursor.move(Coord(1, 1))
-# rect_print("hello\nworld")
-
-
-Screen.clear()
-
-z = 105
-
-
-def x():
-    global z
-    z -= 1
-    Scene(str(z), Coord(0, 0), Size(1, 3)).draw()
-
-
-def y():
-    Scene("y", Coord(2, 2)).draw()
-
-
-Event(x, 1)
-Event(y, 3)
-Event.play()
-
+                event2 = event.func(*event.args)

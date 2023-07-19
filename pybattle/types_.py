@@ -1,6 +1,7 @@
-from collections.abc import Iterable, Sequence, Sized
+from collections.abc import Iterable, Sequence
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Self, TypeAlias, TypeVar, Union
+from itertools import chain
+from typing import TYPE_CHECKING, Any, Self, Sized, TypeAlias, TypeVar, Union
 
 if TYPE_CHECKING:
     from pybattle.ansi.colors import ColorType
@@ -75,11 +76,9 @@ def is_nested(seq: list | list[list]) -> bool:
     return len(seq) > 0 and isinstance(seq[0], (list, str))
 
 
-def nested_len(seq: list | list[list]) -> int:
+def nested_len(seq: list[list] | list[str]) -> int:
     """Get the max nested length of a list. If not nested returns the length."""
-    if is_nested(seq):
-        return max([len(row) for row in seq] + [0])
-    return len(seq)
+    return max([len(row) for row in seq] + [0])
 
 
 def nest(seq: list) -> list[list]:
@@ -87,3 +86,7 @@ def nest(seq: list) -> list[list]:
     if is_nested(seq):
         return seq
     return [seq]
+
+
+def flatten(nested_list: list[list]) -> list:
+    return list(chain(*nested_list))
