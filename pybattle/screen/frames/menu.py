@@ -5,15 +5,15 @@ from pynput.keyboard import Key
 
 from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import Error
-from pybattle.types_ import Align
-from pybattle.window.event import Event, EventGroup, Scene
-from pybattle.window.frames.border.border_type import Direction
-from pybattle.window.frames.frame import Frame
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Matrix
-from pybattle.window.grid.range import center_range, rect_range
-from pybattle.window.grid.size import Size
-from pybattle.window.input import Keyboard, key_listener
+from pybattle.screen.event import Event, EventGroup, Scene
+from pybattle.screen.frames.border.border_type import Direction
+from pybattle.screen.frames.frame import Frame
+from pybattle.screen.grid.coord import Coord
+from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.range import center_range, rect_range
+from pybattle.screen.grid.size import Size
+from pybattle.screen.input import Keyboard, key_listener
+from pybattle.types_ import Alignment
 
 
 def get_directions(from_: Coord, to: Coord) -> list[Direction]:
@@ -217,7 +217,7 @@ class Menu:
         cls,
         frame: Frame,
         selections: list[SwitchSelection],
-        align: Align = Align.MIDDLE,
+        align: Alignment = Alignment.MIDDLE,
     ) -> Self:
         labels = [selection.off.label for selection in selections]
         max_ = max(len(label) for label in labels)

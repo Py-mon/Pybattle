@@ -4,15 +4,14 @@ from typing import Optional, Self
 
 from pybattle.log.log import logger
 from pybattle.types_ import CardinalDirection
-from pybattle.window.event import Event, EventGroup, Scene
-from pybattle.window.frames.border.border_type import Borders
-from pybattle.window.frames.frame import Frame
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.matrix import Cell, Junction, Matrix
-from pybattle.window.grid.size import Size
-from pybattle.window.input import Keyboard, key_listener
-from pybattle.window.map.weather import Rain, Weather
-from pybattle.window.screen.screen import Screen
+from pybattle.screen.event import Event, EventGroup, Scene
+from pybattle.screen.input import Keyboard, key_listener
+from pybattle.screen.screen.screen import Screen
+from pybattle.screen.text.frames.border.border_type import Borders
+from pybattle.screen.text.frames.frame import Frame, Junction
+from pybattle.screen.text.grid.matrix import Cell,  Matrix
+from pybattle.screen.text.grid.point import Coord, Size
+from screen.frames.weather import Rain, Weather
 
 Rain(CardinalDirection.WEST)
 
@@ -49,7 +48,7 @@ class Map:
                 self.open_cells.append(coord)
 
         self.scene = Scene(self.camera, Coord(5, 5))
-        
+
         self.previous = copy(self.pos)
 
     def camera(self):
@@ -72,14 +71,13 @@ class Map:
             start.y -= end.y - self.matrix.size.i.y
             end.y = self.matrix.size.i.y
 
-        rows = self.matrix[start:end].rows
-
+        matrix = self.matrix[start:end]
+    
         # add a column of spaces to each side
-        for row in rows:
-            row.insert(0, Cell(" "))
-            row.append(Cell(" "))
+        matrix.extend_column()
+        matrix.extend_column(-1)
 
-        f = Frame(Matrix(rows))
+        f = Frame(matrix)
         f.update()
         return f
 
@@ -90,20 +88,17 @@ class Map:
 
     def _update_player(self, og):
         # m.exits[Coord(2, 19)] = (m, Coord(4, 26))
-        
+
         self.frame[self.previous].value = " "  # (use base map in future)
 
         self.frame.update()
-        
-        
 
         # self.scene.draw()
 
         self.previous = copy(self.pos)
-       
-        
+
         self.frame[self.pos].value = self.player_char
-        #self.frame[self.pos].value = " "  # (use base map in future)
+        # self.frame[self.pos].value = " "  # (use base map in future)
 
         for key in Keyboard.pressed_keys.copy():
             if key == "w":

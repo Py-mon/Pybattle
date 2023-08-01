@@ -1,11 +1,11 @@
 from time import sleep
 
-from window.frames.frame import Frame
+from screen.frames.frame import Frame
 
 from pybattle.ansi.colors import Colors
-from pybattle.window.frames.border.border_type import Borders
-from pybattle.window.grid.coord import Coord
-from pybattle.window.grid.size import Size
+from pybattle.screen.frames.border.border_type import Borders
+from pybattle.screen.grid.coord import Coord
+from pybattle.screen.grid.size import Size
 
 map_ = Frame.map(
     """

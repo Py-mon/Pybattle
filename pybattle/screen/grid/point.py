@@ -2,21 +2,31 @@ from collections.abc import Iterable
 from math import sqrt
 from typing import Iterable, NamedTuple, Optional, Self
 
-from pybattle.log.errors import NegativeError
-from pybattle.types_ import nested_len
+from pybattle.screen.grid.nested import nested_len
 
 
-class _Point(NamedTuple):
+class Point(NamedTuple):
     """Immutable 2D point in the format of (y, x) or (row, col)"""
 
     y: int
     x: int
+
+    @property
+    def reversed(self):
+        return type(self)(self.x, self.y)
 
     @classmethod
     def _convert(cls, obj: Iterable[int] | Self | int) -> Iterable[int] | Self:
         if not isinstance(obj, int):
             return obj
         return obj, obj
+
+    def __abs__(self) -> Self:
+        return type(self)(abs(self.y), abs(self.x))
+
+    @property
+    def non_negative(self) -> Self:
+        return type(self)(max(self.y, 0), max(self.x, 0))
 
     def __add__(self, __other: Iterable[int] | Self | int) -> Self:
         y, x = type(self)._convert(__other)
@@ -38,39 +48,79 @@ class _Point(NamedTuple):
         y, x = type(self)._convert(__other)
         return type(self)(self.y // y, self.x // x)
 
+    def __lt__(self, __other) -> bool:
+        y, x = type(self)._convert(__other)
+        return (self.x + 1) * (self.y + 1) < (y + 1) * (x + 1)
+    
+    def distance(self, _other) -> float:
+        return sqrt((_other.x - self.x)**2 + (_other.y - self.y)**2)
 
-class Coord(_Point):
+
+class Coord(Point):
     """Immutable 2D coordinate with positive values only, in the format of (y, x) or (row, col)"""
 
-    def __init__(self, y: int, x: int):
-        if y < 0 or x < 0:
-            raise NegativeError({"y": y, "x": x}, type(self))
+    # def __init__(self, y: int, x: int):
+    # if y < 0 or x < 0:
+    #     raise NegativeError({"y": y, "x": x}, type(self))
 
     @property
     def coords(self) -> tuple[int, int]:
         """Returns the current (y, x) coordinates as a tuple"""
         return tuple(self)
 
-    def __lt__(self, __other) -> bool:
-        """Lexicographical Sorting"""
-        return self.coords < tuple(type(self)._convert(__other))
+    @property
+    def yx(self) -> tuple[int, int]:
+        """Returns the current (y, x) coordinates as a tuple"""
+        return tuple(self)
+
+    @property
+    def size(self):
+        return Size(self.y, self.x)
 
 
-class Size(_Point):
-    """Immutable (height, width) with positive values only, representing the ending coordinate of a object"""
+class Size(Point):
+    """Immutable (height, width) with positive values only, representing the ending coordinate of an object"""
 
-    def rect_range(self, start: Optional[Coord] = None) -> list[Coord]:
-        start = start or Coord(0, 0)
+    def __init__(self, height: int, width: int):
+        pass
+
+    def rect_range(self, start_from: Optional[Coord] = None) -> list[Coord]:
+        """Get a list of coordinates starting at `start` and ending at the Size in a rectangle"""
+        start_from = start_from or Coord(0, 0)
         return [
             Coord(y, x)
-            for y in range(start.y, self.y + 1)
-            for x in range(start.x, self.x + 1)
+            for y in range(start_from.y, self.y + 1)
+            for x in range(start_from.x, self.x + 1)
         ]
+
+    def array_rect_range(self, start_from: Optional[Coord] = None) -> list[list[Coord]]:
+        """Get a nested list of coordinates starting at `start` and ending at the Size in a rectangle"""
+        start_from = start_from or Coord(0, 0)
+        return [
+            [Coord(y, x) for x in range(start_from.x, self.x + 1)]
+            for y in range(start_from.y, self.y + 1)
+        ]
+
+    def selection_range(
+        self, width: int, start_from: Optional[Coord] = None
+    ) -> list[Coord]:
+        """Get a list of coordinates starting at `start` and ending at the Size (Lexicographical)"""
+        start_from = start_from or Coord(0, 0)
+        res = [
+            Coord(y, x) for y in range(start_from.y, self.y + 1) for x in range(width)
+        ]
+        res = res[start_from.x : -(width - (self.x + 1))]
+        return res
 
     @property
     def center(self) -> Self:
         """The center point of the Size"""
         return self // 2
+
+    @property
+    def coord(self) -> Coord:
+        """The size in coordinate form (the ending coordinate)"""
+        return Coord(self.y, self.x)
 
     @classmethod
     def from_str(cls, string: str) -> Self:
@@ -87,10 +137,6 @@ class Size(_Point):
 
         return Size(height, width)
 
-    def __init__(self, width: int, height: int):
-        if height < 0 or width < 0:
-            raise NegativeError({"height": height, "width": width}, type(self))
-
     @property
     def height(self) -> int:
         return self.y
@@ -106,17 +152,25 @@ class Size(_Point):
 
     @property
     def i(self) -> Self:
-        """The indexing size"""
-        return self - 1
+        """The indexing size (-1)"""
+        if not hasattr(self, '_i'):
+            self._i = self - 1
+        return self._i
 
     def __repr__(self) -> str:
         """Size(height, width)"""
         return f"Size(height={self.height}, width={self.width})"
 
     def __contains__(self, item: Coord):
-        """"""
-        return self.height <= item.y and self.width <= item.y
-        # return item in rect_range(self)
+        """If the coordinate is within the rect range from the origin (0, 0)"""
+        return (
+            self.height >= item.y
+            and self.width >= item.y
+            and (self.height != item.y and self.width != item.x)
+        )
+
+    def within(self, item: Coord, start: Self):
+        return item in self and item not in start
 
     @property
     def dis(self) -> float:
@@ -130,13 +184,8 @@ class Size(_Point):
 
     @property
     def area(self) -> int:
-        """The amount of points within the Size"""
+        """The amount of points within the Size (the length of the rect_range from the origin (0, 0))"""
         return (self.x + 1) * (self.y + 1)
-
-    def __lt__(self, __other) -> bool:
-        """Compare area"""
-        y, x = type(self)._convert(__other)
-        return self.area < (y + 1) * (x + 1)
 
 
 # class Coord:

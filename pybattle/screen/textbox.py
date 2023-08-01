@@ -3,15 +3,15 @@ from time import sleep
 from typing import Optional
 
 from keyboard import is_pressed, wait
-from window.frames.frame import Frame
+from screen.frames.frame import Frame
 
 from pybattle.ansi.colors import Colors, ColorType
-from pybattle.window.screen import Screen
-from pybattle.types_ import Align
-from window.event_ import Event
-from pybattle.window.frames.border.border_type import Borders, BorderType
+from pybattle.screen.screen import Screen
+from pybattle.types_ import Alignment
+from screen.event_ import Event
+from pybattle.screen.frames.border.border_type import Borders, BorderType
 
-from pybattle.window.grid.size import Size
+from pybattle.screen.grid.size import Size
 
 
 class TextBox:
@@ -25,7 +25,7 @@ class TextBox:
         author_color: ColorType = Colors.DEFAULT,
         border_color: ColorType = Colors.DEFAULT,
         text_color: ColorType = Colors.DEFAULT,
-        text_alignment: Align = Align.LEFT,
+        text_alignment: Alignment = Alignment.LEFT,
         block_char: str = "⏷",
         border_type: BorderType = Borders.THIN,
         default_delay: float = 0.03,
@@ -126,11 +126,11 @@ class TextBox:
             if i <= len(lines) - 1:
                 line = ""
                 match self.text_alignment:
-                    case Align.CENTER:
+                    case Alignment.CENTER:
                         line = f" {lines[i]:^{self.text_width}} \n"
-                    case Align.RIGHT:
+                    case Alignment.RIGHT:
                         line = f" {lines[i]:>{self.text_width}} \n"
-                    case Align.LEFT:
+                    case Alignment.LEFT:
                         line = f" {lines[i]:<{self.text_width}} \n"
 
                 if self.block and i == len(lines) - 1:

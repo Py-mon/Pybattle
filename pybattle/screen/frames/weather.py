@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional, Self
 
 from pybattle.types_ import CardinalDirection
-from pybattle.window.sound import Sound
+from pybattle.screen.sound import Sound
 
 
 class Weather: # ☁☂☀

@@ -67,5 +67,14 @@ class Colors:
             if not key.startswith("_") and key.isupper():
                 console.print(f"[{color.hex}]{key}[/{color.hex}]")
 
-
-Colors.print_all()
+    @classmethod
+    def init_color_tags(cls, for_):
+        for key, color in cls.__dict__.items():
+            if not key.startswith("_") and key.isupper():
+                for_.tag_config(color.name, foreground=color.hex)
+                
+    @classmethod
+    def reset_tags(cls, for_):
+        for key, color in cls.__dict__.items():
+            if not key.startswith("_") and key.isupper():
+                for_.tag_delete(color.name)

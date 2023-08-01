@@ -21,33 +21,16 @@ class Error(Exception):
 
 
 class OutOfBounds(Error, IndexError):
-    """`x` out of bounds of `y` by `z`"""
-
-    def __init__(self, out, bounds) -> None:
-        super().__init__(f"{out} is out of bounds of {bounds} by {out + 1 - bounds}")
+    """Out of bounds of certain size range"""
 
 
-class MethodDoesNotExist(Error, NotImplementedError):
-    """Method `x` does not exist for `y`"""
-
-    def __init__(self, method: Callable, for_: Optional[Type] = None) -> None:
-        msg = f"Method '{method.__name__}' does not exist"
-        if for_ is not None:
-            msg += " for " + for_.__name__
-        super().__init__(msg)
+class MethodDoesNotExist(Error, NotImplementedError, AttributeError):
+    """Attribute not found or not implemented"""
 
 
-class SizeTooSmall(Error, ValueError):
-    """`x` is too small for `y`"""
-
-    def __init__(self, too_small: object, for_: str) -> None:
-        super().__init__(f"{too_small} is too small for {for_}")
+class TooSmallError(Error, ValueError):
+    """too small"""
 
 
-class NegativeError(Error, ValueError):
-    """Negatives (`y`) are invalid for `x`"""
-
-    def __init__(self, numbers: dict[str, int], for_: Type) -> None:
-        super().__init__(
-            f"Negatives ({', '.join([repr(name) + ': ' + str(neg) for name, neg in numbers.items() if neg < 0])}) are invalid for '{for_.__name__}'s",
-        )
+class AttributeMissing(Error, AttributeError):
+    """Cannot do because there is no attribute"""
