@@ -2,14 +2,18 @@ from collections.abc import Iterable
 from math import sqrt
 from typing import Iterable, NamedTuple, Optional, Self
 
-from pybattle.screen.grid.nested import nested_len
+from pybattle.screen.grid.nested import max_len
 
 
 class Point(NamedTuple):
-    """Immutable 2D point in the format of (y, x) or (row, col)"""
+    "Immutable 2D point in the format of (y, x) or (row, col)"
 
     y: int
     x: int
+    
+    def __class_getitem__(cls, item):
+        subs = cls.__subclasses__()
+        return subs[subs.index(item)]
 
     @property
     def reversed(self):
@@ -51,13 +55,23 @@ class Point(NamedTuple):
     def __lt__(self, __other) -> bool:
         y, x = type(self)._convert(__other)
         return (self.x + 1) * (self.y + 1) < (y + 1) * (x + 1)
-    
+
     def distance(self, _other) -> float:
-        return sqrt((_other.x - self.x)**2 + (_other.y - self.y)**2)
+        return sqrt((_other.x - self.x) ** 2 + (_other.y - self.y) ** 2)
+
+    def add_x(self, x):
+        return type(self)(self.y, self.x + x)
+
+    def add_y(self, y):
+        return type(self)(self.y + y, self.x)
+    
+    @property
+    def neighbors(self) -> tuple[Self, Self, Self, Self]:
+        return self.add_x(1), self.add_x(-1), self.add_y(1), self.add_y(1)
 
 
 class Coord(Point):
-    """Immutable 2D coordinate with positive values only, in the format of (y, x) or (row, col)"""
+    "Immutable 2D coordinate with positive values only, in the format of (y, x) or (row, col)"
 
     # def __init__(self, y: int, x: int):
     # if y < 0 or x < 0:
@@ -76,6 +90,8 @@ class Coord(Point):
     @property
     def size(self):
         return Size(self.y, self.x)
+    
+    
 
 
 class Size(Point):
@@ -125,15 +141,13 @@ class Size(Point):
     @classmethod
     def from_str(cls, string: str) -> Self:
         """Get the Size of a str"""
-        return Size(
-            string.removeprefix("\n").count("\n"), nested_len(string.splitlines())
-        )
+        return Size(string.removeprefix("\n").count("\n"), max_len(string.splitlines()))
 
     @classmethod
-    def from_list(cls, lst: list[list]) -> Self:
+    def from_iter(cls, lst: tuple[tuple, ...]) -> Self:
         """Get the Size of a nested list"""
         height = len(lst)
-        width = nested_len(lst)
+        width = max_len(lst)
 
         return Size(height, width)
 
@@ -153,7 +167,7 @@ class Size(Point):
     @property
     def i(self) -> Self:
         """The indexing size (-1)"""
-        if not hasattr(self, '_i'):
+        if not hasattr(self, "_i"):
             self._i = self - 1
         return self._i
 
@@ -161,7 +175,7 @@ class Size(Point):
         """Size(height, width)"""
         return f"Size(height={self.height}, width={self.width})"
 
-    def __contains__(self, item: Coord):
+    def __contains__(self, item: Point):
         """If the coordinate is within the rect range from the origin (0, 0)"""
         return (
             self.height >= item.y
@@ -169,7 +183,7 @@ class Size(Point):
             and (self.height != item.y and self.width != item.x)
         )
 
-    def within(self, item: Coord, start: Self):
+    def within(self, item: Point, start: Self):
         return item in self and item not in start
 
     @property
@@ -186,6 +200,7 @@ class Size(Point):
     def area(self) -> int:
         """The amount of points within the Size (the length of the rect_range from the origin (0, 0))"""
         return (self.x + 1) * (self.y + 1)
+
 
 
 # class Coord:

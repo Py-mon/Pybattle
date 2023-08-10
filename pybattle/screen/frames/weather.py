@@ -21,6 +21,8 @@ class Weather: # ☁☂☀
         self.frequency = frequency
 
         self.power = self.heaviness + 1 / self.frequency
+        
+        self.occupying = {}
 
         type(self).active.append(self)
 

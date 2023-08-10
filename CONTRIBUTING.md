@@ -11,7 +11,7 @@ If you notice any of the code not following these guides, feel free to submit a 
 def foo(x: int) -> int:
 ```
 
-- Only type hint variables went your code editor doesnt know what type it is. But when its obvious don't do this:
+- Only type hint variables went the code editor doesnt know what type it is. But when it's obvious you don't have to do this:
 ```py
 x: int = 5
 ```
@@ -21,14 +21,12 @@ x: int = 5
 - All of the docstring should be imperative.
 For example instead of `Adds one to x` use `Add one to x`
 
-- Prefer single over multiple line docstrings.
-
-- Usually you don't add docstrings to dunder methods.
+- Usually don't add docstrings to dunder methods.
 
 - Feel free to use the markdown formatting.
 
 ### Single Line Docstrings
-They don't have a period at the end and do not go on to multiple lines.
+They don't have a period at the end.
 ```py
 def foo(x: int) -> int:
   """Add one to x"""

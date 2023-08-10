@@ -1,23 +1,20 @@
 from time import sleep
-from typing import Callable, Self
+from typing import Callable, Optional, Self
 
-from pynput.keyboard import Key
-
-from pybattle.ansi.colors import Colors, ColorType
 from pybattle.log.errors import Error
-from pybattle.screen.event import Event, EventGroup, Scene
-from pybattle.screen.frames.border.border_type import Direction
-from pybattle.screen.frames.frame import Frame
-from pybattle.screen.grid.coord import Coord
+from pybattle.screen.colors import Color, Colors
+from pybattle.screen.frames.border.border_type import Borders, BorderType, Direction
+from pybattle.screen.frames.frame import Frame, center_range
+from pybattle.screen.grid.cell import Cell
 from pybattle.screen.grid.matrix import Matrix
-from pybattle.screen.grid.range import center_range, rect_range
-from pybattle.screen.grid.size import Size
-from pybattle.screen.input import Keyboard, key_listener
+from pybattle.screen.grid.nested import max_len
+from pybattle.screen.grid.point import Coord, Size
+from pybattle.screen.window import keys_pressing
 from pybattle.types_ import Alignment
 
 
 def get_directions(from_: Coord, to: Coord) -> list[Direction]:
-    directions = list()
+    directions = []
 
     y1, x1 = from_
     y2, x2 = to
@@ -41,7 +38,7 @@ class VoidSelection:
     def __init__(
         self,
         label: str,
-        color: ColorType = Colors.DEFAULT,
+        color: Color = Colors.DEFAULT,
     ) -> None:
         self.label = label
         self.color = color
@@ -50,7 +47,8 @@ class VoidSelection:
 
     @property
     def size(self):
-        return Size.from_str(self.label).i
+        s = Size.from_str(self.label).i
+        return s.add_y(1)
 
 
 class Selection(VoidSelection):
@@ -60,7 +58,7 @@ class Selection(VoidSelection):
         self,
         label: str,
         pos: Coord,
-        color: ColorType = Colors.DEFAULT,
+        color: Color = Colors.DEFAULT,
     ) -> None:
         super().__init__(label, color)
 
@@ -84,7 +82,7 @@ class FrameSelection(Selection):
         return self.frame.size
 
 
-class SwitchSelection:
+class SwitchSelection:  # TODO clean up selections
     def __init__(
         self,
         off: VoidSelection | Selection | FrameSelection,
@@ -119,21 +117,128 @@ class SwitchSelection:
         self.selected.pos = pos
 
 
-class Menu:
+# class Selection:
+#     def __init__(
+#         self,
+#         label: str,
+#         color: Color = Colors.DEFAULT,
+#     ) -> None:
+#         self.label = label
+#         self.color = color
+
+#         self.pos = Coord(0, 0)
+
+#     @property
+#     def size(self):
+#         return Size.from_str(self.label + " ")
+
+
+# class FrameSelection:
+#     """A selection that has a frame around it"""
+
+#     def __init__(
+#         self,
+#         frame: Frame,
+#     ) -> None:
+#         self.frame = frame
+
+#     @property
+#     def size(self):
+#         return self.frame.size
+
+
+# class SwitchSelection:  # TODO clean up selections
+#     def __init__(
+#         self,
+#         coord: Coord,
+#         off: VoidSelection | Selection | FrameSelection,
+#         selected: VoidSelection | Selection | FrameSelection,
+#     ) -> None:
+#         if off.pos != selected.pos:
+#             raise Error("Cannot move a SwitchSelection's pos")
+#         elif off.label != selected.label and off.label != "" and selected.label != "":
+#             raise Error("Cannot change a SwitchSelection's label")
+
+#         self.off = off
+#         self.selected = selected
+
+#         self.directions: dict[Self, list[Direction]] = {}
+
+#     @property
+#     def label(self):
+#         return self.off.label
+
+#     @label.setter
+#     def label(self, label: str):
+#         self.off.label = label
+#         self.selected.label = label
+
+#     @property
+#     def pos(self):
+#         return self.off.pos
+
+#     @pos.setter
+#     def pos(self, pos: Coord):
+#         self.off.pos = pos
+#         self.selected.pos = pos
+
+
+# class Selection:
+#     def __init__(
+#         self,
+#         label: str,
+#         pos: Coord,
+#         selected_color: Color,
+#         unselected_color: Color = Colors.DEFAULT,
+#     ) -> None:
+#         self.selected = selected
+#         self.unselected_color = unselected_color
+
+#         self.directions: dict[Self, list[Direction]] = {}
+
+#     @property
+#     def label(self):
+#         return self.selected.label
+
+#     @property
+#     def pos(self):
+#         return self.selected.pos
+
+
+# class FrameSelection:
+#     def __init__(
+#         self,
+#         selected: Frame,
+#         pos: Coord,
+#         unselected_border_color: Color = Colors.DEFAULT,
+#         unselected_inside_color: Color = Colors.DEFAULT,
+#     ) -> None:
+#         self.selected = selected
+#         self.pos = pos
+#         self.unselected_border_color = unselected_border_color
+#         self.unselected_inside_color = unselected_inside_color
+
+#         self.directions: dict[Self, list[Direction]] = {}
+
+
+class Menu(Frame):
     def __init__(
         self,
-        frame: Frame,
+        cells: tuple[tuple[Cell, ...], ...],
         selections: list[SwitchSelection],
+        title: Optional[str] = None,
+        border_type: BorderType = Borders.THIN,
     ) -> None:
-        self.frame = frame
+        super().__init__(cells, title, border_type)
 
         self.selections = selections
 
         # Set the starting selection to the one closest to the origin
-        self.selection = selections[0]
+        self.selection = selections[0]  # ? but not ordered?
 
         for current_selection in self.selections.copy():
             # Sort the selections by the closest ones first (when you press '►' it will go to the closest one to the right)
+
             self.selections.sort(key=lambda x: current_selection.pos.distance(x.pos))
             for selection in self.selections:
                 # Exclude its own selection
@@ -145,29 +250,7 @@ class Menu:
 
         self.update()
 
-        s = Scene(lambda: self.frame, Coord(5, 5))
-
-        def event():
-            self.update()
-
-            for key in Keyboard.pressed_keys:
-                if key == Key.right:
-                    self.right()
-                elif key == Key.left:
-                    self.left()
-                elif key == Key.up:
-                    self.up()
-                elif key == Key.down:
-                    self.down()
-                elif key == Key.enter:
-                    return self.selection.label
-
-            s.draw()
-
-        self.event = event
-
     def update(self):
-        frames = []
         for switch_selection in self.selections:
             if switch_selection == self.selection:
                 selection = switch_selection.selected
@@ -175,132 +258,64 @@ class Menu:
                 selection = switch_selection.off
 
             if isinstance(selection, FrameSelection):
-                frames.append((selection.frame, selection.pos))
-
-                selection.frame.update(
-                    selection.frame.border_color,
-                    base_color=selection.frame.base_color,
-                )
+                selection.frame.color_border(selection.frame.border_color)
+                selection.frame.color_inside(selection.frame.base_color)
+                self.add_frame(selection.frame, selection.pos)
 
             elif isinstance(selection, VoidSelection):
-                self.frame.contents[
-                    selection.pos : selection.pos + selection.size
-                ] = Matrix.from_str(selection.label)
-
-                self.frame.contents.color(
-                    selection.color,
-                    rect_range(selection.pos + selection.size, Coord(0, 0)),
+                self[selection.pos : selection.pos + selection.size] = Matrix(
+                    Cell.from_str(selection.label)
                 )
 
-        self.frame.update(frames=frames + self.frame.frames)
+                self.color(
+                    selection.color,
+                    (selection.size + selection.pos).rect_range(selection.pos),
+                )
 
-    def move(self, direction: Direction) -> None:
-        for selection, directions in self.selection.directions.items():
-            if direction in directions:
-                self.selection = selection
-                break
+    def move(self, direction: Direction, times: int = 1) -> None:
+        for _ in range(times):
+            for selection, directions in self.selection.directions.items():
+                if direction in directions:
+                    self.selection = selection
+                    break
 
-    def right(self) -> None:
-        self.move(Direction.RIGHT)
+    def switch(self):
+        for key in keys_pressing:
+            print(key)
+            if key == "a":
+                self.move(Direction.LEFT)
+            elif key == "s":
+                self.move(Direction.DOWN)
+            elif key == "d":
+                self.move(Direction.RIGHT)
+            elif key == "w":
+                self.move(Direction.UP)
+            elif key == "Return":
+                keys_pressing.remove(key)
+                return self.selection
 
-    def left(self) -> None:
-        self.move(Direction.LEFT)
-
-    def up(self) -> None:
-        self.move(Direction.UP)
-
-    def down(self) -> None:
-        self.move(Direction.DOWN)
+        self.update()
 
     @classmethod
     def centered_list(
         cls,
-        frame: Frame,
+        cells: tuple[tuple[Cell, ...], ...],
         selections: list[SwitchSelection],
         align: Alignment = Alignment.MIDDLE,
     ) -> Self:
         labels = [selection.off.label for selection in selections]
-        max_ = max(len(label) for label in labels)
         size = Size.from_str("\n".join(labels))
-        size.x = max_
 
         for i, selection in enumerate(selections):
-            print(repr(selection.label))
-            selection.label = align.align(selection.label, max_)
-            print(repr(selection.label))
-            slice_ = center_range(frame.size.inner, size)
+            selection.label = align.align(selection.label, size.width)
+
+            slice_ = center_range(Size.from_iter(cells), size)
             selection.pos = Coord(slice_.start.y + i, slice_.start.x)
 
-        menu = cls(frame, selections)
+        menu = cls(cells, selections)
 
         # Link the first and the last item together
         selections[-1].directions[selections[0]].append(Direction.UP)
         selections[0].directions[selections[-1]].append(Direction.DOWN)
 
         return menu
-
-
-# print(
-#     Menu(
-#         Frame.box(Size(10, 25)),
-#         [
-#             SwitchSelection(
-#                 Selection("Play", Coord(2, 2)),
-#                 Selection("Play", Coord(2, 2), Colors.RED),
-#             ),
-#             SwitchSelection(
-#                 Selection("Settings", Coord(4, 4)),
-#                 Selection("Settings", Coord(4, 4), Colors.BLUE),
-#             ),
-#             SwitchSelection(
-#                 Selection("Quit", Coord(6, 6)),
-#                 Selection("Quit", Coord(6, 6), Colors.RED),
-#             ),
-#         ],
-#     ).frame
-# )
-
-# Event(
-#     Menu(
-#         Frame.box(Size(10, 25)),
-#         [
-#             SwitchSelection(
-#                 Selection("Play", Coord(2, 2)),
-#                 Selection("Play", Coord(2, 2), Colors.RED),
-#             ),
-#             SwitchSelection(
-#                 Selection("Settings", Coord(4, 4)),
-#                 Selection("Settings", Coord(4, 4), Colors.BLUE),
-#             ),
-#             SwitchSelection(
-#                 Selection("Quit", Coord(6, 6)),
-#                 Selection("Quit", Coord(6, 6), Colors.RED),
-#             ),
-#         ],
-#     ).event,
-#     0.1,
-# )
-
-e = Event(
-    Menu.centered_list(
-        Frame.box(Size(10, 25)),
-        [
-            SwitchSelection(
-                VoidSelection("Play"),
-                VoidSelection("Play", Colors.RED),
-            ),
-            SwitchSelection(
-                VoidSelection("Settings"),
-                VoidSelection("Settings", Colors.BLUE),
-            ),
-            SwitchSelection(
-                VoidSelection("Quit"),
-                VoidSelection("Quit", Colors.RED),
-            ),
-        ],
-    ).event,
-    0.1,
-)
-
-with key_listener:
-    EventGroup([e]).play()

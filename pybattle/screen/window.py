@@ -1,4 +1,6 @@
 import tkinter as tk
+from collections.abc import Iterable
+from enum import Enum
 from math import ceil
 from tkinter import Tk
 from tkinter.font import Font
@@ -15,7 +17,7 @@ SPEED = 1
 
 
 class Event:
-    fps = 30
+    fps = 60
 
     _events: list[Self] = []
 
@@ -31,18 +33,41 @@ class Event:
         type(self)._events.append(self)
 
 
+class EventExit(Enum):
+    BREAK_QUEUE = 2
+    BREAK = 1
+    QUIT = 0
+
+
+class EventQueue:
+    def __init__(self, *events: list[Event]):
+        self.events = list(events)
+        self._i = 0
+        self.current_events = self.events[self._i]
+        self.last_results = {}
+        self.new_results = {}
+
+    def next(self):
+        self._i += 1
+        if self._i >= len(self.events):
+            return "end"
+        self.current_events = self.events[self._i]
+        self.last_results = self.new_results
+        self.new_results = {}
+
+    def add(self, events: list[Event]):
+        self.events.append(events)
+
+
 class Window:
     STARTING_SIZE = Size(520, 700)
-    BACKGROUND = Color.from_hex("BACKGROUND", "#2d2833")
+    BACKGROUND = Color.from_hex("BACKGROUND", "#2c2c34")
     MIN_SIZE = Size(260, 300)
     TITLE = "Pybattle"
     FONT = "Consolas"
     PIXELS_TO_FONT_SIZE: int = 25
 
     def change(self, text: Matrix):
-        #self.text.configure(state="normal")
-        
-        #Colors.reset_tags(self.text)
         Colors.init_color_tags(self.text)
 
         self.text.delete("1.0", "end")
@@ -53,8 +78,6 @@ class Window:
                 self.text.tag_add(cell.color.name, f"{coord.y + 1}.{coord.x}")
 
             self.text.insert(f"999.end", "\n")
-
-        #self.text.configure(state="disabled")
 
     def disable_selection(self) -> None:
         def disable_selection(_):
@@ -72,19 +95,6 @@ class Window:
         self.text.config(font=self.font)
 
     def text_size(self):
-        # Thanks to chat gpt for getting the text size in pixels
-
-        # canvas = tk.Canvas(self.root)
-        # text = canvas.create_text(
-        #     0, 0, text=self.text.get("1.0", "end"), font=self.font
-        # )
-        # box = canvas.bbox(text)
-        # text_width = box[2] - box[0]
-        # text_height = box[3] - box[1] - self.font.actual()["size"] * 2
-
-        # h = self.font.metrics()["linespace"] * 5
-
-        # text_height = round(self.font.metrics()["ascent"] * 5.25)  # estimate
         text_width = self.font.measure(" ") * self.matrix.size.x
 
         line_height = self.font.metrics("linespace")
@@ -105,17 +115,6 @@ class Window:
     def center_resize(self, _=None):
         window_size = Size(self.root.winfo_height(), self.root.winfo_width())
 
-        # # Fast movement speed
-        # if self._times > 5:
-        #     pos = Size(self.root.winfo_y(), self.root.winfo_x()) + window_size
-        #     pos2 = Size(self.root.winfo_y(), self.root.winfo_x())
-        #     if self._last_pos != pos and self._last_pos2 != pos2:
-        #         self._last_pos = pos
-        #         self._last_pos2 = pos2
-        #         return
-
-        # self._times += 1
-
         self.resize_text(window_size)
         self.center_text(window_size)
 
@@ -130,9 +129,7 @@ class Window:
     ):
         self.pixels_to_font_size = type(self).PIXELS_TO_FONT_SIZE
 
-        self._last_pos = None
-        self._last_pos2 = None
-        self._times = 0
+        self.event_queue: EventQueue
 
         self.root = Tk()
 
@@ -160,36 +157,69 @@ class Window:
         self.change(text)
 
         def events(frame_count):
-            for event in Event._events:
+            if not self.event_queue.current_events:
+                if self.event_queue.next() == "end":
+                    self.root.destroy()
+
+            for event in self.event_queue.current_events:
                 if frame_count % event.every_frames != 0:
                     continue
 
-                if event.func(*event.args):
-                    Event._events.remove(event)
+                if self.event_queue.last_results:
+                    result = event.func(self.event_queue.last_results, *event.args)
+                else:
+                    result = event.func(*event.args)
+
+                if result is not None:
+                    break_ = False
+                    if isinstance(result, tuple):
+                        if EventExit.BREAK_QUEUE == result[0]:
+                            break_ = True
+                            result = result[1]
+                    elif result == EventExit.BREAK_QUEUE:
+                        break_ = True
+                    elif result == EventExit.QUIT:
+                        self.root.destroy()
+
+                    self.event_queue.current_events.remove(event)
+                    self.event_queue.new_results[event.func.__name__] = result
+
+                    if break_:
+                        self.event_queue.current_events = []
+                        break
 
             self.root.after(1000 // Event.fps, events, frame_count + 1)
 
-        events(0)
+        self.root.after(10, events, 0)
 
         self.root.bind("<KeyPress>", lambda key: keys_pressing.add(key.keysym))
         self.root.bind("<KeyRelease>", lambda key: keys_pressing.remove(key.keysym))
 
-        def x1(event):
+        def zoom(event):
             if not (self.pixels_to_font_size - event.delta // 30) <= 0:
                 if not ((self.pixels_to_font_size > 50) and event.delta < 0):
                     self.pixels_to_font_size -= event.delta // 30
                     print(self.pixels_to_font_size)
                     self.center_resize()
 
-        self.root.bind("<MouseWheel>", x1)
+        self.root.bind("<MouseWheel>", zoom)
 
         self.root.bind("<Configure>", self.center_resize)
 
-    def run(self):
-        # self.text.configure(state="disabled")
+    def run(self, event_queue: EventQueue):
+        self.event_queue = event_queue
         self.root.mainloop()
 
+    def extend_event_queue(self, events: list[Event]):
+        self.event_queue.add(events)
 
+    def extend_current_events(self, event: Event, time_after=0):
+        self.one_time_event(
+            lambda: self.event_queue.current_events.append(event), time_after
+        )
+
+    def one_time_event(self, func, time_after):
+        self.root.after(time_after * 1000, func)
 
 
 # f = Frame.from_str(
@@ -237,13 +267,6 @@ class Window:
 # Event(update, 0.05)
 
 # w.run()
-
-
-
-
-
-
-
 
 
 # import tkinter as tk

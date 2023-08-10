@@ -103,7 +103,7 @@ class Stat:
         return False
 
 
-with open(code_file) as file:
+with open(code_file, encoding="utf-8") as file:
     code = file.read()
 
 profile = Profile(builtins=False).run(code)
@@ -131,6 +131,14 @@ for stat in stats.values():
             reverse=True,
         )
     )
+
+    # for key in stat._callers:
+    #     try:
+    #         stat.callers[key] = stats[key]
+    #     except KeyError:
+    #         pass
+
+    # stat.callers = dict(sorted(stat.callers.items(), key=sort, reverse=True))
 
 
 def find_callers(callers):

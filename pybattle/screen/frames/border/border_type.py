@@ -21,12 +21,29 @@ class BorderType:
         self.horizontal = horizontal
         self.vertical = vertical
 
-        self.top_right_junction = Junction(self.top_right)
-        self.top_left_junction = Junction(self.top_left)
-        self.bottom_right_junction = Junction(self.bottom_right)
-        self.bottom_left_junction = Junction(self.bottom_left)
-        self.horizontal_junction = Junction(self.horizontal)
-        self.vertical_junction = Junction(self.vertical)
+    @property
+    def top_right_junction(self):
+        return Junction(self.top_right)
+
+    @property
+    def top_left_junction(self):
+        return Junction(self.top_left)
+
+    @property
+    def bottom_right_junction(self):
+        return Junction(self.bottom_right)
+
+    @property
+    def bottom_left_junction(self):
+        return Junction(self.bottom_left)
+
+    @property
+    def horizontal_junction(self):
+        return Junction(self.horizontal)
+
+    @property
+    def vertical_junction(self):
+        return Junction(self.vertical)
 
     def __repr__(self) -> str:
         return (

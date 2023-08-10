@@ -56,7 +56,7 @@ class Alignment(Enum):
             return string.rjust(width)
         elif self == Alignment.CENTER or self == Alignment.MIDDLE:
             return string.center(width)
-        return str()
+        return ''
 
 
 class Thickness(Enum):

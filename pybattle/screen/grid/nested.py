@@ -1,17 +1,17 @@
 from itertools import chain
+from typing import Self
 
 from pybattle.screen.grid.cell import Cell
 from pybattle.types_ import Alignment
-from typing import Self
 
 
 def is_nested(seq: list | list[list]) -> bool:
     """Check if a sequence is nested"""
-    return len(seq) > 0 and isinstance(seq[0], (list, str))
+    return len(seq) > 0 and isinstance(seq[0], (list, str, tuple))
 
 
-def nested_len(seq: list[list] | list[str]) -> int:
-    """Get the max nested length of a list. If not nested returns the length."""
+def max_len(seq: tuple[tuple, ...] | tuple[str, ...] | list[str]) -> int:
+    """Get the max length of row in a nested list."""
     return max([len(row) for row in seq] + [0])
 
 
@@ -26,43 +26,46 @@ def flatten(nested_list: list[list]) -> list:
     return list(chain(*nested_list))
 
 
-def format_list(lst):
-    def format(lst, join_):
-        if not isinstance(lst, list):
-            return str(lst)
+def format(tup):
+    def format_(tup_, join_):
+        if not isinstance(tup_, tuple):
+            return repr(tup_)
 
         elements = []
-        for item in lst:
-            elements.append(format(item, ","))
+        for item in tup_:
+            elements.append(format_(item, ","))
 
-        return "[" + (join_).join(elements) + "]"
+        return "(" + (join_).join(elements) + ")"
 
-    if is_nested(lst):
-        return format(lst, ",\n ")
-    return format(lst, ",")
+    if is_nested(tup):
+        return format_(tup, ",\n ")
+    return format_(tup, ",")
 
 
-
-def level_out(rows: list[list], alignment: Alignment = Alignment.LEFT):
+def level_out(
+    rows: tuple[tuple], alignment: Alignment = Alignment.LEFT
+) -> tuple[tuple, ...]:
     """Level out the rows of the matrix making them all the same width"""
+    max_length = max(len(row) for row in rows)
 
-    if rows:
-        max_length = nested_len(rows)
+    new_rows = []
+    for row in rows:
+        row_length = len(row)
+        if row_length >= max_length:
+            new_rows.append(row)
+            continue
+        
+        if alignment == Alignment.LEFT:
+            new_row = row + (Cell(" "),) * (max_length - row_length)
+        elif alignment == Alignment.RIGHT:
+            new_row = (Cell(" "),) * (max_length - row_length) + row
+        elif alignment == Alignment.CENTER:
+            left_padding = (max_length - row_length) // 2
+            right_padding = max_length - row_length - left_padding
+            new_row = (Cell(" "),) * left_padding + row + (Cell(" "),) * right_padding
+        else:
+            raise ValueError
 
-        for row in rows:
-            row_length = len(row)
-            if row_length >= max_length:
-                continue
+        new_rows.append(new_row)
 
-            match alignment:
-                case Alignment.LEFT:
-                    row.extend(Cell(" ") * (max_length - row_length))
-                case Alignment.RIGHT:
-                    for _ in range(max_length - row_length):
-                        row.insert(0, Cell(" "))
-                case Alignment.CENTER:
-                    left_padding = (max_length - row_length) // 2
-                    right_padding = max_length - row_length - left_padding
-                    row[:] = (
-                        [Cell(" ")] * left_padding + row + [Cell(" ")] * right_padding
-                    )
+    return tuple(new_rows)
