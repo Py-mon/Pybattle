@@ -2,7 +2,7 @@ from copy import copy, deepcopy
 from math import ceil
 from typing import Any, Callable, Optional, Self
 
-from types_ import Alignment
+from pybattle.types_ import Alignment, Level
 
 from pybattle.log.errors import AttributeMissing, TooSmallError
 from pybattle.screen.colors import Color, Colors
@@ -11,7 +11,34 @@ from pybattle.screen.frames.border.junction_table import get_junction
 from pybattle.screen.grid.matrix import Cell, Junction, Matrix
 from pybattle.screen.grid.nested import level_out
 from pybattle.screen.grid.point import Coord, Point, Size
-from pybattle.types_ import Alignment, Direction, JunctionDict
+from pybattle.types_ import Direction, JunctionDict
+from dataclasses import dataclass
+
+
+@dataclass
+class Title:
+    title: str
+    x: int | Alignment = Alignment.LEFT
+    color: Color = Colors.DEFAULT
+    level: Level = Level.TOP
+
+
+def convert_align_to_pos(
+    alignment: Alignment | int,
+    of: "Size",
+    right_adjustment: int = 0,
+    margins: int = 3,
+):
+    if not isinstance(alignment, Alignment):
+        return alignment
+    
+    if alignment == type(alignment).CENTER or alignment == type(alignment).MIDDLE:
+        return of.center.x - 1
+    elif alignment == type(alignment).LEFT:
+        return margins
+    elif alignment == type(alignment).RIGHT:
+        return of.x - right_adjustment - margins
+    return of.x
 
 
 class Frame(Matrix):
@@ -20,7 +47,6 @@ class Frame(Matrix):
         cls,
         text: str,
         size: Size,
-        title: Optional[str] = None,
         border_type: BorderType = Borders.THIN,
         alignment: Alignment = Alignment.CENTER,
     ) -> Self:
@@ -34,14 +60,10 @@ class Frame(Matrix):
         │          │
         ╰──────────╯
         """
-        frame = cls(Cell.from_size(size), title, border_type)
+        frame = cls(Cell.from_size(size), border_type)
 
         aligned_text = Matrix(Cell.from_str(text), alignment)
-        slice_ = center_range(frame.size, aligned_text.size.i)
-
-        # print(slice_)
-        # print(repr(frame[slice_]))
-        # print(repr(aligned_text))
+        slice_ = get_box(frame.size, aligned_text.size.i)
 
         frame[slice_] = aligned_text
 
@@ -50,24 +72,21 @@ class Frame(Matrix):
     def __init__(
         self,
         cells: tuple[tuple[Cell, ...], ...],
-        title: Optional[str] = None,
         border_type: BorderType = Borders.THIN,
     ) -> None:
         super().__init__(cells)
 
-        self.title = title
+        self.titles: list[Title] = []
+
         self.border_type = border_type
+        self.border_color = None
+        self.left_title_color = None
+        self.right_title_color = None
+        self.base_color = None
 
         self.border()
 
-    def color_title(self, color: Color):
-        self.title_color = color
-        if self.title:
-            self.color(color, Size(0, len(self.title) + 3).rect_range(Coord(0, 3)))
-        else:
-            raise AttributeMissing(f"color the title to '{color.name}'", "title")
-
-    def color_inside(self, color: Color):
+    def color_inner(self, color: Color):
         self.base_color = color
         self.color(self.base_color, self.size.inner.rect_range(Coord(1, 1)))
 
@@ -84,47 +103,48 @@ class Frame(Matrix):
             )
             + Size(0, self.size.i.width).rect_range(),
         )
-        if self.title:
-            self.color_title(self.title_color)
 
-    def set_title(self, new_title: str):
-        self.title = new_title
-        self.reborder()
+        self.recolor_titles()
 
-    def reborder(self):
+    def recolor_titles(self):
+        for title in self.titles:
+            pos = convert_align_to_pos(title.x, self.size, len(title.title), 1 + 2)
+
+            self.color(
+                title.color,
+                Coord(title.level.value, pos + len(title.title)).rect_range(
+                    Coord(title.level.value, pos)
+                ),
+            )
+
+    def unborder(self):
+        """Remove the border."""
         self.cells = self[Coord(1, 1) : self.size.inner].cells
 
-        self.border()
+    def add_title(self, title: Title) -> None:
+        matrix = Matrix(Cell.from_str("╴" + title.title + "╶"))
+
+        matrix.color(title.color, matrix.size.i.sub_x(1).rect_range(Coord(0, 1)))
+
+        pos = convert_align_to_pos(title.x, self.size, len(title.title), 1 + 2)
+        print(title.x, pos)
+
+        self[
+            Coord(title.level.value, pos - 1) : Coord(
+                title.level.value, pos + len(title.title)
+            )
+        ] = matrix
+
+        self.titles.append(title)
 
     def border(self):
-        """Add a border around the Matrix"""
-        if self.title:
-            if self.size.inner.width - len(self.title) - 3 <= 0:
-                raise TooSmallError(f"Frame of {self.size}", f"Title: '{self.title}'")
+        """Add a border around the Matrix."""
 
-            cell_title = [Cell(char) for char in self.title]  # was ()
-
-            length_after_title = self.size.width - len(self.title) - 3
-            cells_after_title = (
-                self.border_type.horizontal_junction * length_after_title
-            )
-
-            top_row = (
-                self.border_type.top_right_junction,
-                self.border_type.horizontal_junction,
-                Cell(" ", collision=True),
-                *cell_title,
-                Cell(" ", collision=True),
-                *cells_after_title,
-                self.border_type.top_left_junction,
-            )
-
-        else:
-            top_row = (
-                self.border_type.top_right_junction,  # all theses where copied
-                *self.border_type.horizontal_junction * self.size.width,
-                self.border_type.top_left_junction,
-            )
+        top_row = (
+            self.border_type.top_right_junction,
+            *(self.border_type.horizontal_junction * self.size.width),
+            self.border_type.top_left_junction,
+        )
 
         left_column = self.border_type.vertical_junction * self.size.height
         right_column = self.border_type.vertical_junction * self.size.height
@@ -151,6 +171,24 @@ class Frame(Matrix):
                 Coord(1, self.size.i.width)
             )
         )
+
+        # for title in self.titles.copy():
+        #     self.add_title(title)
+
+        # matrix = Matrix(Cell.from_str("╴" + title.title + "╶"))
+        # # matrix.color(color, matrix.size.i.rect_range(Coord(0, 1)))
+
+        # pos = title.pos
+        # if pos == Alignment.CENTER or pos == Alignment.MIDDLE:
+        #     pos = Coord(0, self.size.center.x - 1)
+        # elif pos == Alignment.LEFT:
+        #     pos = Coord(0, 3)
+        # elif pos == Alignment.RIGHT:
+        #     pos = Coord(0, self.size.x - matrix.size.width - 1)
+
+        # self[pos.add_x(-1) : Coord(pos.y, pos.x + len(title.title))] = matrix
+
+        # self.color_titles()
 
     def add_frame(
         self,
@@ -195,16 +233,16 @@ class Frame(Matrix):
 
             self[coord]._value = junction.dct
 
-        if not change_border_color and hasattr(self, "border_color"):
+        if not change_border_color and self.border_color is not None:
             self.color_border(self.border_color)
 
-        if self.title is not None:
-            for i, char in enumerate(" " + self.title + " "):
-                self[Coord(0, i + 2)] = Cell(char, self.title_color, True)
+        # if self.title is not None:
+        #     for i, char in enumerate(" " + self.title + " "):
+        #         self[Coord(0, i + 2)] = Cell(char, self.title_color, True)
 
 
-def center_range(center_of: Point, size: Point) -> slice:
-    """Get a slice that is the size of inner_size in the center of the outer_size"""
+def get_box(center_of: Point, size: Point) -> slice:
+    """Get a slice that is the size of inner_size in the center of the outer_size."""
     return slice(
         Coord(
             ceil((center_of.y - size.y) / 2 - 1),
@@ -217,8 +255,6 @@ def center_range(center_of: Point, size: Point) -> slice:
     )
 
 
-f = Frame(Cell.from_size(Size(5, 12)))
-
-f.add_frame(Frame(Cell.from_size(Size(2, 5))))
-
+f = Frame(Cell.from_size(Size(5, 17)))
+f.add_title(Title("Air", 5, Colors.BLUE, Level.BOTTOM))
 print(f)

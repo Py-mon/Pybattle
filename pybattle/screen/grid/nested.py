@@ -1,12 +1,12 @@
 from itertools import chain
 from typing import Self
 
-from pybattle.screen.grid.cell import Cell
 from pybattle.types_ import Alignment
+from pybattle.screen.grid.cell import Cell
 
 
 def is_nested(seq: list | list[list]) -> bool:
-    """Check if a sequence is nested"""
+    """Check if a sequence is nested."""
     return len(seq) > 0 and isinstance(seq[0], (list, str, tuple))
 
 
@@ -16,7 +16,7 @@ def max_len(seq: tuple[tuple, ...] | tuple[str, ...] | list[str]) -> int:
 
 
 def nest(seq: list) -> list[list]:
-    """If a sequence is not nested, it returns it nested"""
+    """If a sequence is not nested, it returns it nested."""
     if is_nested(seq):
         return seq
     return [seq]
@@ -45,7 +45,7 @@ def format(tup):
 def level_out(
     rows: tuple[tuple], alignment: Alignment = Alignment.LEFT
 ) -> tuple[tuple, ...]:
-    """Level out the rows of the matrix making them all the same width"""
+    """Level out the rows of the matrix making them all the same width."""
     max_length = max(len(row) for row in rows)
 
     new_rows = []
@@ -54,7 +54,7 @@ def level_out(
         if row_length >= max_length:
             new_rows.append(row)
             continue
-        
+
         if alignment == Alignment.LEFT:
             new_row = row + (Cell(" "),) * (max_length - row_length)
         elif alignment == Alignment.RIGHT:

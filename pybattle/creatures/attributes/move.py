@@ -1,51 +1,70 @@
-from typing import Callable
-
-from pybattle.types_ import Attacker, Creature, Defender, ElementReference
+from typing import Callable, Optional, Literal
 
 from pybattle.creatures.attributes.element import Element
+from pybattle.types_ import Attacker, Creature, Defender
+from pybattle.screen.frames.frame import Frame
+from pybattle.screen.grid.cell import Cell
+from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.point import Size, Coord
 
 
 class Move:
-    """A technique that a creature uses in battle"""
+    """A technique that a creature uses in battle."""
 
     def __init__(
         self,
-        element: ElementReference,
-        function: Callable[[list[Attacker], list[Defender]], None],
+        name: str,
+        element: Element,
+        function: Callable[[list[Attacker], list[Defender]], None | Literal["start"]],
+        tick: Optional[
+            Callable[[list[Attacker], list[Defender]], None | Literal["end"]]
+        ] = None,
+        energy_cost: int = 0,
+        strength: Optional[int] = None,
+        accuracy: int = 100,
+        type_: Optional[str] = None,
+        desc: Optional[str] = None,
     ) -> None:
-        self.element = Element.convert_element_references([element])[0]
+        self.name = name
+        self.element = element
+        self.accuracy = accuracy
+        self.strength = strength
+        self.type_ = type_
+        self.tick = tick
+        self.energy_cost = energy_cost
         self.function = function
+        self.desc = desc
 
-    def __repr__(self) -> str:
-        return self.function.__name__.capitalize()
+    def simple_frame(self):
+        frame = Frame(
+            Cell.from_size(Size(1, 16)),
+            self.name.capitalize(),
+            self.element.name.capitalize(),
+        )
+        frame.overlay(Matrix(Cell.from_str(str(self.strength) + " STR")), Coord(1, 2))
+        frame.overlay(
+            Matrix(Cell.from_str(str(self.energy_cost) + " EC")),
+            Coord(1 , -(len(str(self.energy_cost))) - 5),
+        )
+        return frame
+        ...
 
-    def use(
-        self, attackers: list[Creature], defenders: list[Creature], width: int = 70
-    ) -> None:
-        """Uses a move. Automatically resets damage, does element multipliers, and does damage"""
-        for attacker in attackers:
-            attacker.damage_to = 0
-        for defender in defenders:
-            defender.damage_to = 0
 
-        # TextBox is not implemented
-        # text_box = TextBox(height=3, width=width)
-        text_box = ...
+# ╭─ Wind Bash ─ Air ─╮
+# │ 50 STR      25 EC │
+# ╰───────────────────╯
 
-        for attacker in attackers:
-            self.function(attackers, defenders)
-            for target in attacker.targets:
-                mult = attacker.move.element.attack_mult(target.elements)
-                if mult == 2:
-                    text_box.text = "It's super effective..!"
-                elif mult == 0.5:
-                    text_box.text = "It's not very effective..."
-                elif mult == 4:
-                    text_box.text = "It's super duper effective..!"
-                elif mult == 0:
-                    text_box.text = f"It's doesn't affect {target.name}..."
-                target.damage_to *= mult
-                target.stats["health"].battle_bonus -= target.damage_to
-            attacker.stats["health"].battle_bonus -= attacker.damage_to
 
-        (text_box.speech())
+print(Move('Wind Bash', Element('Air', {}), None, energy_cost=25, strength=50).simple_frame())
+
+
+
+
+# def use(
+#     self, attackers: list[Creature], defenders: list[Creature], width: int = 70
+# ) -> None:
+#     """Uses a move. Automatically resets damage, does element multipliers, and does damage."""
+#     for attacker in attackers:
+#         attacker.damage_to = 0
+#     for defender in defenders:
+#         defender.damage_to = 0

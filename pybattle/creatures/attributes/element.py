@@ -1,68 +1,49 @@
-from __future__ import annotations
-
-from typing import Sequence
-
-from pybattle.log.log import Logger
-from pybattle.types_ import ElementReference
+from copy import copy
+from typing import Self
 
 
 class Element:
-    """Determines the strengths and weaknesses of different `Creatures`"""
-
-    elements: dict[str, "Element"] = {}
-
-    @staticmethod
-    def convert_element_references(
-        elements_references: Sequence[ElementReference],
-    ) -> list["Element"]:
-        """Changes all the strs in `elements` to their value in `Element.elements`.
-        Removes the value if they are not in `Element.elements`. Returns it after the process
-        """
-        elements: list["Element"] = []
-        for element in elements_references:
-            if isinstance(element, str):
-                if element in Element.elements:
-                    elements.append(Element.elements[element])
-                else:
-                    Logger.warning(
-                        f"{element} is not an active element. It is not been added."
-                    )
-            else:
-                elements.append(element)
-        return elements
-
-    def __init__(
-        self,
-        name: str,
-        strengths: list[ElementReference],
-        resistances: list[ElementReference],
-    ) -> None:
+    def __init__(self, name: str, mults: dict[str, float]):
+        self.mults = mults
         self.name = name
-        self.strengths = strengths
-        self.resistances = resistances
 
-        Element.elements[self.name] = self
+    @property
+    def strengths(self):
+        return {element: mult for element, mult in self.mults.items() if mult > 1}
 
-    def __repr__(self) -> str:
-        return self.name.capitalize()
+    @property
+    def weaknesses(self):
+        return {element: mult for element, mult in self.mults.items() if mult < 1}
 
-    def attack_mult(
-        self, element_references: Sequence[ElementReference]
-    ) -> float | int:
-        """The multiplier of `self.element` attacking `elements_references`"""
-        elements = self.convert_element_references(element_references)
+    @property
+    def immunities(self):
+        return {element: mult for element, mult in self.mults.items() if mult == 0}
 
-        mult = 1.0
-        for element in elements:
-            if self.name in element.resistances:
-                mult *= 1 / 2
-            for strength in self.strengths:
-                if isinstance(strength, str):
-                    if element.name == strength:
-                        mult *= 2
-                elif isinstance(strength, Element):
-                    if element.name == strength.name:
-                        mult *= 2
-        if mult == 1 / 4:
-            return 0
-        return mult
+    @property
+    def neutrals(self):
+        return {element: mult for element, mult in self.mults.items() if mult == 1}
+
+    def __mul__(self, other: Self) -> float:
+        """get the mult for self attacking other"""
+        if "+" in other.name:
+            mult = 1
+            for element in other.name.split("+"):
+                mult *= self.mults.get(element, 1)
+            return mult
+        return self.mults.get(other.name, 1)
+
+    def __add__(self, other: Self):
+        """add two or more types together"""
+        dct = copy(self.mults)
+        for element, mult in other.mults.items():
+            if element in dct:
+                dct[element] *= mult
+            else:
+                dct[element] = mult
+        return type(self)(f"{self.name}+{other.name}", dct)
+
+
+fire = Element("fire", {"fire": 0.5, "water": 0.5})
+water = Element("water", {"water": 0.5, "fire": 2})
+
+print((fire) * (fire + water))

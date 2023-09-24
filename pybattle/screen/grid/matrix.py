@@ -31,9 +31,7 @@ from pybattle.types_ import Alignment, Direction, JunctionDict
 
 
 class Junction(Cell):
-    """A Cell that is the borders of frames"""
-
-    x = 5
+    """A Cell that is the borders of frames."""
 
     def __init__(self, dct: JunctionDict, color: Color = Colors.DEFAULT):
         super().__init__(dct, color, True)
@@ -49,7 +47,7 @@ class Junction(Cell):
     def __add__(self, junction: Self) -> Self:
         return Junction(self.dct | junction.dct, junction.color)
 
-    def __mul__(self, times: int) -> tuple[Self]:
+    def __mul__(self, times: int) -> tuple[Self, ...]:
         return tuple(Junction(self.dct, self.color) for _ in range(times))
 
 
@@ -129,15 +127,16 @@ class Matrix:
 
     @property
     def coords(self):
-        """All of the valid coordinates in the Matrix"""
+        """All of the valid coordinates in the Matrix."""
         return self.__coords(self.cells)
 
     def level_out(self, alignment: Alignment = Alignment.LEFT) -> None:
-        """Level out the rows of the matrix making them all the same width"""
-        self.cells = level_out(self.cells, alignment)
+        """Level out the rows of the matrix making them all the same width."""
+        if self.cells:
+            self.cells = level_out(self.cells, alignment)
 
     def color(self, color: Color, coords: list[Coord]) -> None:
-        """Color cells in the matrix"""
+        """Color cells in the matrix."""
         for coord in coords:
             if coord not in self.size:
                 raise OutOfBounds(
@@ -146,11 +145,11 @@ class Matrix:
             self[coord].color = color
 
     def color_all(self, color: Color) -> None:
-        """Color the whole matrix a certain color"""
+        """Color the whole matrix a certain color."""
         self.color(color, self.coords)
 
     def __contains__(self, item: Coord | Any) -> bool:
-        """Check if a coord or cell is in the Matrix"""
+        """Check if a coord or cell is in the Matrix."""
         if isinstance(item, Coord):
             return item in self.coords
         return Cell(item) in self
@@ -194,7 +193,7 @@ class Matrix:
             return Matrix(
                 tuple(
                     tuple(
-                        self[coord] #if coord in self.size else Cell(" ")
+                        self[coord]  # if coord in self.size else Cell(" ")
                         for coord in row
                     )
                     for row in stop.array_rect_range(item.start)
@@ -233,12 +232,11 @@ class Matrix:
             # self.cells[item.y][item.x].collision = new_cells.collision
 
         elif isinstance(item, slice):
-            
             start = item.start or Size(0, 0)
-            stop = item.stop or (self.size.i - start)
+            stop = Size(item.stop.y, item.stop.x) or (self.size.i - start)
 
-            if not self.size.within(stop, start):
-                raise OutOfBounds
+            # if not self.size.within(stop, start):
+            #     raise OutOfBounds
 
             cells = [list(row) for row in self.cells]
 
@@ -254,8 +252,7 @@ class Matrix:
                 cells[coord.y][coord.x] = new_cells[coord - start]
 
             self.cells = tuple(tuple(row) for row in cells)
-            
-            
+
             # start = item.start
             # if start is None:
             #     start = Size(0, 0)
@@ -283,20 +280,17 @@ class Matrix:
 
             #     self[coord] = new_cells[coord - start]
 
-
     def extend_row(self, with_: Optional[tuple] = None, n: int = 1):
         """Extend `n` row(s) of spaces (if negative extends the opposite way)"""
         if with_ is None:
             with_ = Cell(" ") * self.size.width
 
         if n < 0:
-            self.cells = (tuple(with_[i] for i in range(self.size.width)),) * (
-                -n
-            ) + self.cells
+            self.cells = (with_,) * (-n) + self.cells
         else:
-            self.cells = (
-                self.cells + (tuple(with_[i] for i in range(self.size.width)),) * n
-            )
+            self.cells = self.cells + (with_,) * n
+
+        self.level_out()
 
     def extend_column(self, with_: Optional[tuple] = None, n: int = 1):
         """Extend `n` column(s) of spaces (if negative extends the opposite way)"""
@@ -314,7 +308,7 @@ class Matrix:
                 for i, row in enumerate(self.cells)
             )
 
-    def overlay(self, text: Self, pos: Coord):
+    def overlay(self, text, pos: Coord):
         """Overlay a Matrix on top of this Matrix (the `pos` starts at the Matrix's top left corner)"""
         self[pos : text.size.i + pos] = text
 
@@ -325,7 +319,7 @@ class Matrix:
 
     @property
     def cols(self) -> list[list[Cell]]:
-        """Transposed rows"""
+        """Transposed rows."""
         return [list(col) for col in list(zip(*self.rows))]
 
     @property
@@ -334,12 +328,33 @@ class Matrix:
         return self.__size(self.cells)
 
     def __repr__(self) -> str:
-        """A formatted representation of the matrix"""
+        """A formatted representation of the matrix."""
         return format(self.cells)
 
     def __str__(self) -> str:
-        """The colors and values of each cell joined together"""
+        """The colors and values of each cell joined together."""
         return self.__str(self.cells)
+
+    def remove_whitespace_sides(self):
+        matrix = list(self.cells)
+
+        while all(row[1].value == " " for row in matrix):
+            for i in range(len(matrix)):
+                matrix[i] = matrix[i][2:]
+
+        # Remove leading space rows
+        while matrix[0] and all(
+            matrix[0][i].value == " " for i in range(len(matrix[0]))
+        ):
+            matrix.pop(0)
+
+        # Remove trailing space rows
+        while matrix[-1] and all(
+            matrix[-1][i].value == " " for i in range(len(matrix[-1]))
+        ):
+            matrix.pop()
+
+        self.cells = tuple(matrix)
 
 
 # m = Matrix(((Cell(1), Cell(1)), (Cell(1),)))
@@ -383,7 +398,7 @@ class Matrix:
 
 
 # class Junction(Cell):
-#     """A Cell that is the borders of frames"""
+#     """A Cell that is the borders of frames."""
 
 #     def __init__(self, dct: JunctionDict, color: Color = Colors.DEFAULT):
 #         super().__init__(dct, color, True)
@@ -404,7 +419,7 @@ class Matrix:
 
 
 # def cache_change(fn, value_changing):
-#     """Save the result and only rerun the function when the value changes"""
+#     """Save the result and only rerun the function when the value changes."""
 #     last_value = None
 #     last_return = None
 #     copy_change = value_changing
@@ -481,15 +496,15 @@ class Matrix:
 
 #     @property
 #     def coords(self) -> list[Coord]:
-#         """All of the valid coordinates in the Matrix"""
+#         """All of the valid coordinates in the Matrix."""
 #         return self.__coords()
 
 #     def level_out(self, alignment: Alignment = Alignment.LEFT) -> None:
-#         """Level out the rows of the matrix making them all the same width"""
+#         """Level out the rows of the matrix making them all the same width."""
 #         level_out(self.cells, alignment)
 
 #     def color(self, color: Color, coords: list[Coord]) -> None:
-#         """Color cells in the matrix"""
+#         """Color cells in the matrix."""
 #         for coord in coords:
 #             if coord not in self.size:
 #                 raise OutOfBounds(
@@ -498,11 +513,11 @@ class Matrix:
 #             self[coord].color = color
 
 #     def color_all(self, color: Color) -> None:
-#         """Color the whole matrix a certain color"""
+#         """Color the whole matrix a certain color."""
 #         self.color(color, self.coords)
 
 #     def __contains__(self, item: Coord | Any) -> bool:
-#         """Check if a coord or cell is in the Matrix"""
+#         """Check if a coord or cell is in the Matrix."""
 #         if isinstance(item, Coord):
 #             return item in self.coords
 #         return Cell(item) in self
@@ -647,7 +662,7 @@ class Matrix:
 
 #     @property
 #     def cols(self) -> list[list[Cell]]:
-#         """Transposed rows"""
+#         """Transposed rows."""
 #         return [list(col) for col in list(zip(*self.rows))]
 
 #     @property
@@ -656,9 +671,9 @@ class Matrix:
 #         return self._size()
 
 #     def __repr__(self) -> str:
-#         """A formatted representation of the matrix"""
+#         """A formatted representation of the matrix."""
 #         return format_list(self.cells)
 
 #     def __str__(self) -> str:
-#         """The colors and values of each cell joined together"""
+#         """The colors and values of each cell joined together."""
 #         return self.__str()

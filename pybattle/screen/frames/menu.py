@@ -4,7 +4,7 @@ from typing import Callable, Optional, Self
 from pybattle.log.errors import Error
 from pybattle.screen.colors import Color, Colors
 from pybattle.screen.frames.border.border_type import Borders, BorderType, Direction
-from pybattle.screen.frames.frame import Frame, center_range
+from pybattle.screen.frames.frame import Frame, get_box
 from pybattle.screen.grid.cell import Cell
 from pybattle.screen.grid.matrix import Matrix
 from pybattle.screen.grid.nested import max_len
@@ -33,7 +33,7 @@ def get_directions(from_: Coord, to: Coord) -> list[Direction]:
 
 
 class VoidSelection:
-    """The base selection"""
+    """The base selection."""
 
     def __init__(
         self,
@@ -52,7 +52,7 @@ class VoidSelection:
 
 
 class Selection(VoidSelection):
-    """A selection with a designated pos"""
+    """A selection with a designated pos."""
 
     def __init__(
         self,
@@ -88,11 +88,6 @@ class SwitchSelection:  # TODO clean up selections
         off: VoidSelection | Selection | FrameSelection,
         selected: VoidSelection | Selection | FrameSelection,
     ) -> None:
-        if off.pos != selected.pos:
-            raise Error("Cannot move a SwitchSelection's pos")
-        elif off.label != selected.label and off.label != "" and selected.label != "":
-            raise Error("Cannot change a SwitchSelection's label")
-
         self.off = off
         self.selected = selected
 
@@ -234,7 +229,7 @@ class Menu(Frame):
         self.selections = selections
 
         # Set the starting selection to the one closest to the origin
-        self.selection = selections[0]  # ? but not ordered?
+        self.selection = self.selections[0]  # ? but not ordered?
 
         for current_selection in self.selections.copy():
             # Sort the selections by the closest ones first (when you press '►' it will go to the closest one to the right)
@@ -259,7 +254,7 @@ class Menu(Frame):
 
             if isinstance(selection, FrameSelection):
                 selection.frame.color_border(selection.frame.border_color)
-                selection.frame.color_inside(selection.frame.base_color)
+                selection.frame.color_inner(selection.frame.base_color)
                 self.add_frame(selection.frame, selection.pos)
 
             elif isinstance(selection, VoidSelection):
@@ -309,7 +304,7 @@ class Menu(Frame):
         for i, selection in enumerate(selections):
             selection.label = align.align(selection.label, size.width)
 
-            slice_ = center_range(Size.from_iter(cells), size)
+            slice_ = get_box(Size.from_iter(cells), size)
             selection.pos = Coord(slice_.start.y + i, slice_.start.x)
 
         menu = cls(cells, selections)
@@ -319,3 +314,12 @@ class Menu(Frame):
         selections[0].directions[selections[-1]].append(Direction.DOWN)
 
         return menu
+
+
+# ╭─ Wind Bash ─ Air ─╮ ╭─ Slash ── Normal ─╮
+# │ 50 STR    90% ACC │ │ 35 STR      20 EC │
+# │ Physical    25 EC │ ╰───────────────────╯
+# ╰───────────────────╯
+# ╭─ Dodge ───────────╮ ╭─ Tornado ─── Air ─╮
+# │ Support     30 EC │ │ 70 STR      50 EC │
+# ╰───────────────────╯ ╰───────────────────╯

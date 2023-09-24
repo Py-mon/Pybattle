@@ -22,7 +22,7 @@ class Event:
     _events: list[Self] = []
 
     def __init__(self, func, every, *args, time_affected: bool = True):
-        """Minimum sleep 0.03 with 30 fps"""
+        """Minimum sleep 0.03 with 30 fps."""
         if time_affected:
             every /= SPEED
 
@@ -64,7 +64,7 @@ class Window:
     BACKGROUND = Color.from_hex("BACKGROUND", "#2c2c34")
     MIN_SIZE = Size(260, 300)
     TITLE = "Pybattle"
-    FONT = "Consolas"
+    FONT = "Consolas"  # Consolas, 'Courier New', monospace
     PIXELS_TO_FONT_SIZE: int = 25
 
     def change(self, text: Matrix):
@@ -78,6 +78,8 @@ class Window:
                 self.text.tag_add(cell.color.name, f"{coord.y + 1}.{coord.x}")
 
             self.text.insert(f"999.end", "\n")
+
+        self.matrix = text
 
     def disable_selection(self) -> None:
         def disable_selection(_):
@@ -129,7 +131,7 @@ class Window:
     ):
         self.pixels_to_font_size = type(self).PIXELS_TO_FONT_SIZE
 
-        self.event_queue: EventQueue
+        self.event_queue: Optional[EventQueue]
 
         self.root = Tk()
 
@@ -148,7 +150,6 @@ class Window:
             foreground="white",
             border=0,
         )
-        self.matrix = text
 
         self.disable_selection()
 
@@ -157,36 +158,37 @@ class Window:
         self.change(text)
 
         def events(frame_count):
-            if not self.event_queue.current_events:
-                if self.event_queue.next() == "end":
-                    self.root.destroy()
-
-            for event in self.event_queue.current_events:
-                if frame_count % event.every_frames != 0:
-                    continue
-
-                if self.event_queue.last_results:
-                    result = event.func(self.event_queue.last_results, *event.args)
-                else:
-                    result = event.func(*event.args)
-
-                if result is not None:
-                    break_ = False
-                    if isinstance(result, tuple):
-                        if EventExit.BREAK_QUEUE == result[0]:
-                            break_ = True
-                            result = result[1]
-                    elif result == EventExit.BREAK_QUEUE:
-                        break_ = True
-                    elif result == EventExit.QUIT:
+            if self.event_queue:
+                if not self.event_queue.current_events:
+                    if self.event_queue.next() == "end":
                         self.root.destroy()
 
-                    self.event_queue.current_events.remove(event)
-                    self.event_queue.new_results[event.func.__name__] = result
+                for event in self.event_queue.current_events:
+                    if frame_count % event.every_frames != 0:
+                        continue
 
-                    if break_:
-                        self.event_queue.current_events = []
-                        break
+                    if self.event_queue.last_results:
+                        result = event.func(self.event_queue.last_results, *event.args)
+                    else:
+                        result = event.func(*event.args)
+
+                    if result is not None:
+                        break_ = False
+                        if isinstance(result, tuple):
+                            if EventExit.BREAK_QUEUE == result[0]:
+                                break_ = True
+                                result = result[1]
+                        elif result == EventExit.BREAK_QUEUE:
+                            break_ = True
+                        elif result == EventExit.QUIT:
+                            self.root.destroy()
+
+                        self.event_queue.current_events.remove(event)
+                        self.event_queue.new_results[event.func.__name__] = result
+
+                        if break_:
+                            self.event_queue.current_events = []
+                            break
 
             self.root.after(1000 // Event.fps, events, frame_count + 1)
 
@@ -206,8 +208,9 @@ class Window:
 
         self.root.bind("<Configure>", self.center_resize)
 
-    def run(self, event_queue: EventQueue):
+    def run(self, event_queue: Optional[EventQueue] = None):
         self.event_queue = event_queue
+
         self.root.mainloop()
 
     def extend_event_queue(self, events: list[Event]):
@@ -577,7 +580,7 @@ class Window:
 #     True,
 # )
 # w.place_text(
-#     Matrix.from_str("""Hello"""),
+#     Matrix.from_str("""Hello."""),
 #     Coord(5, 5),
 #     True,
 # )

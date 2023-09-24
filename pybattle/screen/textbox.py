@@ -152,7 +152,7 @@ class TextBox:
         return str(self.textbox)
 
     def add(self, text: str) -> None:
-        """Adds text to the TextBox"""
+        """Adds text to the TextBox."""
         self.text += text
 
     def clear(self) -> None:

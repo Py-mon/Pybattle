@@ -1,38 +1,34 @@
-from __future__ import annotations
-
-from typing import Callable
+from typing import Callable, Optional
 
 from pybattle.types_ import Attacker, Creature, Defender, User
+from dataclasses import dataclass
 
 
+@dataclass
 class Ability:
-    """A talent or skill for a `Creature`"""
+    """A talent or skill for a Creature."""
 
-    def __init__(
-        self,
-        function: Callable[[User, list[Attacker], list[Defender]], None],
-        condition: Callable[[], bool] = lambda: True,
-        activations: int = 1,
-    ) -> None:
-        self.function = function
-        self.condition = condition
-        self.activations = activations
+    name: str
+    function: Callable[[User, list[Attacker], list[Defender]], None]
+    condition: Callable[[], bool] = lambda: True
+    max_activations: int = 1
+    desc: Optional[str] = None
 
     def __repr__(self) -> str:
-        return self.function.__name__.capitalize()
+        return f"{type(self).__name__}:{self.name}"
 
     def activate(
         self,
         user: User,
-        attackers: list[Creature],
-        defenders: list[Creature],
+        attackers: list[Attacker],
+        defenders: list[Defender],
     ) -> bool | None:
         """Activate the ability if the conditions aren't right or it is out of activations.
 
-        Returns `True` on success and `False` on failure"""
-        if self.condition and self.activations > 0:
-            self.activations -= 1
-            self.function(user, attackers, defenders)
-            return True
-        else:
+        Returns `True` on success and `False` on failure."""
+        if not self.condition or self.max_activations <= 0:
             return False
+
+        self.max_activations -= 1
+        self.function(user, attackers, defenders)
+        return True

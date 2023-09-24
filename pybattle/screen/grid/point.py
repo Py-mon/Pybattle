@@ -1,3 +1,4 @@
+from __future__ import annotations
 from collections.abc import Iterable
 from math import sqrt
 from typing import Iterable, NamedTuple, Optional, Self
@@ -10,7 +11,7 @@ class Point(NamedTuple):
 
     y: int
     x: int
-    
+
     def __class_getitem__(cls, item):
         subs = cls.__subclasses__()
         return subs[subs.index(item)]
@@ -64,10 +65,25 @@ class Point(NamedTuple):
 
     def add_y(self, y):
         return type(self)(self.y + y, self.x)
-    
+
+    def sub_x(self, x):
+        return type(self)(self.y, self.x - x)
+
+    def sub_y(self, y):
+        return type(self)(self.y - y, self.x)
+
     @property
     def neighbors(self) -> tuple[Self, Self, Self, Self]:
         return self.add_x(1), self.add_x(-1), self.add_y(1), self.add_y(1)
+
+    def rect_range(self, start_from: Optional[Point] = None) -> list[Coord]:
+        """Get a list of coordinates starting at `start` and ending at the Size in a rectangle."""
+        start_from = start_from or Coord(0, 0)
+        return [
+            Coord(y, x)
+            for y in range(start_from.y, self.y + 1)
+            for x in range(start_from.x, self.x + 1)
+        ]
 
 
 class Coord(Point):
@@ -79,19 +95,22 @@ class Coord(Point):
 
     @property
     def coords(self) -> tuple[int, int]:
-        """Returns the current (y, x) coordinates as a tuple"""
-        return tuple(self)
+        """Returns the current (y, x) coordinates as a tuple."""
+        return self.yx
 
     @property
     def yx(self) -> tuple[int, int]:
-        """Returns the current (y, x) coordinates as a tuple"""
-        return tuple(self)
+        """Returns the current (y, x) coordinates as a tuple."""
+        return (self.y, self.x)
+
+    @property
+    def xy(self) -> tuple[int, int]:
+        """Returns the current (y, x) coordinates as a tuple."""
+        return (self.x, self.y)
 
     @property
     def size(self):
         return Size(self.y, self.x)
-    
-    
 
 
 class Size(Point):
@@ -100,17 +119,8 @@ class Size(Point):
     def __init__(self, height: int, width: int):
         pass
 
-    def rect_range(self, start_from: Optional[Coord] = None) -> list[Coord]:
-        """Get a list of coordinates starting at `start` and ending at the Size in a rectangle"""
-        start_from = start_from or Coord(0, 0)
-        return [
-            Coord(y, x)
-            for y in range(start_from.y, self.y + 1)
-            for x in range(start_from.x, self.x + 1)
-        ]
-
     def array_rect_range(self, start_from: Optional[Coord] = None) -> list[list[Coord]]:
-        """Get a nested list of coordinates starting at `start` and ending at the Size in a rectangle"""
+        """Get a nested list of coordinates starting at `start` and ending at the Size in a rectangle."""
         start_from = start_from or Coord(0, 0)
         return [
             [Coord(y, x) for x in range(start_from.x, self.x + 1)]
@@ -130,7 +140,7 @@ class Size(Point):
 
     @property
     def center(self) -> Self:
-        """The center point of the Size"""
+        """The center point of the Size."""
         return self // 2
 
     @property
@@ -140,7 +150,7 @@ class Size(Point):
 
     @classmethod
     def from_str(cls, string: str) -> Self:
-        """Get the Size of a str"""
+        """Get the Size of a str."""
         return Size(string.removeprefix("\n").count("\n"), max_len(string.splitlines()))
 
     @classmethod
@@ -188,19 +198,18 @@ class Size(Point):
 
     @property
     def dis(self) -> float:
-        """The distance (the amount of points) between the origin (0, 0)"""
+        """The distance between the origin (0, 0)"""
         return sqrt(self.x**2 + self.y**2)
 
     @property
     def compare_dis(self) -> int:
-        """Compare the distance between the origin of Size's"""
+        """Compare the distance between the origin of Size's."""
         return self.x**2 + self.y**2
 
     @property
     def area(self) -> int:
         """The amount of points within the Size (the length of the rect_range from the origin (0, 0))"""
         return (self.x + 1) * (self.y + 1)
-
 
 
 # class Coord:
@@ -216,7 +225,7 @@ class Size(Point):
 
 #     @property
 #     def coords(self) -> tuple[int, int]:
-#         """Returns the current (y, x) coordinates as a tuple"""
+#         """Returns the current (y, x) coordinates as a tuple."""
 #         return self.y, self.x
 
 #     @property
@@ -239,7 +248,7 @@ class Size(Point):
 #     def _convert(cls, obj: Self | int) -> Self:
 #         """Tries to convert the object to a Coord object
 
-#         Raises InvalidConvertType error on invalid object type"""
+#         Raises InvalidConvertType error on invalid object type."""
 #         if isinstance(obj, Coord):
 #             return obj
 #         elif isinstance(obj, int):
@@ -275,5 +284,5 @@ class Size(Point):
 #         return hash(self.coords)
 
 #     def distance(self, other: Self) -> float:
-#         """Get the distance between one coord and another"""
+#         """Get the distance between one coord and another."""
 #         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)

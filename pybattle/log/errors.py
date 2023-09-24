@@ -21,11 +21,11 @@ class Error(Exception):
 
 
 class OutOfBounds(Error, IndexError):
-    """Out of bounds of certain size range"""
+    """Out of bounds of certain size range."""
 
 
 class MethodDoesNotExist(Error, NotImplementedError, AttributeError):
-    """Attribute not found or not implemented"""
+    """Attribute not found or not implemented."""
 
 
 class TooSmallError(Error, ValueError):
@@ -33,4 +33,4 @@ class TooSmallError(Error, ValueError):
 
 
 class AttributeMissing(Error, AttributeError):
-    """Cannot do because there is no attribute"""
+    """Cannot do because there is no attribute."""

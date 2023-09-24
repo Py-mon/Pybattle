@@ -98,7 +98,7 @@ class Lexer:
         self.code = code.replace(" ", "")
 
     def split(self):
-        """Split the code into pieces based of the IdTokens"""
+        """Split the code into pieces based of the IdTokens."""
         pattern = (
             "("
             + "|".join(
@@ -117,7 +117,7 @@ class Lexer:
         )
 
     def lex(self):
-        """Covert the split pieces into Token objects"""
+        """Covert the split pieces into Token objects."""
         tokens = []
         for token in self.splits:
             for token_ in IdToken.tokens:

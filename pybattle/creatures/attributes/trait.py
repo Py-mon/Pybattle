@@ -5,7 +5,7 @@ from pybattle.types_ import Creature
 
 
 class Trait:
-    """A quality or characteristic belonging to a creature"""
+    """A quality or characteristic belonging to a creature."""
 
     traits: list["Trait"] = []
 
@@ -13,7 +13,7 @@ class Trait:
     def generate(cls, x: int = 2) -> set["Trait"] | None:
         """Generate `x` number of random traits. May have less if it generates the same trait.
 
-        Returns `None` if there are too few traits"""
+        Returns `None` if there are too few traits."""
         if len(cls.traits) >= x:
             traits = set(
                 choices(
@@ -27,13 +27,14 @@ class Trait:
 
     @staticmethod
     def creases(increases: list[str], decreases: list[str], percent: float = 0.1):
-        """Create a function that increases and decreases a User's stats by a percent"""
+        """Create a function that increases and decreases a User's stats by a percent."""
 
         def func(user: Creature) -> None:
-            for increase in increases:
-                user.stats[increase].bonus *= percent
-            for decrease in decreases:
-                user.stats[decrease].bonus /= percent
+            pass
+            # for increase in increases:
+            #     user.[increase].bonus *= percent
+            # for decrease in decreases:
+            #     user.stats[decrease].bonus /= percent
 
         return func
 
@@ -50,6 +51,21 @@ class Trait:
     def __repr__(self) -> str:
         return self.name
 
+
+"""
+Evolution
+Skins (Shiny)
+
+Aging: Implement an aging system where Pymon's appearance and attributes change as they progress through different lifestages.
+Pymon Emotions: Assign emotions or moods to Pymon that can influence their behavior and interactions. '
+
+Dynamic Stat Growth: Implement a more dynamic system where certain stats have a higher growth rate during different life stages'
+Stat Specialization: Allow players to choose certain stats to specialize in as their Pymon levels up.'
+
+Stat Decay: Introduce a stat decay mechanic where unused or underutilized stats gradually decrease over time, encouraging players to regularly engage with their Pymon.
+Stat-Dependent Evolution Paths: Design multiple evolution paths for each Pymon species, each influenced by different stat distributions. 
+
+"""
 
 Trait("brave", Trait.creases(["attack"], ["speed"]))
 Trait("fierce", Trait.creases(["attack"], ["magic"]))

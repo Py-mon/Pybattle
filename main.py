@@ -8,51 +8,177 @@ from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.window import Event, EventExit, EventQueue, Window, keys_pressing
 from pybattle.types_ import CardinalDirection
 
-f = Frame(Cell.from_size(Size(15, 40)))
-m1 = """
-╭─ BEDROOM ─┬──────────────────╮
-│   ╰───────╯       ||||       │
-│                   ||||       │
-│                     ─┬─┬─┬─┬─┤
-│                              │
-│                              │
-│╭│╮   ╶─╮                     │
-││││    ░│                     │
-│╰│╯   ╶─╯           ╭─────┬─╮ │
-│                    │░░░░░│▓│ │
-│                    ╰─────┴─╯ │
-╰──────────────────────────────╯
-"""
+
+# r"""
+#    _-----_
+#    | , , |
+#    |  -  |
+#   __|---|__
+#  / |     | \
+#  \ |_____| /
+#   ^| | | |^
+#    | | | |
+#    |_| |_|
+
+# """
+# x = r"""
+#    _-----_
+#    ┃ , , ┃
+#    ┃  -  ┃
+#   __┃───┃__
+#  / ┃     ┃ \
+#  \ ┃_____┃ /
+#   ^┃ ┃ ┃ ┃^
+#    ┃ ┃ ┃ ┃
+#    ┃_┃ ┃_┃
+# """
+
+# w = Window(Matrix(Cell.from_str(x)))
+# w.run()
 
 
-m2 = Map(Cell.from_str(m1), Coord(7, 22))
-m2[Coord(5, 5)].value = "^"
-m2[Coord(5, 5)].collision = False
-
-f.add_frame(m2.camera())
-print(f)
-
-
-w = Window(f)
-
-w.one_time_event(lambda: Rain(CardinalDirection.EAST, frequency=0.17), 3)
-
-
-def update1():
-    f.add_frame(m2.camera())
-    w.change(f)
-
-    # if m2[m2.pos].value == "^":
-    #     w.extend_current_events(Event(lambda: EventExit.QUIT, 0.01), 3)
+# f = Frame(Cell.from_size(Size(15, 40)))
+# m1 = """
+# ╭─ BEDROOM ─┬──────────────────╮
+# │   ╰───────╯       ||||       │
+# │                   ||||       │
+# │                     ─┬─┬─┬─┬─┤
+# │                              │
+# │                              │
+# │╭│╮   ╶─╮                     │
+# ││││    ░│                     │
+# │╰│╯   ╶─╯           ╭─────┬─╮ │
+# │                    │░░░░░│▓│ │
+# │                    ╰─────┴─╯ │
+# ╰──────────────────────────────╯
+# """
 
 
-e1 = Event(update1, 0.01)
+# m2 = Map(Cell.from_str(m1), Coord(7, 22))
+# m2[Coord(5, 5)].value = "^"
+# m2[Coord(5, 5)].collision = False
+
+# f.add_frame(m2.camera())
+# print(f)
 
 
-m2.events.append(e1)
+# w = Window(f)
+
+# w.one_time_event(lambda: Rain(CardinalDirection.EAST, frequency=0.17), 3)
 
 
-w.run(EventQueue(m2.events))
+# def update1():
+#     f.add_frame(m2.camera())
+#     w.change(f)
+
+#     # if m2[m2.pos].value == "^":
+#     #     w.extend_current_events(Event(lambda: EventExit.QUIT, 0.01), 3)
+
+
+# e1 = Event(update1, 0.01)
+
+
+# m2.events.append(e1)
+
+
+# w.run(EventQueue(m2.events))
+
+
+# ╭─ Wind Bash ─ Air ─╮ ╭─ Slash ── Normal ─╮
+# │ 50 STR    90% ACC │ │ 35 STR      20 EC │
+# │ Physical    25 EC │ ╰───────────────────╯
+# ╰───────────────────╯
+# ╭─ Dodge ───────────╮ ╭─ Tornado ─── Air ─╮
+# │ Support     30 EC │ │ 70 STR      50 EC │
+# ╰───────────────────╯ ╰───────────────────╯
+
+m = Menu(
+    Cell.from_size(Size(7, 50)),
+    [
+        SwitchSelection(
+            Selection(
+                """\
+╭─ Wind Bash ─ Air ─╮
+│ 50 STR      25 EC │
+╰───────────────────╯""",
+                Coord(1, 2),
+            ),
+            Selection(
+                """\
+╭─ Wind Bash ─ Air ─╮
+│ 50 STR      25 EC │
+│ Physical  90% ACC │
+╰───────────────────╯""",
+                Coord(1, 2),
+            ),
+        ),
+        SwitchSelection(
+            Selection(
+                """\
+╭─ Slash ── Normal ─╮
+│ 35 STR      20 EC │
+╰───────────────────╯""",
+                Coord(1, 25),
+            ),
+            Selection(
+                """\
+╭─ Slash ── Normal ─╮
+│ 35 STR      20 EC │
+│ Physical  99% ACC │
+╰───────────────────╯""",
+                Coord(1, 25),
+            ),
+        ),
+        SwitchSelection(
+            Selection(
+                """
+                     
+╭─ Dodge ───────────╮
+│ Support     30 EC │
+╰───────────────────╯""",
+                Coord(4, 2),
+            ),
+            Selection(
+                """\
+╭─ Dodge ───────────╮
+│             30 EC │
+│ Support   80% ACC │
+╰───────────────────╯""",
+                Coord(4, 2),
+            ),
+        ),
+        SwitchSelection(
+            Selection(
+                """
+                     
+╭─ Tornado ─── Air ─╮
+│ 70 STR      50 EC │
+╰───────────────────╯""",
+                Coord(4, 25),
+            ),
+            Selection(
+                """\
+╭─ Tornado ─── Air ─╮
+│ 70 STR      50 EC │
+│ Magical   95% ACC │
+╰───────────────────╯""",
+                Coord(4, 25),
+            ),
+        ),
+    ],
+)
+
+w = Window(m)
+
+
+def update():
+    w.change(m)
+    return m.switch()
+
+
+e1 = Event(update, 0.05)
+
+w.run(EventQueue([e1]))
 
 
 # m = Menu(

@@ -6,7 +6,6 @@ def remove_cache(directory: Path) -> dict[Path, Path | dict[Path, Path | dict]]:
     """Get all the .py files and folders in a directory."""
     dct = {}
     for path in directory.glob("*"):
-        print(path.name)
         if path.is_dir():
             if path.name == "__pycache__":
                 rmtree(path)

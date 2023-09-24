@@ -3,16 +3,18 @@ from enum import Enum
 from itertools import chain
 from typing import TYPE_CHECKING, Any, Self, Sized, TypeAlias, TypeVar, Union
 
+
 if TYPE_CHECKING:
     from pybattle.creatures.attributes.element import Element
     from pybattle.creatures.humanoid import Humanoid
     from pybattle.creatures.pymon import Pymon
+    from pybattle.screen.grid.point import Coord, Size
 
 
 Creature = Union["Pymon", "Humanoid"]
 User: TypeAlias = "Humanoid"
-
-ElementReference = Union[str, "Element"]
+Attacker = Creature
+Defender = Creature
 
 
 class Direction(Enum):
@@ -24,6 +26,7 @@ class Direction(Enum):
     def __lt__(self, other):
         return self.value < other.value
 
+    @property
     def reverse(self) -> Self:
         if self == Direction.UP:
             return Direction.DOWN
@@ -36,13 +39,6 @@ class Direction(Enum):
         return self
 
 
-class CardinalDirection(Enum):
-    NORTH = 0
-    WEST = 1
-    EAST = 2
-    SOUTH = 3
-
-
 class Alignment(Enum):
     LEFT = 0
     RIGHT = 1
@@ -50,13 +46,25 @@ class Alignment(Enum):
     MIDDLE = 2
 
     def align(self, string: str, width: int) -> str:
-        if self == Alignment.LEFT:
+        if self == type(self).LEFT:
             return string.ljust(width)
-        elif self == Alignment.RIGHT:
+        elif self == type(self).RIGHT:
             return string.rjust(width)
-        elif self == Alignment.CENTER or self == Alignment.MIDDLE:
+        elif self == type(self).CENTER or self == type(self).MIDDLE:
             return string.center(width)
-        return ''
+        return ""
+
+
+class Level(Enum):
+    TOP = 0
+    BOTTOM = -1
+
+
+class CardinalDirection(Enum):
+    NORTH = 0
+    WEST = 1
+    EAST = 2
+    SOUTH = 3
 
 
 class Thickness(Enum):

@@ -166,7 +166,7 @@ table = {
 
 
 def get_junction(dct: JunctionDict) -> str:
-    """Get a str junction from a dict of Directions and Thicknesses"""
+    """Get a str junction from a dict of Directions and Thicknesses."""
     return table[dct.get(Direction.UP)][dct.get(Direction.DOWN)][
         dct.get(Direction.LEFT)
     ][dct.get(Direction.RIGHT)]

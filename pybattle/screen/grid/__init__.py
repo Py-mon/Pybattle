@@ -1,1 +1,1 @@
-"""The layout of the text and the fundamentals"""
+"""The layout of the text and the fundamentals."""

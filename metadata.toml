@@ -1,5 +1,5 @@
 
-name = 'pybattle'
+name = "pybattle"
 license = "GNU"
 
 [author]

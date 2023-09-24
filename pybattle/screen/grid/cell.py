@@ -15,7 +15,7 @@ from pybattle.screen.colors import Color, Colors
 
 
 class Cell:
-    """A Cell in a matrix"""
+    """A Cell in a matrix."""
 
     def __init__(
         self,
@@ -49,7 +49,7 @@ class Cell:
 
     @classmethod
     def from_iter(cls, itr: Iterable) -> tuple[Self, ...]:
-        """Create a list of cells from an iterable"""
+        """Create a list of cells from an iterable."""
         return tuple(Cell(cell) for cell in itr)
 
     @classmethod

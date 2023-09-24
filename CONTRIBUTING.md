@@ -29,7 +29,7 @@ For example instead of `Adds one to x` use `Add one to x`
 They don't have a period at the end.
 ```py
 def foo(x: int) -> int:
-  """Add one to x"""
+  """Add one to x."""
   return x + 1
 ```
 
