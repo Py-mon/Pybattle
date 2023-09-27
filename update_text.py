@@ -8,6 +8,7 @@
 #     f.write(str(frame))
 import sys
 sys.path.append(r'C:\Users\jacob\Downloads\Programming\Python\Pybattle\Github')
+import x
 from pybattle.screen.frames.frame import Frame
 
 from pybattle.screen.grid.point import Coord, Size
