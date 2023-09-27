@@ -1,20 +1,24 @@
 <html>
-    <meta charset="utf-8" />
-    
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>>  
+<meta charset="utf-8" />
 
-    <head>
-        <body>
-            <div>
-                <?php echo "Current Prodi-G version: " . file_get_contents('/txt.txt');?>;
-            </div>
-        </body>
-    </head>
+<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>>
 
-    <py-script>
-        from os import system
-        system("python update_text.py")
-    </py-script>
+<head>
+
+<body>
+    <?php
+                $filename = fopen('txt.txt', 'r'); 
+                $file = fread($filename, filesize('document_name'));
+                echo $file; 
+                fclose($filename);
+            ?>
+</body>
+</head>
+
+<py-script>
+    from os import system
+    system("python update_text.py")
+</py-script>
 
 </html>
