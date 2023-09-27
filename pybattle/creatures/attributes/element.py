@@ -1,19 +1,32 @@
 from copy import copy
 from typing import Self
+from dataclasses import dataclass
 
 
+@dataclass
 class Element:
-    def __init__(self, name: str, mults: dict[str, float]):
-        self.mults = mults
-        self.name = name
+    name: str
+    mults: dict[str, float]
 
     @property
     def strengths(self):
-        return {element: mult for element, mult in self.mults.items() if mult > 1}
+        """All of the elements that are super effective (2x)."""
+        return {element: mult for element, mult in self.mults.items() if mult == 2}
+
+    @property
+    def super_strengths(self):
+        """All of the elements that are super duper effective (4x)."""
+        return {element: mult for element, mult in self.mults.items() if mult == 4}
 
     @property
     def weaknesses(self):
-        return {element: mult for element, mult in self.mults.items() if mult < 1}
+        """All of the elements that are super duper effective (1/2x)."""
+        return {element: mult for element, mult in self.mults.items() if mult < 0.5}
+    
+    @property
+    def super_weaknesses(self):
+        """All of the elements that are super duper effective (1/4x)."""
+        return {element: mult for element, mult in self.mults.items() if mult < 0.5}
 
     @property
     def immunities(self):
@@ -28,7 +41,8 @@ class Element:
         if "+" in other.name:
             mult = 1
             for element in other.name.split("+"):
-                mult *= self.mults.get(element, 1)
+                #mult *= self.mults.get(element, 1)
+                mult = 1/(1/self.mults.get(element, 1)+1)
             return mult
         return self.mults.get(other.name, 1)
 
@@ -44,6 +58,9 @@ class Element:
 
 
 fire = Element("fire", {"fire": 0.5, "water": 0.5})
-water = Element("water", {"water": 0.5, "fire": 2})
 
-print((fire) * (fire + water))
+# water = Element("water", {"water": 0.5, "fire": 2})
+
+# print((fire) * (fire + water))
+
+

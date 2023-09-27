@@ -6,11 +6,11 @@ from pathfinding.finder.a_star import AStarFinder
 
 from pybattle.screen.frames.map import Map
 from pybattle.screen.grid.cell import Cell
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 from pybattle.screen.grid.point import Coord, Point, Size
 
 
-def _get_path(start: Point, end: Point, map_: Matrix, thick_barriers: bool = True):
+def _get_path(start: Point, end: Point, map_: Grid, thick_barriers: bool = True):
     neighs = start.neighbors + end.neighbors
 
     for row in deepcopy(map_.dct_rows):
@@ -48,7 +48,7 @@ def _get_path(start: Point, end: Point, map_: Matrix, thick_barriers: bool = Tru
     ]
 
 
-def get_path(start: Point, end: Point, map_: Matrix):
+def get_path(start: Point, end: Point, map_: Grid):
     r1 = _get_path(start, end, map_, False)
     if len(r1) <= 2:
         return _get_path(start, end, map_, True)
@@ -58,7 +58,7 @@ def get_path(start: Point, end: Point, map_: Matrix):
 # TODO pip install pybattle and fix version and fix screen. instead of pybattle.screen
 
 
-m1 = Matrix(
+m1 = Grid(
     Cell.from_str(
         """\
 ╭─ BEDROOM ─┬──────────────────╮

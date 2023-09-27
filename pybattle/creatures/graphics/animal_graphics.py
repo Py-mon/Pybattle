@@ -10,7 +10,7 @@ from pybattle.screen.frames.frame import Frame
 from pybattle.screen.frames.map import Map
 from pybattle.screen.frames.menu import Menu, Selection, SwitchSelection, VoidSelection
 from pybattle.screen.frames.weather import Rain, Weather
-from pybattle.screen.grid.matrix import Cell, Matrix
+from pybattle.screen.grid.matrix import Cell, Grid
 from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.window import Event, EventExit, EventQueue, Window, keys_pressing
 from pybattle.types_ import CardinalDirection
@@ -18,7 +18,7 @@ from pybattle.types_ import CardinalDirection
 # 7x24
 
 
-r'''                                        
+r"""                                        
 
 
 
@@ -37,7 +37,7 @@ SQUIRREL                                    __/\       _─────_
   \_/ ___|      | /                                                                                    
      /____\_____//                                                                                  
                                                                               
-'''
+"""
 
 
 r"""

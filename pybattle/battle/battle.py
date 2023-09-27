@@ -1,6 +1,6 @@
 from pybattle.creatures.pymon import Pymon
 from pybattle.types_ import Creature
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 from pybattle.screen.grid.cell import Cell
 from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.frames.frame import Frame

@@ -51,7 +51,7 @@ class Junction(Cell):
         return tuple(Junction(self.dct, self.color) for _ in range(times))
 
 
-class Matrix:
+class Grid:
     """
     A matrix of cells. (The main game grid)
 
@@ -190,7 +190,7 @@ class Matrix:
             # if not self.size.within(stop, item.start):
             #     raise OutOfBounds  # TODO
 
-            return Matrix(
+            return Grid(
                 tuple(
                     tuple(
                         self[coord]  # if coord in self.size else Cell(" ")
@@ -201,7 +201,7 @@ class Matrix:
             )
 
         elif isinstance(item, int):
-            return Matrix((self.cells[item],))
+            return Grid((self.cells[item],))
 
     @overload
     def __setitem__(self, coord: Coord, cell: Cell, /) -> None:
@@ -311,6 +311,10 @@ class Matrix:
     def overlay(self, text, pos: Coord):
         """Overlay a Matrix on top of this Matrix (the `pos` starts at the Matrix's top left corner)"""
         self[pos : text.size.i + pos] = text
+
+    def overlay_to_left(self, text, pos: Coord):
+        """Overlay a Matrix on top of this Matrix (the `pos` starts at the Matrix's top right corner)"""
+        self[pos - text.size.i : pos] = text
 
     @property
     def rows(self) -> tuple[tuple[Cell, ...], ...]:

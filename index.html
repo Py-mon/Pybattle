@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <body>
+            <div>
+                <?php echo "Current Prodi-G version: " . file_get_contents('/txt.txt');?>;
+            </div>
+        </body>
+    </head>
+
+    <py-script>
+        from os import system
+        system("python update_text.py")
+    </py-script>
+
+</html>

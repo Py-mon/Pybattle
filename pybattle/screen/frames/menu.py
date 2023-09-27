@@ -6,7 +6,7 @@ from pybattle.screen.colors import Color, Colors
 from pybattle.screen.frames.border.border_type import Borders, BorderType, Direction
 from pybattle.screen.frames.frame import Frame, get_box
 from pybattle.screen.grid.cell import Cell
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 from pybattle.screen.grid.nested import max_len
 from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.window import keys_pressing
@@ -221,10 +221,9 @@ class Menu(Frame):
         self,
         cells: tuple[tuple[Cell, ...], ...],
         selections: list[SwitchSelection],
-        title: Optional[str] = None,
         border_type: BorderType = Borders.THIN,
     ) -> None:
-        super().__init__(cells, title, border_type)
+        super().__init__(cells, border_type)
 
         self.selections = selections
 
@@ -253,12 +252,14 @@ class Menu(Frame):
                 selection = switch_selection.off
 
             if isinstance(selection, FrameSelection):
-                selection.frame.color_border(selection.frame.border_color)
-                selection.frame.color_inner(selection.frame.base_color)
+                if selection.frame.border_color is not None:
+                    selection.frame.color_border(selection.frame.border_color)
+                if selection.frame.base_color is not None:
+                    selection.frame.color_inner(selection.frame.base_color)
                 self.add_frame(selection.frame, selection.pos)
 
             elif isinstance(selection, VoidSelection):
-                self[selection.pos : selection.pos + selection.size] = Matrix(
+                self[selection.pos : selection.pos + selection.size] = Grid(
                     Cell.from_str(selection.label)
                 )
 

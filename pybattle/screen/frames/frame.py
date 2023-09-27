@@ -8,7 +8,7 @@ from pybattle.log.errors import AttributeMissing, TooSmallError
 from pybattle.screen.colors import Color, Colors
 from pybattle.screen.frames.border.border_type import Borders, BorderType
 from pybattle.screen.frames.border.junction_table import get_junction
-from pybattle.screen.grid.matrix import Cell, Junction, Matrix
+from pybattle.screen.grid.matrix import Cell, Junction, Grid
 from pybattle.screen.grid.nested import level_out
 from pybattle.screen.grid.point import Coord, Point, Size
 from pybattle.types_ import Direction, JunctionDict
@@ -20,6 +20,7 @@ class Title:
     title: str
     x: int | Alignment = Alignment.LEFT
     color: Color = Colors.DEFAULT
+    margin: int = 2
     level: Level = Level.TOP
 
 
@@ -31,7 +32,7 @@ def convert_align_to_pos(
 ):
     if not isinstance(alignment, Alignment):
         return alignment
-    
+
     if alignment == type(alignment).CENTER or alignment == type(alignment).MIDDLE:
         return of.center.x - 1
     elif alignment == type(alignment).LEFT:
@@ -41,7 +42,7 @@ def convert_align_to_pos(
     return of.x
 
 
-class Frame(Matrix):
+class Frame(Grid):
     @classmethod
     def centered(
         cls,
@@ -62,7 +63,7 @@ class Frame(Matrix):
         """
         frame = cls(Cell.from_size(size), border_type)
 
-        aligned_text = Matrix(Cell.from_str(text), alignment)
+        aligned_text = Grid(Cell.from_str(text), alignment)
         slice_ = get_box(frame.size, aligned_text.size.i)
 
         frame[slice_] = aligned_text
@@ -108,7 +109,9 @@ class Frame(Matrix):
 
     def recolor_titles(self):
         for title in self.titles:
-            pos = convert_align_to_pos(title.x, self.size, len(title.title), 1 + 2)
+            pos = convert_align_to_pos(
+                title.x, self.size, len(title.title), title.margin + 1
+            )
 
             self.color(
                 title.color,
@@ -122,11 +125,13 @@ class Frame(Matrix):
         self.cells = self[Coord(1, 1) : self.size.inner].cells
 
     def add_title(self, title: Title) -> None:
-        matrix = Matrix(Cell.from_str("╴" + title.title + "╶"))
+        matrix = Grid(Cell.from_str("╴" + title.title + "╶"))
 
         matrix.color(title.color, matrix.size.i.sub_x(1).rect_range(Coord(0, 1)))
 
-        pos = convert_align_to_pos(title.x, self.size, len(title.title), 1 + 2)
+        pos = convert_align_to_pos(
+            title.x, self.size, len(title.title), title.margin + 1
+        )
         print(title.x, pos)
 
         self[
@@ -253,8 +258,3 @@ def get_box(center_of: Point, size: Point) -> slice:
             ceil((center_of.x + size.x) / 2 - 1),
         ),
     )
-
-
-f = Frame(Cell.from_size(Size(5, 17)))
-f.add_title(Title("Air", 5, Colors.BLUE, Level.BOTTOM))
-print(f)

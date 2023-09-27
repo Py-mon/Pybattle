@@ -6,13 +6,13 @@ from pybattle.log.log import logger
 from pybattle.screen.frames.border.border_type import Borders
 from pybattle.screen.frames.frame import Frame, Junction
 from pybattle.screen.frames.weather import Rain, Sound, Weather
-from pybattle.screen.grid.matrix import Cell, Matrix
+from pybattle.screen.grid.matrix import Cell, Grid
 from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.window import Event, EventExit, keys_pressing
 from pybattle.types_ import CardinalDirection
 
 
-class Map(Matrix):
+class Map(Grid):
     CAMERA_RANGE = Size(3, 10)
     PLAYER_SPEED = 0.05
     WEATHER_UPDATE_SPEED = 0.5
@@ -76,7 +76,7 @@ class Map(Matrix):
         start = Coord(start_y, start_x)
         end = Size(end_y, end_x)
 
-        camera = Matrix(
+        camera = Grid(
             tuple(
                 tuple(self[coord] for coord in row)
                 for row in end.array_rect_range(start)
@@ -114,7 +114,7 @@ class Map(Matrix):
     def _update_weather(self, weather: Weather):  # TODO fix player blinking
         if not weather.particles:
             return EventExit.BREAK
-        
+
         for coord, pre_val in weather.occupying.items():
             self[coord].value = pre_val
 

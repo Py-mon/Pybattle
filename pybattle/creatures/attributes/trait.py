@@ -2,22 +2,28 @@ from random import choices
 from typing import Callable
 
 from pybattle.types_ import Creature
+from dataclasses import dataclass
 
 
+TRAITS: list["Trait"] = []
+
+
+@dataclass
 class Trait:
     """A quality or characteristic belonging to a creature."""
 
-    traits: list["Trait"] = []
+    name: str
+    function: Callable[[Creature], None]
 
     @classmethod
     def generate(cls, x: int = 2) -> set["Trait"] | None:
         """Generate `x` number of random traits. May have less if it generates the same trait.
 
         Returns `None` if there are too few traits."""
-        if len(cls.traits) >= x:
+        if len(TRAITS) >= x:
             traits = set(
                 choices(
-                    cls.traits,
+                    TRAITS,
                     k=x,
                 )
             )
@@ -30,26 +36,20 @@ class Trait:
         """Create a function that increases and decreases a User's stats by a percent."""
 
         def func(user: Creature) -> None:
-            pass
-            # for increase in increases:
-            #     user.[increase].bonus *= percent
-            # for decrease in decreases:
-            #     user.stats[decrease].bonus /= percent
+            for increase in increases:
+                user.bonuses[increase] *= percent
+            for decrease in decreases:
+                user.bonuses[decrease] /= percent
 
         return func
 
-    def __init__(
+    def __post_init__(
         self,
-        name: str,
-        function: Callable[[Creature], None],
     ) -> None:
-        self.name = name
-        self.function = function
-
-        Trait.traits.append(self)
+        TRAITS.append(self)
 
     def __repr__(self) -> str:
-        return self.name
+        return type(self).__name__ + ":" + self.name
 
 
 """

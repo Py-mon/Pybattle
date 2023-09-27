@@ -3,11 +3,12 @@ from pybattle.screen.frames.frame import Frame
 from pybattle.screen.frames.map import Map
 from pybattle.screen.frames.menu import Menu, Selection, SwitchSelection, VoidSelection
 from pybattle.screen.frames.weather import Rain, Weather
-from pybattle.screen.grid.matrix import Cell, Matrix
+from pybattle.screen.grid.matrix import Cell, Grid
 from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.window import Event, EventExit, EventQueue, Window, keys_pressing
 from pybattle.types_ import CardinalDirection
-
+from pybattle.creatures.attributes.move import Move
+from pybattle.creatures.attributes.element import Element
 
 # r"""
 #    _-----_
@@ -92,77 +93,87 @@ from pybattle.types_ import CardinalDirection
 # │ Support     30 EC │ │ 70 STR      50 EC │
 # ╰───────────────────╯ ╰───────────────────╯
 
+move1 = Move(
+    "Wind Bash",
+    Element("Air", {}),
+    None,
+    energy_cost=25,
+    strength=50,
+    type_="Physical",
+    accuracy=90,
+)
+
+move2 = Move(
+    "Slash",
+    Element("Normal", {}),
+    None,
+    energy_cost=20,
+    strength=35,
+    type_="Physical",
+    accuracy=99,
+)
+
+move3 = Move(
+    "Dodge",
+    Element("Normal", {}),
+    None,
+    energy_cost=0,
+    type_="Support",
+    accuracy=80,
+)
+
+move4 = Move(
+    "Dodge",
+    Element("Air", {}),
+    None,
+    energy_cost=50,
+    strength=70,
+    type_="Magical",
+    accuracy=95,
+)
+
+
 m = Menu(
     Cell.from_size(Size(7, 50)),
     [
         SwitchSelection(
             Selection(
-                """\
-╭─ Wind Bash ─ Air ─╮
-│ 50 STR      25 EC │
-╰───────────────────╯""",
+                str(move1.frame),
                 Coord(1, 2),
             ),
             Selection(
-                """\
-╭─ Wind Bash ─ Air ─╮
-│ 50 STR      25 EC │
-│ Physical  90% ACC │
-╰───────────────────╯""",
+                str(move1.bottom_extended_frame),
                 Coord(1, 2),
             ),
         ),
         SwitchSelection(
             Selection(
-                """\
-╭─ Slash ── Normal ─╮
-│ 35 STR      20 EC │
-╰───────────────────╯""",
-                Coord(1, 25),
+                str(move2.frame),
+                Coord(1, 24),
             ),
             Selection(
-                """\
-╭─ Slash ── Normal ─╮
-│ 35 STR      20 EC │
-│ Physical  99% ACC │
-╰───────────────────╯""",
-                Coord(1, 25),
+                str(move2.bottom_extended_frame),
+                Coord(1, 24),
             ),
         ),
         SwitchSelection(
             Selection(
-                """
-                     
-╭─ Dodge ───────────╮
-│ Support     30 EC │
-╰───────────────────╯""",
+                "\n\n" + str(move3.frame),
                 Coord(4, 2),
             ),
             Selection(
-                """\
-╭─ Dodge ───────────╮
-│             30 EC │
-│ Support   80% ACC │
-╰───────────────────╯""",
+                str(move3.top_extended_frame),
                 Coord(4, 2),
             ),
         ),
         SwitchSelection(
             Selection(
-                """
-                     
-╭─ Tornado ─── Air ─╮
-│ 70 STR      50 EC │
-╰───────────────────╯""",
-                Coord(4, 25),
+                "\n\n" + str(move4.frame),
+                Coord(4, 24),
             ),
             Selection(
-                """\
-╭─ Tornado ─── Air ─╮
-│ 70 STR      50 EC │
-│ Magical   95% ACC │
-╰───────────────────╯""",
-                Coord(4, 25),
+                str(move4.top_extended_frame),
+                Coord(4, 24),
             ),
         ),
     ],

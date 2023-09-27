@@ -1,4 +1,4 @@
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 
 
 y = "╱____╲_____╱╱   ── ⎯  —— –– ‒‒ ‑‑ ‐‐ _⎽⎼⎻⎺ ⎹ ⎸ ╲ ╱ ╷ ╶ ╵ ╴ ⏗ ⎾⎺⏋"
@@ -39,7 +39,7 @@ from pybattle.types_ import CardinalDirection
 def read_graphic_file(file):
     with open(file, encoding="utf-8") as f:
         text = f.read()
-        matrix = Matrix(Cell.from_str(text[: text.find("%")]))
+        matrix = Grid(Cell.from_str(text[: text.find("%")]))
         return matrix
 
 
@@ -77,7 +77,7 @@ class Face:
 
     @property
     def straight_on(self) -> tuple[tuple[Cell, ...], ...]:
-        face = Matrix(
+        face = Grid(
             Cell.from_str(
                 dedent(
                     """\
@@ -150,10 +150,10 @@ class MaleHair:
 class HelmetGraphics:
     def __init__(
         self,
-        straight_on: Matrix,
-        left: Optional[Matrix] = None,
-        right: Optional[Matrix] = None,
-        icon: Optional[Matrix] = None,
+        straight_on: Grid,
+        left: Optional[Grid] = None,
+        right: Optional[Grid] = None,
+        icon: Optional[Grid] = None,
     ):
         self.straight_on = straight_on
 
@@ -172,10 +172,10 @@ class Head:
 class WeaponGraphics:
     def __init__(
         self,
-        right: Matrix,
-        left: Matrix,
-        attack_left: Optional[list[Matrix]] = None,  # use in battle
-        attack_right: Optional[list[Matrix]] = None,
+        right: Grid,
+        left: Grid,
+        attack_left: Optional[list[Grid]] = None,  # use in battle
+        attack_right: Optional[list[Grid]] = None,
         image: Optional[str] = None,
         icon: Optional[str] = None,
     ):
@@ -192,7 +192,7 @@ class WeaponGraphics:
 
 
 class ItemGraphics:
-    def __init__(self, graphics: Matrix):
+    def __init__(self, graphics: Grid):
         # "`x`'s will be ignored"
         self.graphics = graphics
 
@@ -200,7 +200,7 @@ class ItemGraphics:
 class Body:
     def __init__(
         self,
-        body: Matrix,
+        body: Grid,
         icon: Optional[str] = None,
     ):
         self.body = body
@@ -314,7 +314,7 @@ class Character:
 x = Character(
     head=Head(MaleHair(Cell.from_str("_-/|\\-_")[0]), Face(Cell(","), Cell("-"))),
     weapon_graphics=WeaponGraphics(
-        Matrix(
+        Grid(
             Cell.from_str(
                 """\
 
@@ -358,7 +358,7 @@ print(x.straight_on)
 # │                    ╰─────┴─╯ │
 # ╰──────────────────────────────╯
 
-x = Matrix(
+x = Grid(
     Cell.from_str(
         """
   _-----_      
@@ -621,7 +621,7 @@ x = """
 #  "Modifier Letter Down Arrowhead (no. 709 U+02C5)": "˅",
 
 # Egypt
-#𓀂 𓀝 
+# 𓀂 𓀝
 #  |  |
 # 𓀟x 𓏼x
 x = """

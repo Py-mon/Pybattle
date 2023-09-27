@@ -7,7 +7,7 @@ from tkinter.font import Font
 from typing import Optional, Self
 
 from pybattle.screen.colors import Color, Colors
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 from pybattle.screen.grid.point import Coord, Size
 
 keys_pressing = set()
@@ -67,7 +67,7 @@ class Window:
     FONT = "Consolas"  # Consolas, 'Courier New', monospace
     PIXELS_TO_FONT_SIZE: int = 25
 
-    def change(self, text: Matrix):
+    def change(self, text: Grid):
         Colors.init_color_tags(self.text)
 
         self.text.delete("1.0", "end")
@@ -122,7 +122,7 @@ class Window:
 
     def __init__(
         self,
-        text: Matrix,
+        text: Grid,
         background: Color = BACKGROUND,
         starting_size: Size = STARTING_SIZE,
         min_size: Size = MIN_SIZE,

@@ -1,66 +1,41 @@
 from typing import Optional
 
-from creatures.grpahics.graphics import Body, HelmetGraphics, WeaponGraphics
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.creatures.graphics.graphics import Body, HelmetGraphics, WeaponGraphics
+from dataclasses import dataclass
 
-WEIGHT_TO_SPEED = 1 / 3  # 1lb -> 0.33% Speed Decrease
+WEIGHT_TO_SPEED = 1 / 4  # 1lb -> 0.25% Speed Decrease
 
 
-class Reinforcement:
-    def __init__(
-        self,
-        name: str,
-        stat: str,
-        mult: float,
-        weight: int = 0,
-        graphics: Optional[Body | WeaponGraphics | HelmetGraphics] = None,
-    ) -> None:
-        self.name = name
-        self.stat = stat
-        self.mult = mult
-        self.graphics = graphics
-        self.weight = weight
+@dataclass
+class _Reinforcement:
+    """A tool that increases a certain stat, but with the disadvantage of losing a little speed."""
+
+    name: str
+    stat: str
+    mult: float
+    weight: int = 0
+    graphics: Optional[Body | WeaponGraphics | HelmetGraphics] = None
+
+    def __post_init__(self) -> None:
         self.speed_decrease_mult = 1 + self.weight * WEIGHT_TO_SPEED / 100
 
 
-class Armor(Reinforcement):
+@dataclass
+class Armor(_Reinforcement):
     """A covering to protect and increase a Humanoid's defense in battle."""
 
-    def __init__(
-        self,
-        name: str,
-        stat: str,
-        mult: float,
-        weight: int = 0,
-        graphics: Optional[Body] = None,
-    ) -> None:
-        super().__init__(name, stat, mult, weight, graphics)
-        self.graphics: Optional[Body]
+    graphics: Optional[Body] = None
 
 
-class Helmet(Reinforcement):
-    def __init__(
-        self,
-        name: str,
-        stat: str,
-        mult: float,
-        weight: int = 0,
-        graphics: Optional[HelmetGraphics] = None,
-    ) -> None:
-        super().__init__(name, stat, mult, weight, graphics)
-        self.graphics: Optional[HelmetGraphics]
+@dataclass
+class Helmet(_Reinforcement):
+    """A covering to protect a Humanoid's head, increasing a their defense in battle."""
+
+    graphics: Optional[HelmetGraphics]
 
 
-class Weapon(Reinforcement):
-    """A tool used for increasing physical or magical damage for Humanoids."""
+@dataclass
+class Weapon(_Reinforcement):
+    """A tool used for increasing damage for Humanoids."""
 
-    def __init__(
-        self,
-        name: str,
-        stat: str,
-        mult: float,
-        weight: int = 0,
-        graphics: Optional[WeaponGraphics] = None,
-    ) -> None:
-        super().__init__(name, stat, mult, weight, graphics)
-        self.graphics: Optional[WeaponGraphics]
+    graphics: Optional[WeaponGraphics]

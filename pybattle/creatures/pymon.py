@@ -10,14 +10,13 @@ from pybattle.creatures.attributes.ability import Ability
 from pybattle.creatures.attributes.element import Element
 from pybattle.creatures.attributes.item import Item
 from pybattle.creatures.attributes.move import Move
-from pybattle.creatures.attributes.stats import Stats
 from pybattle.creatures.attributes.status_ailment import StatusEffect
 from pybattle.creatures.attributes.trait import Trait
 from pybattle.creatures.rand import Curve, roll
 from pybattle.log.log import logger
 from pybattle.screen.colors import Color, Colors
 from pybattle.screen.grid.cell import Cell
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 from pybattle.types_ import Creature
 
 
@@ -65,7 +64,7 @@ class Pymon:
     unique_abilities: tuple[Ability, ...] = ()
     species_graphics: Optional[str] = None
     bonuses: dict[str, float] = {}
-    graphics: Optional[Matrix] = None
+    graphics: Optional[Grid] = None
 
     def __init__(
         self,
@@ -119,7 +118,7 @@ class Pymon:
         self.item: Item | None = item
 
         self.graphics = (
-            Matrix(Cell.from_str(self.species_graphics))
+            Grid(Cell.from_str(self.species_graphics))
             if self.species_graphics is not None
             else self.species_graphics
         )
@@ -149,7 +148,6 @@ class Pymon:
         self.bonuses = (
             bonuses or type(self).bonuses or {key: 1 for key in self.bases.keys()}
         )
-        
 
         self.temp_bonuses = {}
 
@@ -221,7 +219,7 @@ class Pymon:
         high_color=Colors.GREEN,
         medium_color=Colors.YELLOW,
         low_color=Colors.RED,
-    ) -> Matrix:
+    ) -> Grid:
         """Get a percentage bar.
         `━━━━━━━━━━━━━───────`
         """
@@ -240,7 +238,7 @@ class Pymon:
         else:  # percent <= 1 / 3:
             color = low_color
 
-        return Matrix(
+        return Grid(
             (Cell("━", color) * bars + Cell("─", other_color) * (bar_amount - bars),)
         )
 

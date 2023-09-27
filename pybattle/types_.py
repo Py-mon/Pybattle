@@ -58,6 +58,11 @@ class Alignment(Enum):
 class Level(Enum):
     TOP = 0
     BOTTOM = -1
+    
+    
+class Side(Enum):
+    LEFT = 0
+    RIGHT = -1
 
 
 class CardinalDirection(Enum):

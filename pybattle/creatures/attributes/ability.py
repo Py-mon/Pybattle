@@ -1,6 +1,6 @@
 from typing import Callable, Optional
 
-from pybattle.types_ import Attacker, Creature, Defender, User
+from pybattle.types_ import Attacker, Defender, User
 from dataclasses import dataclass
 
 
@@ -15,7 +15,7 @@ class Ability:
     desc: Optional[str] = None
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}:{self.name}"
+        return type(self).__name__ + ":" + self.name
 
     def activate(
         self,

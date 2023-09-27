@@ -16,7 +16,7 @@ from creatures.grpahics.graphics import (
 )
 from pybattle.creatures.pymon import Pymon
 from pybattle.screen.grid.cell import Cell
-from pybattle.screen.grid.matrix import Matrix
+from pybattle.screen.grid.matrix import Grid
 
 
 class Humanoid(Pymon):
@@ -109,7 +109,7 @@ b = Body(
 
 h = Head(MaleHair(Cell.from_str("_-/|\\-_")[0]), Face(Cell(","), Cell("-")))
 w = WeaponGraphics(
-    Matrix(
+    Grid(
         Cell.from_str(
             """
             
