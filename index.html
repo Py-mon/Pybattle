@@ -9,6 +9,9 @@
 
 <body>
 
+    <p id="text"></p>
+    </p>
+
     <py-script>
         from pybattle.screen.frames.frame import Frame
 
@@ -17,7 +20,7 @@
 
         frame = Frame(Cell.from_size(Size(2, 5)))
 
-        pyscript.write(str(frame), 1)
+        pyscript.write("text", str(frame))
     </py-script>
 </body>
 
