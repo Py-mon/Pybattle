@@ -1,1 +1,7 @@
-packages = ["pybattle"]
+[[fetch]]
+    files = [
+        "./pybattle.screen.grid.point.py",
+        "./pybattle.screen.grid.cell.py",
+        "./pybattle.screen.grid.matrix.py",
+        "./pybattle.screen.frames.frame.py",
+    ]
