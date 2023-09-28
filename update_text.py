@@ -14,5 +14,5 @@ from pybattle.screen.grid.cell import Cell
 
 
 frame = Frame(Cell.from_size(Size(2, 5)))
- 
+
 pyscript.write("text", str(frame))
