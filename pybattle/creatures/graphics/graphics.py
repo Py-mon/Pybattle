@@ -311,38 +311,38 @@ class Character:
         return str(character)
 
 
-x = Character(
-    head=Head(MaleHair(Cell.from_str("_-/|\\-_")[0]), Face(Cell(","), Cell("-"))),
-    weapon_graphics=WeaponGraphics(
-        Grid(
-            Cell.from_str(
-                """\
+# x = Character(
+#     head=Head(MaleHair(Cell.from_str("_-/|\\-_")[0]), Face(Cell(","), Cell("-"))),
+#     weapon_graphics=WeaponGraphics(
+#         Grid(
+#             Cell.from_str(
+#                 """\
 
 
 
 
-_ ^
- ╲│
-  ^
-  │
-  │
-  │"""
-            )
-        ),
-        None,
-    ),
-    # item_graphics=ItemGraphics(
-    #     Matrix(
-    #         Cell.from_str(
-    #             """\
-    #  ╲ ╱
-    # __̲*__│ .^
-    #           """
-    #         )
-    #     )
-    # ),
-)
-print(x.straight_on)
+# _ ^
+#  ╲│
+#   ^
+#   │
+#   │
+#   │"""
+#             )
+#         ),
+#         None,
+#     ),
+#     # item_graphics=ItemGraphics(
+#     #     Matrix(
+#     #         Cell.from_str(
+#     #             """\
+#     #  ╲ ╱
+#     # __̲*__│ .^
+#     #           """
+#     #         )
+#     #     )
+#     # ),
+# )
+# print(x.straight_on)
 
 
 # ╭─ BEDROOM ─┬──────────────────╮

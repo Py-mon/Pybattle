@@ -5,7 +5,7 @@ from pybattle.creatures.attributes.element import Element
 from pybattle.creatures.attributes.item import Item
 from pybattle.creatures.attributes.move import Move
 from pybattle.creatures.attributes.reinforcements import Armor, Helmet, Weapon
-from creatures.grpahics.graphics import (
+from creatures.graphics.graphics import (
     Body,
     Character,
     Face,
@@ -96,43 +96,43 @@ class Humanoid(Pymon):
         raise AttributeError("Breeding is not allowed for Humanoids.")
 
 
-b = Body(
-    """
-  _─╵───╵─_          
- ╱ │     │ ╲          
- ╲ │_____│ ╱          
-  ^│ ╭─╮ │^          
-   │ │ │ │          
-   │_│ │_│          
-        """
-)
+# b = Body(
+#     """
+#   _─╵───╵─_          
+#  ╱ │     │ ╲          
+#  ╲ │_____│ ╱          
+#   ^│ ╭─╮ │^          
+#    │ │ │ │          
+#    │_│ │_│          
+#         """
+# )
 
-h = Head(MaleHair(Cell.from_str("_-/|\\-_")[0]), Face(Cell(","), Cell("-")))
-w = WeaponGraphics(
-    Grid(
-        Cell.from_str(
-            """
+# h = Head(MaleHair(Cell.from_str("_-/|\\-_")[0]), Face(Cell(","), Cell("-")))
+# w = WeaponGraphics(
+#     Grid(
+#         Cell.from_str(
+#             """
             
     
             
-_ ^
- ╲│
-  ^
-  │
-  │
-  │"""
-        )
-    ),
-    None,
-)
+# _ ^
+#  ╲│
+#   ^
+#   │
+#   │
+#   │"""
+#         )
+#     ),
+#     None,
+# )
 
 
-human = Humanoid(
-    bases={"attack": 40, "defense": 30},
-    weapon=Weapon("", "attack", 1.2, graphics=w),
-    head=h,
-    armor=Armor("", "defense", 1.1, graphics=b),
-)
-print(human.graphics.left)
-print(human.get_stat("attack"))
-print(human.get_stat("defense"))
+# human = Humanoid(
+#     bases={"attack": 40, "defense": 30},
+#     weapon=Weapon("", "attack", 1.2, graphics=w),
+#     head=h,
+#     armor=Armor("", "defense", 1.1, graphics=b),
+# )
+# print(human.graphics.left)
+# print(human.get_stat("attack"))
+# print(human.get_stat("defense"))
