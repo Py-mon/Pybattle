@@ -8,7 +8,7 @@ from pybattle.screen.frames.frame import Frame, Junction
 from pybattle.screen.frames.weather import Rain, Sound, Weather
 from pybattle.screen.grid.matrix import Cell, Grid
 from pybattle.screen.grid.point import Coord, Size
-from pybattle.screen.window import Event, EventExit, keys_pressing
+#from pybattle.screen.window import Event, EventExit, keys_pressing
 from pybattle.types_ import CardinalDirection
 
 
@@ -42,10 +42,10 @@ class Map(Grid):
             if not cell.collision and not isinstance(cell, Junction):
                 self.open_cells.append(coord)
 
-        self.events = [
-            Event(self._update_player, type(self).PLAYER_SPEED),
-            Event(self._update_weathers, type(self).WEATHER_UPDATE_SPEED),
-        ]
+        # self.events = [
+        #     Event(self._update_player, type(self).PLAYER_SPEED),
+        #     Event(self._update_weathers, type(self).WEATHER_UPDATE_SPEED),
+        # ]
 
         self.weathers = []
 
