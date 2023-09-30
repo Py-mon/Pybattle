@@ -69,6 +69,8 @@
 
     <code>Does text still work?<br>Hello?</code>
 
+    <button id='btn'></button>
+
     <py-script>
     from js import document
     
@@ -109,9 +111,14 @@
 
     weather = Weather(particles=["."])
 
-    while True:
+    document.getElementById("text").addEventListener("")
+
+    def update():
         m2._update_weather(weather)
         document.getElementById("text").innerHTML = str(m2).replace("\n", "<br>")
+
+    update()
+    document.getElementById("btn").addEventListener('click', update)
     </py-script>
 
 
