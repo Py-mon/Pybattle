@@ -1,7 +1,10 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
@@ -10,116 +13,126 @@
 
         [[fetch]]
         files = [
-            'logs/logging.toml',
-            'pybattle/alignment.py',
-            'pybattle/battle/battle.py',
-            'pybattle/creatures/attributes/ability.py',
-            'pybattle/creatures/attributes/element.py',
-            'pybattle/creatures/attributes/item.py',
-            'pybattle/creatures/attributes/move.py',
-            'pybattle/creatures/attributes/reinforcements.py',
-            'pybattle/creatures/attributes/status_ailment.py',
-            'pybattle/creatures/attributes/trait.py',
-            'pybattle/creatures/graph.py',
-            'pybattle/creatures/graphics/animal_graphics.py',
-            'pybattle/creatures/graphics/graphics.py',
-            'pybattle/creatures/humanoid.py',
-            'pybattle/creatures/pymon.py',
-            'pybattle/creatures/rand.py',
-            'pybattle/creatures/species.py',
-            'pybattle/log/errors.py',
-            'pybattle/log/log.py',
-            'pybattle/log/test_speed_of.py',
-            'pybattle/screen/colors.py',
-            'pybattle/screen/frames/border/border_type.py',
-            'pybattle/screen/frames/border/junction_table.py',
-            'pybattle/screen/frames/frame.py',
-            'pybattle/screen/frames/map.py',
-            'pybattle/screen/frames/menu.py',
-            'pybattle/screen/frames/npc.py',
-            'pybattle/screen/frames/weather.py',
-            'pybattle/screen/grid/cell.py',
-            'pybattle/screen/grid/matrix.py',
-            'pybattle/screen/grid/nested.py',
-            'pybattle/screen/grid/point.py',
-            'pybattle/screen/sound.py',
-            'pybattle/screen/textbox.py',
-            'pybattle/screen/window.py',
-            'pybattle/types_.py'
+        'logs/logging.toml',
+        'pybattle/alignment.py',
+        'pybattle/battle/battle.py',
+        'pybattle/creatures/attributes/ability.py',
+        'pybattle/creatures/attributes/element.py',
+        'pybattle/creatures/attributes/item.py',
+        'pybattle/creatures/attributes/move.py',
+        'pybattle/creatures/attributes/reinforcements.py',
+        'pybattle/creatures/attributes/status_ailment.py',
+        'pybattle/creatures/attributes/trait.py',
+        'pybattle/creatures/graph.py',
+        'pybattle/creatures/graphics/animal_graphics.py',
+        'pybattle/creatures/graphics/graphics.py',
+        'pybattle/creatures/humanoid.py',
+        'pybattle/creatures/pymon.py',
+        'pybattle/creatures/rand.py',
+        'pybattle/creatures/species.py',
+        'pybattle/log/errors.py',
+        'pybattle/log/log.py',
+        'pybattle/log/test_speed_of.py',
+        'pybattle/screen/colors.py',
+        'pybattle/screen/frames/border/border_type.py',
+        'pybattle/screen/frames/border/junction_table.py',
+        'pybattle/screen/frames/frame.py',
+        'pybattle/screen/frames/map.py',
+        'pybattle/screen/frames/menu.py',
+        'pybattle/screen/frames/npc.py',
+        'pybattle/screen/frames/weather.py',
+        'pybattle/screen/grid/cell.py',
+        'pybattle/screen/grid/matrix.py',
+        'pybattle/screen/grid/nested.py',
+        'pybattle/screen/grid/point.py',
+        'pybattle/screen/textbox.py',
+        'pybattle/screen/sound.py',
+        'pybattle/screen/window.py',
+        'pybattle/types_.py'
         ]
-    
+
     </py-config>
 
     <style src='x.css'></style>
 
 
     <style>
-    code {
-        line-height: 1.15;
-        white-space: pre-wrap;
-        font-family: monospace;
-        display: block;
-    }
+        code {
+            line-height: 1.15;
+            white-space: pre-wrap;
+            font-family: monospace;
+            display: inline-block;
+        }
     </style>
 
 </head>
 
 <body>
-    <code id="text"></code>
+    <code id="text">
 
     <code>Does text still work?<br>Hello?</code>
 
     <button id='btn'></button>
-
-    <py-script>
-    from js import document
     
-    # from pybattle.screen.frames.frame import Frame, Title
-    # from pybattle.screen.grid.point import Coord, Size
-    # from pybattle.screen.grid.cell import Cell
-    # frame = Frame(Cell.from_size(Size(2, 5)))
-    # frame.add_title(Title('Hi'))
+    <script type="py">
+        from js import document
+        
+        # from pybattle.screen.frames.frame import Frame, Title
+        # from pybattle.screen.grid.point import Coord, Size
+        # from pybattle.screen.grid.cell import Cell
+        # frame = Frame(Cell.from_size(Size(2, 5)))
+        # frame.add_title(Title('Hi'))
+        
 
-    # document.getElementById("text").innerHTML = str(frame).replace('\n', '<br>')
-
-
-    from pybattle.screen.frames.frame import Frame, Title
-    from pybattle.screen.grid.point import Coord, Size
-    from pybattle.screen.grid.cell import Cell
-    from pybattle.screen.frames.map import Map
-    from pybattle.screen.frames.weather import Weather, Rain
+        # document.getElementById("text").innerHTML = str(frame).replace('\n', '<br>')
 
 
-    m1 = """
-    ╭─ BEDROOM ─┬──────────────────╮
-    │   ╰───────╯       ||||       │
-    │                   ||||       │
-    │                     ─┬─┬─┬─┬─┤
-    │                              │
-    │                              │
-    │╭│╮   ╶─╮                     │
-    ││││    ░│                     │
-    │╰│╯   ╶─╯           ╭─────┬─╮ │
-    │                    │░░░░░│▓│ │
-    │                    ╰─────┴─╯ │
-    ╰──────────────────────────────╯
-    """
+        from pybattle.screen.frames.frame import Frame, Title
+        from pybattle.screen.grid.point import Coord, Size
+        from pybattle.screen.grid.cell import Cell
+        from pybattle.screen.frames.map import Map
+        from pybattle.screen.frames.weather import Weather, Rain
+        from pybattle.screen.colors import Colors
 
-    m2 = Map(Cell.from_str(m1), Coord(7, 22))
+        m1 = """
+        ╭─ BEDROOM ─┬──────────────────╮
+        │   ╰───────╯       ||||       │
+        │                   ||||       │
+        │                     ─┬─┬─┬─┬─┤
+        │                              │
+        │                              │
+        │╭│╮   ╶─╮                     │
+        ││││    ░│                     │
+        │╰│╯   ╶─╯           ╭─────┬─╮ │
+        │                    │░░░░░│▓│ │
+        │                    ╰─────┴─╯ │
+        ╰──────────────────────────────╯
+        """
 
-    from pyodide.ffi import create_proxy
+        m2 = Map(Cell.from_str(m1), Coord(7, 22))
+        m2[Coord(0,0)].color = Colors.RED
 
-    weather = Weather(particles=["."])
 
-    def update(*args, **kwargs):
-        print('clicked')
-        m2._update_weather(weather)
-        document.getElementById("text").innerHTML = str(m2).replace("\n", "<br>")
+        from pyodide.ffi import create_proxy
 
-    update()
-    document.body.addEventListener('click', create_proxy(update))
-    # proxy.destroy()
-    </py-script>
+        weather = Weather(particles=["|"])
+
+        def update(*args, **kwargs):
+            m2._update_weather(weather)
+
+            txt = ""
+            for row in m2.rows:
+                for cell in row:
+                    txt += cell.value
+                    txt += f'<code style="color: rgb{cell.color.rgb}"></code>'
+                txt += "<br>"
+
+            document.getElementById("text").innerHTML = txt
+
+        update()
+        document.body.addEventListener('click', create_proxy(update))
+        # proxy.destroy()
+    </script>
 
 
 

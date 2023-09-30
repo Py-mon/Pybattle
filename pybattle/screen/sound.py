@@ -1,9 +1,5 @@
 from pathlib import Path
 
-# from pygame import mixer
-
-# mixer.init()
-
 
 class Sound:
     FADE_SECONDS = 3

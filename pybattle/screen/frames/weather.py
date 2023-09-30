@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Optional, Self
 
 from pybattle.types_ import CardinalDirection
+
 from pybattle.screen.sound import Sound
 
 
