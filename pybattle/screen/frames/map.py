@@ -8,7 +8,8 @@ from pybattle.screen.frames.frame import Frame, Junction
 from pybattle.screen.frames.weather import Rain, Sound, Weather
 from pybattle.screen.grid.matrix import Cell, Grid
 from pybattle.screen.grid.point import Coord, Size
-#from pybattle.screen.window import Event, EventExit, keys_pressing
+
+# from pybattle.screen.window import Event, EventExit, keys_pressing
 from pybattle.types_ import CardinalDirection
 
 
