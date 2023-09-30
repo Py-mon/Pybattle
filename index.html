@@ -111,14 +111,13 @@
 
     weather = Weather(particles=["."])
 
-    document.getElementById("text").addEventListener("")
-
     def update():
         m2._update_weather(weather)
         document.getElementById("text").innerHTML = str(m2).replace("\n", "<br>")
 
     update()
-    document.getElementById("btn").addEventListener('click', create_proxy(update))
+    document.body.addEventListener('click', create_proxy(update))
+    # proxy.destroy()
     </py-script>
 
 
