@@ -113,7 +113,7 @@
 
     weather = Weather(particles=["."])
 
-    def update():
+    def update(*args, **kwargs):
         m2._update_weather(weather)
         document.getElementById("text").innerHTML = str(m2).replace("\n", "<br>")
 
