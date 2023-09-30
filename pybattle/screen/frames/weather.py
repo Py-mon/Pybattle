@@ -5,7 +5,7 @@ from pybattle.types_ import CardinalDirection
 from pybattle.screen.sound import Sound
 
 
-class Weather: # ☁☂☀
+class Weather:  # ☁☂☀
     active: list[Self] = []
 
     def __init__(
@@ -21,13 +21,13 @@ class Weather: # ☁☂☀
         self.frequency = frequency
 
         self.power = self.heaviness + 1 / self.frequency
-        
+
         self.occupying = {}
 
         type(self).active.append(self)
 
 
-class Rain(Weather): # rain icon: ⛆ ☁☂☀
+class Rain(Weather):  # rain icon: ⛆ ☁☂☀
     def __init__(
         self, wind: CardinalDirection, heaviness: int = 5, frequency: float = 0.12
     ):
@@ -41,6 +41,6 @@ class Rain(Weather): # rain icon: ⛆ ☁☂☀
         super().__init__(
             Sound("sounds/light_rain.mp3"), particles, heaviness, frequency
         )
-        
+
         if self.power < 10:
             particles.append(".")

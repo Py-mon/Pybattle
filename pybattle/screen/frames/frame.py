@@ -30,12 +30,17 @@ def convert_align_to_pos(
     right_adjustment: int = 0,
     margins: int = 3,
 ):
+    print(alignment)
     if not isinstance(alignment, Alignment):
         return alignment
 
     if alignment == type(alignment).CENTER or alignment == type(alignment).MIDDLE:
         return of.center.x - 1
     elif alignment == type(alignment).LEFT:
+        right_offset_margin = of.x - margins - right_adjustment
+        if margins >= right_offset_margin:
+            return right_offset_margin
+
         return margins
     elif alignment == type(alignment).RIGHT:
         return of.x - right_adjustment - margins

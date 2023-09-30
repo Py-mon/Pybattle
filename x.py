@@ -1,11 +1,31 @@
-from pybattle.screen.frames.frame import Frame
+from pybattle.screen.frames.frame import Frame, Title
 from pybattle.screen.grid.point import Coord, Size
 from pybattle.screen.grid.cell import Cell
-frame = Frame(Cell.from_size(Size(2, 5)))
-from pyscript import document
-import pyscript
+from pybattle.screen.frames.map import Map
+from pybattle.screen.frames.weather import Weather, Rain
 
-pyscript.
-document.
-pyscript.write("text", str(frame).replace('\n', '<br>'))
-</py-script>
+
+m1 = """
+╭─ BEDROOM ─┬──────────────────╮
+│   ╰───────╯       ||||       │
+│                   ||||       │
+│                     ─┬─┬─┬─┬─┤
+│                              │
+│                              │
+│╭│╮   ╶─╮                     │
+││││    ░│                     │
+│╰│╯   ╶─╯           ╭─────┬─╮ │
+│                    │░░░░░│▓│ │
+│                    ╰─────┴─╯ │
+╰──────────────────────────────╯
+"""
+
+
+m2 = Map(Cell.from_str(m1), Coord(7, 22))
+
+
+weather = Weather(particles=["."])
+
+while True:
+    m2._update_weather(weather)
+    document.getElementById("text").innerHTML = str(m2).replace("\n", "<br>")
