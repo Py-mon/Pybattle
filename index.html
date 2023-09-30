@@ -104,7 +104,6 @@
     │                    ╰─────┴─╯ │
     ╰──────────────────────────────╯
     """
-    from pyodide import create_proxy
 
     m2 = Map(Cell.from_str(m1), Coord(7, 22))
 
@@ -116,7 +115,7 @@
         document.getElementById("text").innerHTML = str(m2).replace("\n", "<br>")
 
     update()
-    document.body.addEventListener('click', create_proxy(update))
+    document.body.addEventListener('click', update)
     # proxy.destroy()
     </py-script>
 
