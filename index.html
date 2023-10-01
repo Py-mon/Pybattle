@@ -48,13 +48,14 @@
         'pybattle/screen/textbox.py',
         'pybattle/screen/sound.py',
         'pybattle/screen/window.py',
-        'pybattle/types_.py'
+        'pybattle/types_.py',
+        'update.py',
+        'element.py',
+        'create.py',
+        'movement.py',
         ]
 
     </py-config>
-
-    <style src='x.css'></style>
-
 
     <style>
         code {
@@ -65,76 +66,27 @@
         }
     </style>
 
+
 </head>
 
 <body>
     <code id="text">
 
-    <code>Does text still work?<br>Hello?</code>
+    <input type="text" id="input"/>
 
-    <button id='btn'></button>
-    
-    <script type="py">
-        from js import document
-        
-        # from pybattle.screen.frames.frame import Frame, Title
-        # from pybattle.screen.grid.point import Coord, Size
-        # from pybattle.screen.grid.cell import Cell
-        # frame = Frame(Cell.from_size(Size(2, 5)))
-        # frame.add_title(Title('Hi'))
-        
+    <py-script src="update.py">
+    </py-script>
 
-        # document.getElementById("text").innerHTML = str(frame).replace('\n', '<br>')
+    <!-- function myKeyPress(e){
+        var keynum;
 
+        if(window.event) { // IE                  
+            keynum = e.keyCode;
+        } else if(e.which){ // Netscape/Firefox/Opera                 
+            keynum = e.which;
+    }
 
-        from pybattle.screen.frames.frame import Frame, Title
-        from pybattle.screen.grid.point import Coord, Size
-        from pybattle.screen.grid.cell import Cell
-        from pybattle.screen.frames.map import Map
-        from pybattle.screen.frames.weather import Weather, Rain
-        from pybattle.screen.colors import Colors
-
-        m1 = """
-        ╭─ BEDROOM ─┬──────────────────╮
-        │   ╰───────╯       ||||       │
-        │                   ||||       │
-        │                     ─┬─┬─┬─┬─┤
-        │                              │
-        │                              │
-        │╭│╮   ╶─╮                     │
-        ││││    ░│                     │
-        │╰│╯   ╶─╯           ╭─────┬─╮ │
-        │                    │░░░░░│▓│ │
-        │                    ╰─────┴─╯ │
-        ╰──────────────────────────────╯
-        """
-
-        m2 = Map(Cell.from_str(m1), Coord(7, 22))
-        m2[Coord(0,0)].color = Colors.RED
-
-
-        from pyodide.ffi import create_proxy
-
-        weather = Weather(particles=["|"])
-
-        def update(*args, **kwargs):
-            m2._update_weather(weather)
-
-            txt = ""
-            for row in m2.rows:
-                for cell in row:
-                    txt += cell.value
-                    txt += f'<code style="color: rgb{cell.color.rgb}"></code>'
-                txt += "<br>"
-
-            document.getElementById("text").innerHTML = txt
-
-        update()
-        document.body.addEventListener('click', create_proxy(update))
-        # proxy.destroy()
-    </script>
-
-
+    alert(String.fromCharCode(keynum)); -->
 
 </body>
 

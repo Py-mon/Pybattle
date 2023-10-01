@@ -11,6 +11,7 @@ from pybattle.screen.grid.point import Coord, Size
 
 # from pybattle.screen.window import Event, EventExit, keys_pressing
 from pybattle.types_ import CardinalDirection
+from movement import keys_pressing
 
 
 class Map(Grid):
@@ -98,6 +99,7 @@ class Map(Grid):
         self[self.pos].value = self.player_char
 
         for key in keys_pressing:
+            key = key.lower()
             if key == "w":
                 self.up()
             elif key == "a":
@@ -110,7 +112,8 @@ class Map(Grid):
         if not self._is_valid(self.pos):
             self.pos = self._previous_pos
             if self.pos in self.exits:
-                return EventExit.BREAK_QUEUE, self.pos
+                pass
+                # return EventExit.BREAK_QUEUE, self.pos
 
     def _update_weather(self, weather: Weather):  # TODO fix player blinking
         if not weather.particles:
