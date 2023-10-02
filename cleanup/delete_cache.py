@@ -13,6 +13,7 @@ def remove_cache(directory: Path) -> dict[Path, Path | dict[Path, Path | dict]]:
     return dct
 
 
-remove_cache(
-    Path(r"C:\Users\jacob\Downloads\Programming\Python\Pybattle\Github\pybattle")
-)
+if __name__ == "__main__":
+    remove_cache(
+        Path(r"C:\Users\jacob\Downloads\Programming\Python\Pybattle\Github\pybattle")
+    )

@@ -8,54 +8,7 @@
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
-    <py-config>
-        packages = ['typing', 'toml']
-
-        [[fetch]]
-        files = [
-        'logs/logging.toml',
-        'pybattle/alignment.py',
-        'pybattle/battle/battle.py',
-        'pybattle/creatures/attributes/ability.py',
-        'pybattle/creatures/attributes/element.py',
-        'pybattle/creatures/attributes/item.py',
-        'pybattle/creatures/attributes/move.py',
-        'pybattle/creatures/attributes/reinforcements.py',
-        'pybattle/creatures/attributes/status_ailment.py',
-        'pybattle/creatures/attributes/trait.py',
-        'pybattle/creatures/graph.py',
-        'pybattle/creatures/graphics/animal_graphics.py',
-        'pybattle/creatures/graphics/graphics.py',
-        'pybattle/creatures/humanoid.py',
-        'pybattle/creatures/pymon.py',
-        'pybattle/creatures/rand.py',
-        'pybattle/creatures/species.py',
-        'pybattle/log/errors.py',
-        'pybattle/log/log.py',
-        'pybattle/log/test_speed_of.py',
-        'pybattle/screen/colors.py',
-        'pybattle/screen/frames/border/border_type.py',
-        'pybattle/screen/frames/border/junction_table.py',
-        'pybattle/screen/frames/frame.py',
-        'pybattle/screen/frames/map.py',
-        'pybattle/screen/frames/menu.py',
-        'pybattle/screen/frames/npc.py',
-        'pybattle/screen/frames/weather.py',
-        'pybattle/screen/grid/cell.py',
-        'pybattle/screen/grid/matrix.py',
-        'pybattle/screen/grid/nested.py',
-        'pybattle/screen/grid/point.py',
-        'pybattle/screen/textbox.py',
-        'pybattle/screen/sound.py',
-        'pybattle/screen/window.py',
-        'pybattle/types_.py',
-        'update.py',
-        'element.py',
-        'create.py',
-        'movement.py',
-        ]
-
-    </py-config>
+    <py-config src="web/pyscript.toml"></py-config>
 
     <style>
         code {
@@ -77,7 +30,7 @@
 
     <code id="text">
 
-    <py-script src="update.py">
+    <py-script src="web/update.py">
     </py-script>
 
 </body>

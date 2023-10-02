@@ -10,7 +10,6 @@ __pycache__
 
 update_version.py
 
+dist
 
-texting.py
-scrab.py
-test.py
+cleanup
