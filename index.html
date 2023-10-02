@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
-    <py-config src="web/pyscript.toml"></py-config>
+    <py-config src="pybattle\screen\web\pyscript.toml"></py-config>
 
     <style>
         code {
             line-height: 1.15;
             white-space: pre-wrap;
-            font-family: monospace;
+            font-family: -apple-system, BlinkMacSystemFont, monospace, ;
+            
             display: inline-block;
+            
         }
     </style>
 
@@ -30,7 +32,13 @@
 
     <code id="text">
 
-    <py-script src="web/update.py">
+    <py-script>
+    from js import Audio
+    mySound = Audio.new('sounds/light_rain.mp3')
+    mySound.play()
+    </py-script>
+
+    <py-script src="pybattle/screen/web/update.py">
     </py-script>
 
 </body>

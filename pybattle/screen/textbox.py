@@ -161,12 +161,8 @@ class TextBox:
 
     def refresh(self) -> None:
         Screen.write(str(self))
-<<<<<<< HEAD
-
 
 
 
 
 TextBox('jf jfjfj fj fjf j ff jf jjfj fjfj fj fj fj fj fj fj fj fjfjfjfjf j fjf jf jf j fjf j jfj fj fj fj fjf j')
-=======
->>>>>>> 4776fb8e362041f4d23ed22e3e756965bbd293e1

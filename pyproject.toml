@@ -21,7 +21,6 @@ dependencies = [""]
 
 [project.optional-dependencies]
 chars-dataset = ['bs4', 'rich']
-developer = []
 
 
 [tool.setuptools.packages.find]

@@ -12,7 +12,7 @@ from pybattle.screen.frames.menu import Menu, Selection, SwitchSelection, VoidSe
 from pybattle.screen.frames.weather import Rain, Weather
 from pybattle.screen.grid.matrix import Cell, Grid
 from pybattle.screen.grid.point import Coord, Size
-from pybattle.screen.window import Event, EventExit, EventQueue, Window, keys_pressing
+from pybattle.screen.window.window import Event, EventExit, EventQueue, Window, keys_pressing
 from pybattle.types_ import CardinalDirection
 
 # 7x24

@@ -1,4 +1,4 @@
-from web.element import window
+from pybattle.screen.web.element import window
 
 
 # def key_press(e):

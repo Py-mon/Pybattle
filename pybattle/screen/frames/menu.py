@@ -9,7 +9,7 @@ from pybattle.screen.grid.cell import Cell
 from pybattle.screen.grid.matrix import Grid
 from pybattle.screen.grid.nested import max_len
 from pybattle.screen.grid.point import Coord, Size
-from pybattle.screen.window import keys_pressing
+from screen.window.window import keys_pressing
 from pybattle.types_ import Alignment
 
 

@@ -1,4 +1,4 @@
-from web.element import Element, window
+from pybattle.screen.web.element import Element, window
 
 from pybattle.screen.frames.frame import Frame, Title
 from pybattle.screen.grid.point import Coord, Size

@@ -1,7 +1,7 @@
-from web.create import update, update_player, update_weather
-from web.movement import key_up, key_down, keys_pressing
+from pybattle.screen.web.create import update, update_player, update_weather
+from pybattle.screen.web.movement import key_up, key_down, keys_pressing
 import asyncio
-from web.element import Element, document
+from pybattle.screen.web.element import Element, document
 from pyodide.ffi import create_proxy
 
 

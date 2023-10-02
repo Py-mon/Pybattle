@@ -36,10 +36,10 @@ files = [
     'pybattle/screen/grid/point.py',
     'pybattle/screen/textbox.py',
     'pybattle/screen/sound.py',
-    'pybattle/screen/window.py',
     'pybattle/types_.py',
-    'web/update.py',
-    'web/element.py',
-    'web/create.py',
-    'web/movement.py',
+    'pybattle/screen/web/update.py',
+    'pybattle/screen/web/element.py',
+    'pybattle/screen/web/create.py',
+    'pybattle/screen/web/movement.py',
+    'sounds/light_rain.mp3'
 ]
