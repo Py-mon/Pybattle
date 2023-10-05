@@ -11,13 +11,22 @@
     <py-config src="pybattle\screen\web\pyscript.toml"></py-config>
 
     <style>
+        @font-face {
+            font-family: Moni;
+            src: url('Anonymous.ttf');
+        }
+
         code {
-            line-height: 1.15;
+            line-height: 1.1;
+            width: 9.33px;
             white-space: pre-wrap;
-            font-family: -apple-system, BlinkMacSystemFont, monospace, ;
-            
+            font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono";
+            /* "Courier New", Courier, monospace */
+
+
             display: inline-block;
-            
+            text-wrap: nowrap;
+
         }
     </style>
 
@@ -30,13 +39,13 @@
     <button id="left">left</button>
     <button id="right">right</button>
 
-    <code id="text">
-
+    <code id="text"></code>
+    <!--
     <py-script>
     from js import Audio
     mySound = Audio.new('sounds/light_rain.mp3')
     mySound.play()
-    </py-script>
+    </py-script>-->
 
     <py-script src="pybattle/screen/web/update.py">
     </py-script>

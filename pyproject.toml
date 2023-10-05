@@ -13,7 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU License",
 ]
-dependencies = [""]
+#dependencies = []
 
 [project.urls]
 "Homepage" = "https://github.com/PythonDominator/Pybattle"

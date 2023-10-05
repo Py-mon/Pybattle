@@ -1,4 +1,8 @@
 from js import document, window
+from typing import Callable
+
+
+window = window
 
 
 class Element:
@@ -8,5 +12,5 @@ class Element:
     def edit(self, html: str):
         self._element.innerHTML = html
 
-    def add_event(self, event: str, html):
-        self._element.addEventListener(event, html)
+    def add_func_callback(self, event: str, func: Callable):
+        self._element.addEventListener(event, func)

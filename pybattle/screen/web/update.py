@@ -1,5 +1,5 @@
 from pybattle.screen.web.create import update, update_player, update_weather
-from pybattle.screen.web.movement import key_up, key_down, keys_pressing
+from pybattle.screen.web.input import key_up, key_down, keys_pressing
 import asyncio
 from pybattle.screen.web.element import Element, document
 from pyodide.ffi import create_proxy
@@ -16,8 +16,6 @@ async def myLongFunction():
 document.onkeydown = create_proxy(key_down)
 document.onkeyup = create_proxy(key_up)
 
-asyncio.ensure_future(myLongFunction())
-
 
 def get_dir_func(c):
     def y(_):
@@ -31,10 +29,12 @@ def get_dir_func(c):
     return create_proxy(y)
 
 
-Element("up").add_event("click", get_dir_func("w"))
+asyncio.ensure_future(myLongFunction())
 
-Element("left").add_event("click", get_dir_func("a"))
+Element("up").add_func_callback("click", get_dir_func("w"))
 
-Element("down").add_event("click", get_dir_func("s"))
+Element("left").add_func_callback("click", get_dir_func("a"))
 
-Element("right").add_event("click", get_dir_func("d"))
+Element("down").add_func_callback("click", get_dir_func("s"))
+
+Element("right").add_func_callback("click", get_dir_func("d"))

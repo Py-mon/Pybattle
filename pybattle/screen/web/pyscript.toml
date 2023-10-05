@@ -40,6 +40,6 @@ files = [
     'pybattle/screen/web/update.py',
     'pybattle/screen/web/element.py',
     'pybattle/screen/web/create.py',
-    'pybattle/screen/web/movement.py',
-    'sounds/light_rain.mp3'
+    'pybattle/screen/web/input.py',
+    'sounds/light_rain.mp3',
 ]

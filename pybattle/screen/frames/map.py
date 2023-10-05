@@ -11,7 +11,7 @@ from pybattle.screen.grid.point import Coord, Size
 
 # from pybattle.screen.window import Event, EventExit, keys_pressing
 from pybattle.types_ import CardinalDirection
-from pybattle.screen.web.movement import keys_pressing
+from pybattle.screen.web.input import keys_pressing
 
 
 class Map(Grid):
