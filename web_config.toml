@@ -1,0 +1,6 @@
+packages = ["typing", "toml"]
+directories = ["pybattle"]
+
+[files]
+include = ["logs/logging.toml", "sounds/light_rain.mp3"]
+exclude = []
