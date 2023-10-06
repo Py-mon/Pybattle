@@ -45,5 +45,6 @@ def update():
             txt += f'<code style="color: rgb{cell.color.rgb};">{cell.value}</code>'
 
         txt += "<br>"
+    
 
     Element("text").edit(txt)
