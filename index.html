@@ -11,10 +11,16 @@
     <py-config src="pybattle\screen\web\pyscript.toml"></py-config>
 
     <style>
-        code-char {
-            white-space: pre;
+        .code-char {
             width: 1ch;
+            font-family: inherit;
+        }
+
+        #text {
             font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono";
+            display: inline-block;
+            white-space: pre;
+            line-height: 2ch;
         }
     </style>
 
@@ -22,8 +28,7 @@
 </head>
 
 <body>
-    <code id="text"
-        style="white-space: pre; display: inline-block; line-height: 2ch;"></code>
+    <code id="text"></code>
 
     <button id="up">up</button>
     <button id="down">down</button>
