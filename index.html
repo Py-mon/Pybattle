@@ -11,17 +11,10 @@
     <py-config src="pybattle\screen\web\pyscript.toml"></py-config>
 
     <style>
-        html {
-            white-space: nowrap;
-            line-break: strict;
-        }
-
-        code {
+        code-char {
             white-space: pre;
             width: 1ch;
             font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono";
-            display: inline-block;
-            line-height: 2ch;
         }
     </style>
 
@@ -29,20 +22,13 @@
 </head>
 
 <body>
-    <code id="text"></code>
+    <code id="text"
+        style="white-space: pre; display: inline-block; line-height: 2ch;"></code>
 
     <button id="up">up</button>
     <button id="down">down</button>
     <button id="left">left</button>
     <button id="right">right</button>
-
-
-    <!--
-    <py-script>
-    from js import Audio
-    mySound = Audio.new('sounds/light_rain.mp3')
-    mySound.play()
-    </py-script>-->
 
     <py-script src="pybattle/screen/web/update.py">
     </py-script>

@@ -42,9 +42,8 @@ def update():
     txt = ""
     for row in m2.rows:
         for cell in row:
-            txt += f'<code style="color: rgb{cell.color.rgb};">{cell.value}</code>'
+            txt += f'<code id="code-char" style="color: rgb{cell.color.rgb};">{cell.value}</code>'
 
         txt += "<br>"
-    
 
     Element("text").edit(txt)
